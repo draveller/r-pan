@@ -5,6 +5,8 @@
 **/*.log
 
 
+**/target/
+**/.idea/
 
 # Package Files #
 **/*.jar
