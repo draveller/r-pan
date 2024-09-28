@@ -1,0 +1,2 @@
+mybatis-plus的依赖模块
+引入了mybatis-plus以及代码生成器
