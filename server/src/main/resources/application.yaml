@@ -12,6 +12,16 @@ spring:
       max-file-size: 3072MB
       max-request-size: 3072MB
 
+  datasource:
+    username: root
+    data-password: MuL!zsV8dHov346i4oY7KBXsX3
+    url: jdbc:mysql://dzl-database.mysql.rds.aliyuncs.com:3306/r_pan?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath:mappers/**/*.xml
+
+
 server:
   port: 8080
 
