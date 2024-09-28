@@ -22,7 +22,6 @@ management:
         include: '*'
         exclude: env,beans
 
-
 swagger2:
   show: true
   group-name: ${spring.application.name}
@@ -34,7 +33,6 @@ swagger2:
   contact-url: https://blog.rubinchu.com
   contact-email: rubinchu@126.com
   version: 1.0
-
 
 logging:
   file: ${user.home}/logs/${spring.application.name}/${spring.application.name}.log

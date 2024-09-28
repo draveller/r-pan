@@ -59,11 +59,11 @@ public class R<T> implements Serializable {
         return new R<>(ResponseCode.SUCCESS.getCode());
     }
 
-    public static <T> R<T> success(String data) {
-        return new R<>(ResponseCode.SUCCESS.getCode(), data);
+    public static <T> R<T> success(String message) {
+        return new R<>(ResponseCode.SUCCESS.getCode(), message);
     }
 
-    public static <T> R<T> success(T data) {
+    public static <T> R<T> data(T data) {
         return new R<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getDesc(), data);
     }
 
