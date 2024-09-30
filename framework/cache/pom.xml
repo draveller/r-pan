@@ -9,11 +9,11 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>r-pan-orm</artifactId>
+    <artifactId>r-pan-cache</artifactId>
     <packaging>pom</packaging>
-
     <modules>
-        <module>mybatis-plus</module>
+        <module>cache-core</module>
+        <module>cache-caffeine</module>
     </modules>
 
     <properties>
