@@ -1,6 +1,7 @@
 package com.imooc.pan.web.exception;
 
 import com.imooc.pan.core.exception.RPanBusinessException;
+import com.imooc.pan.core.exception.RPanFrameworkException;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.response.ResponseCode;
 import org.springframework.validation.BindException;
@@ -51,6 +52,11 @@ public class WebExceptionHandler {
     public R<?> bindExceptionHandler(BindException e) {
         FieldError fieldError = e.getBindingResult().getFieldErrors().stream().findFirst().get();
         return R.fail(ResponseCode.ERROR_PARAM.getCode(), fieldError.getDefaultMessage());
+    }
+
+    @ExceptionHandler(RPanFrameworkException.class)
+    public R<?> rPanFrameworkExceptionHandler(RPanFrameworkException e) {
+        return R.fail(ResponseCode.ERROR.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)

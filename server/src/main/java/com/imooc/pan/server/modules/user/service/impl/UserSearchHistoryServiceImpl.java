@@ -3,7 +3,7 @@ package com.imooc.pan.server.modules.user.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.pan.server.modules.user.entity.RPanUserSearchHistory;
 import com.imooc.pan.server.modules.user.mapper.RPanUserSearchHistoryMapper;
-import com.imooc.pan.server.modules.user.service.RPanUserSearchHistoryService;
+import com.imooc.pan.server.modules.user.service.IUserSearchHistoryService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 * @createDate 2024-09-28 14:06:46
 */
 @Service
-public class RPanUserSearchHistoryServiceImpl extends ServiceImpl<RPanUserSearchHistoryMapper, RPanUserSearchHistory>
-    implements RPanUserSearchHistoryService {
+public class UserSearchHistoryServiceImpl extends ServiceImpl<RPanUserSearchHistoryMapper, RPanUserSearchHistory>
+    implements IUserSearchHistoryService {
 
 }
 
