@@ -1,41 +1,38 @@
 # r-pan
 
+## 项目简介 📁
+
 这是一个简单的网上云盘系统。
 
-## 目录结构
+## 目录结构 🗂️
 
-当前目录是后端项目的根目录，默认目录结构如下：
+1. **distribution**: 打包模块。包含打包脚本、配置等。
+2. **framework** (pom): 技术框架管理模块。包含非业务代码的技术框架配置等。
+    1. **cache** (pom): 缓存管理模块。
+        - **cache-caffeine**: 基于 Caffeine 的本地缓存实现。
+        - **cache-core**: 公用的缓存模块，定义了相关常量配置。
+        - **cache-redis**: 基于 Redis 的缓存实现。
+    2. **core**: 核心公共模块。包含全局的常量类和工具类。
+    3. **orm** (pom): ORM 框架管理模块。
+        - **mybatis-plus**: MyBatis Plus 的实现，包含配置类和代码生成器。
+    4. **schedule**: 定时任务模块。包含定时任务配置。
+    5. **swagger2**: 后端项目的 API 文档模块。
+    6. **web**: 后端服务的主要框架模块，继承了 Spring Web，处理了通用的跨域、日志、序列化、参数校验等问题。
+3. **server**: 后端服务模块。包含主要的业务代码。  
+   ![project-tree.svg](project-tree.svg)  
+   通过这些层次分明的模块化设计，可以确保系统具有良好的扩展性和可维护性。
 
-### 模块说明
+## 引用关系 🗂️
 
-1. **framework**: 技术框架包
-    - **core**: 核心公共模块，包含一些常量类和工具类。
-    - **swagger2**: API文档相关模块。
-    - **web**: 处理网络请求跨域问题以及记录日志的包，并且继承了Spring Web。
+distribution -> server  
+cache-caffeine -> cache-core  
+cache-redis -> cache-core  
+mybatis-plus -> core  
+schedule -> cache-core  
+swagger2 -> core  
+web -> core  
+server -> web/mybatis-plus/swagger2  
+![project-reference.svg](project-reference.svg)
 
-2. **server**: 后端服务模块，包含服务启动类以及主体的业务代码。
-3. **distribution**: 打包模块, 包含打包脚本, 配置等
+更新于 2024-09-30
 
-### 引用关系
-
-- **core**: 
-  - 引用了Guava、Hutool、Lombok等基本的第三方库。
-  - 基础模块，不需要引用其他内部模块。
-
-- **swagger2**:
-  - 引用了core模块。
-  - API文档工具模块，相对独立，仅依赖于core模块。
-
-- **web**:
-  - 引用了core和Spring Web。
-  - Web后端服务的父模块，依赖于core和Spring Web。
-
-- **server**:
-  - 引用了swagger2和web。
-  - Web后端服务模块，依赖于swagger2来提供API文档支持，并依赖于web作为Spring的后端服务器。
-
-- **distribution**:
-  - 引用了server。
-  - 打包模块，对项目后端进行打包。
-
-通过这些层次分明的模块化设计，可以确保系统具有良好的扩展性和可维护性。
