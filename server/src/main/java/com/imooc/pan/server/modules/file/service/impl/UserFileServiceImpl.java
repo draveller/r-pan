@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConstants;
 import com.imooc.pan.server.modules.file.context.CreateFolderContext;
 import com.imooc.pan.server.modules.file.context.QueryFileListContext;
+import com.imooc.pan.server.modules.file.context.UpdateFilenameContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.enums.FolderFlagEnum;
 import com.imooc.pan.server.modules.file.mapper.RPanUserFileMapper;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author 18063
@@ -69,8 +73,66 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         return this.baseMapper.selectFileList(context);
     }
 
+    /**
+     * 更新文件名称
+     *
+     * @param context
+     */
+    @Override
+    public void updateFilename(UpdateFilenameContext context) {
+        this.checkUpdateFilenameCondition(context);
+        this.doUpdateFilename(context);
+    }
+
 
     // ******************************** private ********************************
+
+    /**
+     * 执行文件重命名的操作
+     *
+     * @param context
+     */
+    private void doUpdateFilename(UpdateFilenameContext context) {
+        RPanUserFile entity = context.getEntity();
+        entity.setFilename(context.getNewFilename());
+        entity.setUpdateTime(new Date());
+        entity.setUpdateUser(context.getUserId());
+
+        if (!this.updateById(entity)) {
+            throw new RuntimeException("文件(夹)重命名失败");
+        }
+    }
+
+    /**
+     * 更新文件名称的条件校验
+     * 1. 文件id是有效的
+     * 2. 用户有权限更新该文件的名称
+     * 3. 新旧文件名不能一样
+     * 4. 不能使用当前文件夹下面的子文件名称
+     *
+     * @param context
+     */
+    private void checkUpdateFilenameCondition(UpdateFilenameContext context) {
+        Long fileId = context.getFileId();
+        RPanUserFile entity = Optional.ofNullable(this.getById(fileId))
+                .orElseThrow(() -> new RPanBusinessException("文件(夹)不存在"));
+
+        if (!Objects.equals(entity.getUserId(), context.getUserId())) {
+            throw new RPanBusinessException("当前用户没有权限更新该文件(夹)的名称");
+        }
+
+        if (Objects.equals(entity.getFilename(), context.getNewFilename())) {
+            throw new RPanBusinessException("新文件名称不能与旧文件一致");
+        }
+
+        LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.<RPanUserFile>lambdaQuery()
+                .eq(RPanUserFile::getParentId, entity.getParentId())
+                .eq(RPanUserFile::getFilename, context.getNewFilename());
+        if (this.count(wrapper) > 0) {
+            throw new RPanBusinessException("当前文件夹下已有同名文件");
+        }
+        context.setEntity(entity);
+    }
 
     /**
      * 保存用户文件(夹)的映射记录信息, 使用字段如下

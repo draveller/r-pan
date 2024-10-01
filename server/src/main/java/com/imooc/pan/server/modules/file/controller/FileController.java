@@ -12,6 +12,8 @@ import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.po.CreateFolderPO;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
+import com.imooc.pan.server.modules.file.context.UpdateFilenameContext;
+import com.imooc.pan.server.modules.file.po.UpdateFilenamePO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +81,19 @@ public class FileController {
         CreateFolderContext context = this.fileConverter.convertPO2Context(createFolderPO);
         Long fileId = this.iUserFileService.createFolder(context);
         return R.data(IdUtil.encrypt(fileId));
+    }
+
+    @ApiOperation(
+            value = "文件重命名",
+            notes = "该接口提供了文件重命名的功能",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @PutMapping("file")
+    public R<Object> updateFilename(@Validated @RequestBody UpdateFilenamePO updateFilenamePO) {
+        UpdateFilenameContext context = this.fileConverter.convertPO2Context(updateFilenamePO);
+        this.iUserFileService.updateFilename(context);
+        return R.success();
     }
 
 }
