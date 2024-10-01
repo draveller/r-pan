@@ -37,7 +37,7 @@ public interface UserConverter {
      */
     @Mapping(source = "rPanUser.username", target = "username")
     @Mapping(source = "rPanUserFile.fileId", target = "rootFileId")
-    @Mapping(source = "rPanUserFile.fileName", target = "rootFileName")
+    @Mapping(source = "rPanUserFile.filename", target = "rootFileName")
     UserInfoVO assembleUserInfoVO(RPanUser rPanUser, RPanUserFile rPanUserFile);
 
 }

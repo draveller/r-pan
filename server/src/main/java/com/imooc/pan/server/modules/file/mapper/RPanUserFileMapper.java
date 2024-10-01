@@ -1,7 +1,11 @@
 package com.imooc.pan.server.modules.file.mapper;
 
+import com.imooc.pan.server.modules.file.context.QueryFileListContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
+
+import java.util.List;
 
 /**
 * @author 18063
@@ -10,6 +14,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.imooc.pan.server.modules.file.entity.RPanUserFile
 */
 public interface RPanUserFileMapper extends BaseMapper<RPanUserFile> {
+
+    List<RPanUserFileVO> selectFileList(QueryFileListContext context);
 
 }
 

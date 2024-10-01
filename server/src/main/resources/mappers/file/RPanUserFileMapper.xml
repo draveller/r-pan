@@ -27,4 +27,27 @@
         create_user,create_time,update_user,
         update_time
     </sql>
+
+    <select id="selectFileList" resultType="com.imooc.pan.server.modules.file.vo.RPanUserFileVO">
+        SELECT file_id, parent_id, filename, file_size_desc, folder_flag, file_type, update_time
+        FROM r_pan_user_file
+        <where>
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+            <if test="parentId != null and parentId != ''">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND del_flag = #{delFlag}
+            </if>
+            <if test="fileTypeArray != null">
+                AND file_type IN
+                <foreach collection="fileTypeArray" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
 </mapper>

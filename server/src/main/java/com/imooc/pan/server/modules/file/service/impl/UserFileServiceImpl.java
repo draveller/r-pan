@@ -7,14 +7,17 @@ import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConstants;
 import com.imooc.pan.server.modules.file.context.CreateFolderContext;
+import com.imooc.pan.server.modules.file.context.QueryFileListContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.enums.FolderFlagEnum;
 import com.imooc.pan.server.modules.file.mapper.RPanUserFileMapper;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
+import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 18063
@@ -54,6 +57,18 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
                         .eq(RPanUserFile::getFolderFlag, FolderFlagEnum.YES.getCode())
         );
     }
+
+    /**
+     * 查询用户的文件列表
+     *
+     * @param context
+     * @return
+     */
+    @Override
+    public List<RPanUserFileVO> getFileList(QueryFileListContext context) {
+        return this.baseMapper.selectFileList(context);
+    }
+
 
     // ******************************** private ********************************
 
