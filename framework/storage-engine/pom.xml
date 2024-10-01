@@ -5,20 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.imooc.pan</groupId>
-        <artifactId>r-pan-parent</artifactId>
+        <artifactId>r-pan-framework</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>r-pan-framework</artifactId>
+    <artifactId>r-pan-storage-engine</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>core</module>
-        <module>web</module>
-        <module>swagger2</module>
-        <module>cache</module>
-        <module>orm</module>
-        <module>schedule</module>
-        <module>storage-engine</module>
+        <module>storage-engine-core</module>
+        <module>storage-engine-local</module>
+        <module>storage-engine-oss</module>
+        <module>storage-engine-fastdfs</module>
     </modules>
 
     <properties>

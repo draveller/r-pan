@@ -5,26 +5,25 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.imooc.pan</groupId>
-        <artifactId>r-pan-parent</artifactId>
+        <artifactId>r-pan-storage-engine</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>r-pan-framework</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>core</module>
-        <module>web</module>
-        <module>swagger2</module>
-        <module>cache</module>
-        <module>orm</module>
-        <module>schedule</module>
-        <module>storage-engine</module>
-    </modules>
+    <artifactId>r-pan-storage-engine-local</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.imooc.pan</groupId>
+            <artifactId>r-pan-storage-engine-core</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 
 </project>
