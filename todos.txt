@@ -1,0 +1,8 @@
+
+1. 升级到jdk17
+2. 升级到springboot3
+3. 升级到swagger3
+
+
+
+

@@ -1,4 +1,7 @@
 spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
   application:
     name: r-pan-server
   output:

@@ -14,10 +14,12 @@ public enum FolderFlagEnum {
      * 不是文件夹
      */
     NO(0),
+
     /**
      * 是文件夹
      */
     YES(1);
+
     private Integer code;
 
 }

@@ -25,6 +25,12 @@ import java.util.Date;
 public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUserFile>
         implements IUserFileService {
 
+    /**
+     * 创建文件夹的业务方法实现
+     *
+     * @param createFolderContext 上下文字段集合对象
+     * @return
+     */
     @Override
     public Long createFolder(CreateFolderContext createFolderContext) {
         return this.saveUserFile(createFolderContext.getParentId(), createFolderContext.getFolderName(),
@@ -35,16 +41,16 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     // ******************************** private ********************************
 
     /**
-     * 保存用户文件的映射记录
+     * 保存用户文件(夹)的映射记录信息, 使用字段如下
      *
-     * @param parentId
-     * @param filename
-     * @param folderFlagEnum
-     * @param fileType
-     * @param realFileId
-     * @param userId
-     * @param fileSizeDesc
-     * @return
+     * @param parentId       父级目录id
+     * @param filename       文件(夹)名称
+     * @param folderFlagEnum 文件夹标识, 以此区分'文件夹'和'文件'
+     * @param fileType       文件类型
+     * @param realFileId     真实文件id
+     * @param userId         用户id, 即所属人id
+     * @param fileSizeDesc   文件大小描述
+     * @return 返回的文件(夹)id
      */
     private Long saveUserFile(Long parentId, String filename, FolderFlagEnum folderFlagEnum,
                               Integer fileType, Long realFileId, Long userId, String fileSizeDesc) {
@@ -57,18 +63,12 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     }
 
     /**
-     * 用户文件映射关系实体转化
-     * 1. 构建并填充实体信息
+     * 将属性集成为实体类, 并对该对象进行文件(夹)名称的处理
+     * <p>
+     * 1. 将将属性集成为文件(夹)实体类对象
      * 2. 处理文件命名一致的问题
      *
-     * @param parentId
-     * @param filename
-     * @param folderFlagEnum
-     * @param fileType
-     * @param realFileId
-     * @param userId
-     * @param fileSizeDesc
-     * @return
+     * @return 集成后的实体类对象, 并且已自动进行了重命名
      */
     private RPanUserFile assembleRPanUserFile(Long parentId, String filename, FolderFlagEnum folderFlagEnum,
                                               Integer fileType, Long realFileId, Long userId, String fileSizeDesc) {
@@ -95,7 +95,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 处理重复的文件名
      * 如果同一文件夹下存在相同的文件名，则自动在文件名后加上数字后缀
      *
-     * @param entity
+     * @param entity 文件(夹)对象
      */
     private void handleDuplicateFilename(RPanUserFile entity) {
         String filename = entity.getFilename();

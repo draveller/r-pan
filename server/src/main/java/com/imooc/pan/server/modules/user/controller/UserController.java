@@ -2,8 +2,11 @@ package com.imooc.pan.server.modules.user.controller;
 
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.server.common.utils.UserIdUtil;
+import com.imooc.pan.server.modules.user.context.UserLoginContext;
 import com.imooc.pan.server.modules.user.context.UserRegisterContext;
 import com.imooc.pan.server.modules.user.converter.UserConverter;
+import com.imooc.pan.server.modules.user.po.UserLoginPO;
 import com.imooc.pan.server.modules.user.po.UserRegisterPO;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import io.swagger.annotations.Api;
@@ -43,6 +46,32 @@ public class UserController {
         Long userId = iUserService.register(userRegisterContext);
 
         return R.data(IdUtil.encrypt(userId));
+    }
+
+    @ApiOperation(
+            value = "用户登录接口",
+            notes = "该接口提供了用户登录功能, 成功登录之后会返回有时效性的accessToken, 供后续服务使用",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @PatchMapping("login")
+    public R<Object> login(@Validated @RequestBody UserLoginPO userLoginPO) {
+        UserLoginContext userLoginContext = userConverter.userLoginPO2UserLoginContext(userLoginPO);
+
+        String accessToken = iUserService.login(userLoginContext);
+        return R.data(accessToken);
+    }
+
+    @ApiOperation(
+            value = "用户登出接口",
+            notes = "该接口提供了用户登出功能",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @PatchMapping("exit")
+    public R<Object> exit() {
+        iUserService.exit(UserIdUtil.get());
+        return R.success();
     }
 
 }

@@ -1,23 +1,31 @@
 package com.imooc.pan.server.modules.user.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.imooc.pan.cache.core.constants.CacheConstants;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.core.utils.PasswordUtil;
 import com.imooc.pan.server.modules.file.constants.FileConstants;
 import com.imooc.pan.server.modules.file.context.CreateFolderContext;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
+import com.imooc.pan.server.modules.user.constants.UserConstants;
+import com.imooc.pan.server.modules.user.context.UserLoginContext;
 import com.imooc.pan.server.modules.user.context.UserRegisterContext;
 import com.imooc.pan.server.modules.user.converter.UserConverter;
 import com.imooc.pan.server.modules.user.entity.RPanUser;
 import com.imooc.pan.server.modules.user.mapper.RPanUserMapper;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author 18063
@@ -33,38 +41,109 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     @Autowired
     private IUserFileService iUserFileService;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     /**
-     * 用户注册的业务实现
-     * 需要实现的功能点
-     * 1. 注册用户信息
-     * 2. 创建新用户的根目录的信息
-     * <p>
-     * 需要实现的技术难点:
-     * 1. 该业务是幂等的
-     * 2. 要保证用户名全局唯一
-     * <p>
-     * 处理方案:
-     * 幂等性通过数据库表对于用户名字段添加唯一索引, 上游业务捕获对应的冲突异常, 转化返回
+     * 用户注册的业务方法实现
+     * 1. 注册用户信息, 保证用户名的唯一性, 并保存入库
+     * 2. 创建用户的根目录信息
      *
-     * @param userRegisterContext
-     * @return
+     * @param userRegisterContext 用户注册上下文对象, 包含注册所需的字段
+     * @return 注册成功的用户ID
      */
     @Override
     public Long register(UserRegisterContext userRegisterContext) {
 
-        assembleUserEntity(userRegisterContext);
-
-        doRegister(userRegisterContext);
-        createUserRootFolder(userRegisterContext);
+        RPanUser entity = this.assembleUserEntity(userRegisterContext);
+        this.doRegister(entity);
+        this.createUserRootFolder(userRegisterContext);
 
         return userRegisterContext.getEntity().getUserId();
     }
 
     /**
-     * 实体转化, 由上下文信息转换成用户实体, 封装进上下文
+     * 用户登录业务实现
+     * 1. 校验信息
+     * 2. 生成一个具有时效性的认证令牌
+     * 3. 缓存令牌信息, 实现单机登录
      *
-     * @param userRegisterContext
-     * @return
+     * @param userLoginContext 用户登录上下文对象
+     * @return 访问令牌
+     */
+    @Override
+    public String login(UserLoginContext userLoginContext) {
+        checkLoginInfo(userLoginContext);
+
+        generateAndSaveAccessToken(userLoginContext);
+
+        return userLoginContext.getAccessToken();
+    }
+
+    /**
+     * 用户退出登录
+     * 清除用户的登录凭证缓存
+     *
+     * @param userId 用户id
+     */
+    @Override
+    public void exit(Long userId) {
+        try {
+            Cache cache = cacheManager.getCache(CacheConstants.R_PAN_CACHE_NAME);
+            cache.evict(UserConstants.USER_LOGIN_PREFIX + userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RPanBusinessException("退出登录失败");
+        }
+    }
+
+    // ******************************** private ********************************
+
+    private void generateAndSaveAccessToken(UserLoginContext userLoginContext) {
+        RPanUser entity = userLoginContext.getEntity();
+
+        String accessToken = JwtUtil.generateToken(entity.getUsername(), UserConstants.LOGIN_USER_ID,
+                entity.getUserId(), UserConstants.ONE_DAY_LONG);
+
+        Cache cache = this.cacheManager.getCache(CacheConstants.R_PAN_CACHE_NAME);
+        cache.put(UserConstants.USER_LOGIN_PREFIX + entity.getUserId(), accessToken);
+
+        userLoginContext.setAccessToken(accessToken);
+    }
+
+    /**
+     * 校验用户名密码
+     *
+     * @param userLoginContext
+     */
+    private void checkLoginInfo(UserLoginContext userLoginContext) {
+        String username = userLoginContext.getUsername();
+        String password = userLoginContext.getPassword();
+
+        RPanUser entity = this.getRPanUserByUsername(username);
+        if (entity == null) {
+            throw new RPanBusinessException("用户名或密码错误");
+        }
+
+        String salt = entity.getSalt();
+        String encPassword = PasswordUtil.encryptPassword(salt, password);
+        String dbPassword = entity.getPassword();
+        if (!Objects.equals(dbPassword, encPassword)) {
+            throw new RPanBusinessException("用户名或密码错误");
+        }
+        userLoginContext.setEntity(entity);
+    }
+
+    private RPanUser getRPanUserByUsername(String username) {
+        return getOne(Wrappers.<RPanUser>lambdaQuery().eq(RPanUser::getUsername, username));
+    }
+
+    /**
+     * 工具方法
+     * 将上下文对象的属性值集成为entity, 并封装进上下文对象的属性中
+     *
+     * @param userRegisterContext 上下文对象
+     * @return 已经集成的上下文对象
      */
     private RPanUser assembleUserEntity(UserRegisterContext userRegisterContext) {
         RPanUser entity = userConverter.userRegisterContext2RPanUser(userRegisterContext);
@@ -82,13 +161,12 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     }
 
     /**
-     * 实现用户注册的业务
-     * 需要捕获数据库的唯一索引冲突异常, 来实现全局用户名称唯一的保证
+     * 将entity对象存入数据库
+     * 对象表的用户名字段有唯一索引, 针对性捕获 DuplicateKeyException 进行处理, 并提示 '用户名已存在'
      *
-     * @param userRegisterContext
+     * @param entity
      */
-    private void doRegister(UserRegisterContext userRegisterContext) {
-        RPanUser entity = userRegisterContext.getEntity();
+    private void doRegister(RPanUser entity) {
         if (entity == null) {
             throw new RPanBusinessException(ResponseCode.ERROR);
         }
@@ -104,9 +182,11 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     }
 
     /**
-     * 创建用户的根目录信息
+     * 创建用户的云盘根目录
+     * 将各个字段封装好后, 移交给文件模块的业务层进行处理
+     * 用户根目录的父目录id为0; 所属人id为当前用户id; 文件夹名称为'全部文件'
      *
-     * @param userRegisterContext
+     * @param userRegisterContext 上下文对象
      */
     private void createUserRootFolder(UserRegisterContext userRegisterContext) {
         CreateFolderContext createFolderContext = new CreateFolderContext();
@@ -114,8 +194,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         createFolderContext.setUserId(userRegisterContext.getEntity().getUserId());
         createFolderContext.setFolderName(FileConstants.ALL_FILE_CN_STR);
 
-        Long folder = iUserFileService.createFolder(createFolderContext);
-
+        iUserFileService.createFolder(createFolderContext);
     }
 
 }
