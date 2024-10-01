@@ -38,6 +38,23 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         );
     }
 
+    /**
+     * 按照用户id获取根文件夹信息
+     *
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public RPanUserFile getUserRootFile(Long userId) {
+        return this.getOne(
+                Wrappers.<RPanUserFile>lambdaQuery()
+                        .eq(RPanUserFile::getUserId, userId)
+                        .eq(RPanUserFile::getParentId, FileConstants.TOP_PARENT_ID)
+                        .eq(RPanUserFile::getDelFlag, DelFlagEnum.NO.getCode())
+                        .eq(RPanUserFile::getFolderFlag, FolderFlagEnum.YES.getCode())
+        );
+    }
+
     // ******************************** private ********************************
 
     /**
