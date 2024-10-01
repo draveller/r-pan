@@ -1,13 +1,7 @@
 package com.imooc.pan.server.modules.file.converter;
 
-import com.imooc.pan.server.modules.file.context.CreateFolderContext;
-import com.imooc.pan.server.modules.file.context.DeleteFileContext;
-import com.imooc.pan.server.modules.file.context.SecUploadContext;
-import com.imooc.pan.server.modules.file.context.UpdateFilenameContext;
-import com.imooc.pan.server.modules.file.po.CreateFolderPO;
-import com.imooc.pan.server.modules.file.po.DeleteFilePO;
-import com.imooc.pan.server.modules.file.po.SecUploadPO;
-import com.imooc.pan.server.modules.file.po.UpdateFilenamePO;
+import com.imooc.pan.server.modules.file.context.*;
+import com.imooc.pan.server.modules.file.po.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -30,5 +24,12 @@ public interface FileConverter {
     @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(secUploadPO.getParentId()))")
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     SecUploadContext convertPO2Context(SecUploadPO secUploadPO);
+
+    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(fileUploadPO.getParentId()))")
+    @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
+    FileUploadContext convertPO2Context(FileUploadPO fileUploadPO);
+
+    @Mapping(target = "record", ignore = true)
+    FileSaveContext fileUploadContext2FileSaveContext(FileUploadContext context);
 
 }

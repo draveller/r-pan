@@ -11,6 +11,7 @@ import com.imooc.pan.server.common.event.file.DeleteFileEvent;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConstants;
 import com.imooc.pan.server.modules.file.context.*;
+import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.entity.RPanFile;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.enums.FileTypeEnum;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,6 +45,9 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
 
     @Autowired
     private IFileService iFileService;
+
+    @Autowired
+    private FileConverter fileConverter;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -134,12 +139,40 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         }
         this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
                 FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
-                        record.getFileId(), context.getUserId(), record.getFileSizeDesc());
+                record.getFileId(), context.getUserId(), record.getFileSizeDesc());
         return true;
+    }
+
+    /**
+     * 单文件上传
+     * 1. 上传文件并保存实体文件记录
+     * 2. 保存用户据文件的关系记录
+     *
+     * @param context
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void upload(FileUploadContext context) {
+        this.saveFile(context);
+        this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
+                FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
+                context.getRecord().getFileId(), context.getUserId(), context.getRecord().getFileSizeDesc());
     }
 
 
     // ******************************** private ********************************
+
+    /**
+     * 上传文件并保存实体文件记录
+     * 委托给实体文件的service去完成此操作
+     *
+     * @param context
+     */
+    private void saveFile(FileUploadContext context) {
+        FileSaveContext fileSaveContext = this.fileConverter.fileUploadContext2FileSaveContext(context);
+        this.iFileService.saveFile(fileSaveContext);
+        context.setRecord(fileSaveContext.getRecord());
+    }
 
     /**
      * 通过用户id和唯一标识来查找文件

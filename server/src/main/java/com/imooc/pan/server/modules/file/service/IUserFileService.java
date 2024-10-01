@@ -31,4 +31,7 @@ public interface IUserFileService extends IService<RPanUserFile> {
     void deleteFile(DeleteFileContext context);
 
     boolean secUpload(SecUploadContext context);
+
+    void upload(FileUploadContext context);
+
 }
