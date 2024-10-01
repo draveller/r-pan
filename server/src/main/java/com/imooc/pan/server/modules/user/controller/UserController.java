@@ -2,6 +2,7 @@ package com.imooc.pan.server.modules.user.controller;
 
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.server.common.LoginIgnore;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.user.context.UserLoginContext;
 import com.imooc.pan.server.modules.user.context.UserRegisterContext;
@@ -33,6 +34,7 @@ public class UserController {
     @Autowired
     private UserConverter userConverter;
 
+    @LoginIgnore
     @ApiOperation(
             value = "用户注册接口",
             notes = "该接口提供了用户注册功能, 实现了幂等性注册的逻辑, 可多并发调用",
@@ -48,6 +50,7 @@ public class UserController {
         return R.data(IdUtil.encrypt(userId));
     }
 
+    @LoginIgnore
     @ApiOperation(
             value = "用户登录接口",
             notes = "该接口提供了用户登录功能, 成功登录之后会返回有时效性的accessToken, 供后续服务使用",
