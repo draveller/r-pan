@@ -23,6 +23,7 @@ import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.server.modules.file.service.IFileService;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.FileChunkUploadVO;
+import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
 import com.imooc.pan.storage.engine.core.StorageEngine;
@@ -268,8 +269,63 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         this.doPreview(record, context.getResponse());
     }
 
+    /**
+     * 查询用户的文件夹树
+     * 1. 查询出该用户的所有文件夹列表
+     * 2. 在内存中拼装文件夹树
+     *
+     * @param context
+     * @return
+     */
+    @Override
+    public List<FolderTreeNodeVO> getFolderTree(QueryFolderTreeContext context) {
+        List<RPanUserFile> folderRecords = this.queryFolderRecords(context.getUserId());
+        return this.assembleFolderTreeNodeVOList(folderRecords);
+    }
+
 
     // ******************************** private ********************************
+
+    /**
+     * 拼装文件夹树列表
+     *
+     * @param folderRecords
+     * @return
+     */
+    private List<FolderTreeNodeVO> assembleFolderTreeNodeVOList(List<RPanUserFile> folderRecords) {
+        if (CollectionUtils.isEmpty(folderRecords)) {
+            return Collections.emptyList();
+        }
+
+        List<FolderTreeNodeVO> mappedFolderTreeNodeVOList = folderRecords.stream()
+                .map(fileConverter::rPanUserFile2FolderTreeNodeVO).collect(Collectors.toList());
+        Map<Long, List<FolderTreeNodeVO>> mappedFolderTreeNodeVOMap = mappedFolderTreeNodeVOList.stream()
+                .collect(Collectors.groupingBy(FolderTreeNodeVO::getParentId));
+
+        for (FolderTreeNodeVO node : mappedFolderTreeNodeVOList) {
+            List<FolderTreeNodeVO> children = mappedFolderTreeNodeVOMap.get(node.getId());
+            if (CollectionUtils.isNotEmpty(children)) {
+                node.getChildren().addAll(children);
+            }
+        }
+
+        return mappedFolderTreeNodeVOList.stream()
+                .filter(node -> Objects.equals(node.getParentId(), 0L)).collect(Collectors.toList());
+    }
+
+    /**
+     * 查询用户所有有效的文件夹信息
+     *
+     * @param userId
+     * @return
+     */
+    private List<RPanUserFile> queryFolderRecords(Long userId) {
+        LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.<RPanUserFile>lambdaQuery()
+                .eq(RPanUserFile::getUserId, userId)
+                .eq(RPanUserFile::getFolderFlag, FolderFlagEnum.YES.getCode())
+                .eq(RPanUserFile::getDelFlag, DelFlagEnum.NO.getCode());
+        return this.list(wrapper);
+    }
 
     /**
      * 执行文件预览的动作

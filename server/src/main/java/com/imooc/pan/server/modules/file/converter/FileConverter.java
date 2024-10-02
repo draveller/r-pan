@@ -1,7 +1,9 @@
 package com.imooc.pan.server.modules.file.converter;
 
 import com.imooc.pan.server.modules.file.context.*;
+import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.po.*;
+import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -51,4 +53,9 @@ public interface FileConverter {
     FileChunkMergeContext convertPO2Context(FileChunkMergePO fileChunkMergePO);
 
     FileChunkMergeAndSaveContext fileChunkMergeContext2FileChunkMergeAndSaveContext(FileChunkMergeContext context);
+
+    @Mapping(target = "label", source = "record.filename")
+    @Mapping(target = "id", source = "record.fileId")
+    @Mapping(target = "children", expression = "java(java.util.Collections.emptyList())")
+    FolderTreeNodeVO rPanUserFile2FolderTreeNodeVO(RPanUserFile rPanUserFile);
 }

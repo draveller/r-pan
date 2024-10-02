@@ -11,6 +11,7 @@ import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.po.*;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.FileChunkUploadVO;
+import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
 import io.swagger.annotations.Api;
@@ -190,7 +191,7 @@ public class FileController {
             value = "下载文件",
             notes = "该接口提供了下载文件的功能",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
     )
     @GetMapping("file/download")
     public void download(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
@@ -204,13 +205,28 @@ public class FileController {
             value = "预览文件",
             notes = "该接口提供了预览文件的功能",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
     )
     @GetMapping("file/preview")
     public void preview(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
                         HttpServletResponse response) {
         FilePreviewContext context = new FilePreviewContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
         this.iUserFileService.preview(context);
+    }
+
+    @ApiOperation(
+            value = "查询文件夹树",
+            notes = "该接口提供了查询文件夹树的功能",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @GetMapping("file/folder/tree")
+    public R<List<FolderTreeNodeVO>> getFolderTree() {
+
+        QueryFolderTreeContext context = new QueryFolderTreeContext();
+        context.setUserId(UserIdUtil.get());
+        List<FolderTreeNodeVO> result = this.iUserFileService.getFolderTree(context);
+        return R.data(result);
     }
 
 }

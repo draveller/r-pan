@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.vo.FileChunkUploadVO;
+import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
 
@@ -45,4 +46,6 @@ public interface IUserFileService extends IService<RPanUserFile> {
     void download(FileDownloadContext context);
 
     void preview(FilePreviewContext context);
+
+    List<FolderTreeNodeVO> getFolderTree(QueryFolderTreeContext context);
 }
