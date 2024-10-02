@@ -283,8 +283,111 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         return this.assembleFolderTreeNodeVOList(folderRecords);
     }
 
+    /**
+     * 文件转移
+     * 1. 权限校验
+     * 2. 执行动作
+     *
+     * @param context
+     */
+    @Override
+    public void transfer(TransferFileContext context) {
+        this.checkTransferCondition(context);
+        this.doTransfer(context);
+    }
+
 
     // ******************************** private ********************************
+
+    /**
+     * 执行文件转移的动作
+     *
+     * @param context
+     */
+    private void doTransfer(TransferFileContext context) {
+        List<RPanUserFile> prepareRecords = context.getPrepareRecords();
+        for (RPanUserFile record : prepareRecords) {
+            record.setParentId(context.getTargetParentId());
+            record.setUserId(context.getUserId());
+            record.setCreateTime(new Date());
+            record.setUpdateTime(new Date());
+            record.setCreateUser(context.getUserId());
+            record.setUpdateUser(context.getUserId());
+        }
+        if (!this.updateBatchById(prepareRecords)) {
+            throw new RPanBusinessException("文件转移失败");
+        }
+    }
+
+    /**
+     * 文件转移的权限校验
+     * 1. 目标文件必须是一个文件夹
+     * 2. 选中的文件中不能含有目标文件夹以及其子文件夹
+     *
+     * @param context
+     */
+    private void checkTransferCondition(TransferFileContext context) {
+        Long targetParentId = context.getTargetParentId();
+        if (!this.checkIsFolder(this.getById(targetParentId))) {
+            throw new RPanBusinessException("目标不是一个文件夹");
+        }
+
+        List<Long> fileIdList = context.getFileIdList();
+        List<RPanUserFile> prepareRecords = this.listByIds(fileIdList);
+        context.setPrepareRecords(prepareRecords);
+        if (this.checkIsChildFolder(prepareRecords, targetParentId, context.getUserId())) {
+            throw new RPanBusinessException("目标文件夹不能是选中文件夹的子文件夹");
+        }
+
+    }
+
+    /**
+     * 校验目标文件夹id是否是要操作的文件记录的子文件夹id以及其子文件夹id
+     * 1. 如果要操作的文件列表中没有文件夹, 那就直接返回false
+     * 2. 拼装文件夹id以及所有的子文件夹id, 判断存在即可
+     *
+     * @param prepareRecords
+     * @param targetParentId
+     * @param userId
+     * @return
+     */
+    private boolean checkIsChildFolder(List<RPanUserFile> prepareRecords, Long targetParentId, Long userId) {
+        prepareRecords = prepareRecords.stream()
+                .filter(record -> Objects.equals(record.getFolderFlag(), FolderFlagEnum.YES.getCode()))
+                .collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(prepareRecords)) {
+            return false;
+        }
+        List<RPanUserFile> folderRecords = this.queryFolderRecords(userId);
+        Map<Long, List<RPanUserFile>> folderRecordMap = folderRecords.stream().collect(Collectors.groupingBy(RPanUserFile::getParentId));
+        List<RPanUserFile> unavailableRecords = Collections.emptyList();
+
+        prepareRecords.stream().forEach(record -> this.findAllChildFolderRecords(unavailableRecords, folderRecordMap, record));
+
+        List<Long> unavailableFolderRecordIds = unavailableRecords.stream().map(RPanUserFile::getFileId).collect(Collectors.toList());
+
+        return unavailableFolderRecordIds.contains(targetParentId);
+    }
+
+    /**
+     * 查找文件夹的所有子文件夹记录
+     *
+     * @param unavailableFolderRecords
+     * @param folderRecordMap
+     * @param record
+     */
+    private void findAllChildFolderRecords(List<RPanUserFile> unavailableFolderRecords, Map<Long, List<RPanUserFile>> folderRecordMap, RPanUserFile record) {
+        if (Objects.isNull(record)) {
+            return;
+        }
+        List<RPanUserFile> childFolderRecords = folderRecordMap.get(record.getFileId());
+        if (CollectionUtils.isEmpty(childFolderRecords)) {
+            return;
+        }
+        unavailableFolderRecords.addAll(childFolderRecords);
+        childFolderRecords.stream().forEach(childRecord -> findAllChildFolderRecords(unavailableFolderRecords, folderRecordMap, childRecord));
+    }
 
     /**
      * 拼装文件夹树列表

@@ -1,5 +1,7 @@
 package com.imooc.pan.server.modules.file.converter;
 
+import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.po.*;
@@ -7,6 +9,10 @@ import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户模块实体转化工具类
@@ -58,4 +64,19 @@ public interface FileConverter {
     @Mapping(target = "id", source = "record.fileId")
     @Mapping(target = "children", expression = "java(java.util.Collections.emptyList())")
     FolderTreeNodeVO rPanUserFile2FolderTreeNodeVO(RPanUserFile rPanUserFile);
+
+    default TransferFileContext convertPO2Context(TransferFilePO transferFilePO) {
+        String fileIds = transferFilePO.getFileIds();
+        String targetParentId = transferFilePO.getTargetParentId();
+
+        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR)).map(IdUtil::decrypt)
+                .collect(Collectors.toList());
+        Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
+
+        TransferFileContext context = new TransferFileContext();
+        context.setFileIdList(fileIdList);
+        context.setTargetParentId(decryptedTargetParentId);
+        return context;
+    }
+
 }

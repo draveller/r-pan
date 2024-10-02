@@ -222,11 +222,23 @@ public class FileController {
     )
     @GetMapping("file/folder/tree")
     public R<List<FolderTreeNodeVO>> getFolderTree() {
-
         QueryFolderTreeContext context = new QueryFolderTreeContext();
         context.setUserId(UserIdUtil.get());
         List<FolderTreeNodeVO> result = this.iUserFileService.getFolderTree(context);
         return R.data(result);
+    }
+
+    @ApiOperation(
+            value = "文件转移",
+            notes = "该接口提供了文件转移的功能",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @PostMapping("file/transfer")
+    public R<Object> getFolderTree(@Validated @RequestBody TransferFilePO transferFilePO) {
+        TransferFileContext context = this.fileConverter.convertPO2Context(transferFilePO);
+        this.iUserFileService.transfer(context);
+        return R.success();
     }
 
 }
