@@ -1,6 +1,7 @@
 package com.imooc.pan.server.modules.file.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.imooc.pan.server.modules.file.context.FileChunkMergeAndSaveContext;
 import com.imooc.pan.server.modules.file.context.FileSaveContext;
 import com.imooc.pan.server.modules.file.entity.RPanFile;
 
@@ -17,5 +18,7 @@ public interface IFileService extends IService<RPanFile> {
      * @param context
      */
     void saveFile(FileSaveContext context);
+
+    void mergeFileChunkAndSaveFile(FileChunkMergeAndSaveContext anotherContext);
 
 }

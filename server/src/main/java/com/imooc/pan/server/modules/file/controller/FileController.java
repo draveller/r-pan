@@ -15,8 +15,6 @@ import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.tomcat.util.http.fileupload.UploadContext;
-import org.assertj.core.util.diff.Chunk;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -124,7 +122,7 @@ public class FileController {
     )
     @PostMapping("file/sec-upload")
     public R<Object> secUpload(@Validated @RequestBody SecUploadPO secUploadPO) {
-        SecUploadContext context = this.fileConverter.convertPO2Context(secUploadPO);
+        SecUploadFileContext context = this.fileConverter.convertPO2Context(secUploadPO);
         boolean success = this.iUserFileService.secUpload(context);
         if (success) {
             return R.success();
@@ -140,7 +138,7 @@ public class FileController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     @PostMapping("file/upload")
-    public R<Object> upload(@Validated @RequestBody FileUploadPO fileUploadPO) {
+    public R<Object> upload(@Validated FileUploadPO fileUploadPO) {
         FileUploadContext context = this.fileConverter.convertPO2Context(fileUploadPO);
         this.iUserFileService.upload(context);
         return R.success();
@@ -154,7 +152,7 @@ public class FileController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     @PostMapping("file/chunk-upload")
-    public R<FileChunkUploadVO> chunkUpload(@Validated @RequestBody FileChunkUploadPO fileChunkUploadPO) {
+    public R<FileChunkUploadVO> chunkUpload(@Validated FileChunkUploadPO fileChunkUploadPO) {
         FileChunkUploadContext context = this.fileConverter.convertPO2Context(fileChunkUploadPO);
         FileChunkUploadVO fileChunkUploadVO = this.iUserFileService.chunkUpload(context);
         return R.data(fileChunkUploadVO);
@@ -168,10 +166,23 @@ public class FileController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     @GetMapping("file/chunk-upload")
-    public R<UploadedChunksVO> getUploadedChunks(@Validated @RequestBody QueryUploadedChunksPO queryUploadedChunksPO) {
+    public R<UploadedChunksVO> getUploadedChunks(@Validated QueryUploadedChunksPO queryUploadedChunksPO) {
         QueryUploadedChunksContext context = this.fileConverter.convertPO2Context(queryUploadedChunksPO);
         UploadedChunksVO vo = this.iUserFileService.getUploadedChunks(context);
         return R.data(vo);
+    }
+
+    @ApiOperation(
+            value = "合并文件分片",
+            notes = "该接口提供了合并文件分片的功能",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @PostMapping("file/merge")
+    public R<Object> mergeFile(@Validated @RequestBody FileChunkMergePO fileChunkMergePO) {
+        FileChunkMergeContext context = this.fileConverter.convertPO2Context(fileChunkMergePO);
+        this.iUserFileService.mergeFile(context);
+        return R.success();
     }
 
 }

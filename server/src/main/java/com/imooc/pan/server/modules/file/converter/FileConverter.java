@@ -24,7 +24,7 @@ public interface FileConverter {
 
     @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(secUploadPO.getParentId()))")
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
-    SecUploadContext convertPO2Context(SecUploadPO secUploadPO);
+    SecUploadFileContext convertPO2Context(SecUploadPO secUploadPO);
 
     @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(fileUploadPO.getParentId()))")
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
@@ -46,4 +46,9 @@ public interface FileConverter {
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     QueryUploadedChunksContext convertPO2Context(QueryUploadedChunksPO queryUploadedChunksPO);
 
+    @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
+    @Mapping(target = "record", ignore = true)
+    FileChunkMergeContext convertPO2Context(FileChunkMergePO fileChunkMergePO);
+
+    FileChunkMergeAndSaveContext fileChunkMergeContext2FileChunkMergeAndSaveContext(FileChunkMergeContext context);
 }

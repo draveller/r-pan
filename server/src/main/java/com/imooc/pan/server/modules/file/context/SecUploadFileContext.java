@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 文件秒传上下文实体对象
  */
 @Data
-public class SecUploadContext implements Serializable {
+public class SecUploadFileContext implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
