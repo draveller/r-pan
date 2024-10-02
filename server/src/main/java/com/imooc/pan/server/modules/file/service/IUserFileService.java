@@ -3,7 +3,9 @@ package com.imooc.pan.server.modules.file.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
+import com.imooc.pan.server.modules.file.vo.FileChunkUploadVO;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
+import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
 
 import java.util.List;
 
@@ -33,5 +35,9 @@ public interface IUserFileService extends IService<RPanUserFile> {
     boolean secUpload(SecUploadContext context);
 
     void upload(FileUploadContext context);
+
+    FileChunkUploadVO chunkUpload(FileChunkUploadContext context);
+
+    UploadedChunksVO getUploadedChunks(QueryUploadedChunksContext context);
 
 }

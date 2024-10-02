@@ -10,10 +10,13 @@ import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.po.*;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
+import com.imooc.pan.server.modules.file.vo.FileChunkUploadVO;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
+import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.tomcat.util.http.fileupload.UploadContext;
+import org.assertj.core.util.diff.Chunk;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -141,6 +144,34 @@ public class FileController {
         FileUploadContext context = this.fileConverter.convertPO2Context(fileUploadPO);
         this.iUserFileService.upload(context);
         return R.success();
+    }
+
+
+    @ApiOperation(
+            value = "文件分片上传",
+            notes = "该接口提供了文件分片上传的功能",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @PostMapping("file/chunk-upload")
+    public R<FileChunkUploadVO> chunkUpload(@Validated @RequestBody FileChunkUploadPO fileChunkUploadPO) {
+        FileChunkUploadContext context = this.fileConverter.convertPO2Context(fileChunkUploadPO);
+        FileChunkUploadVO fileChunkUploadVO = this.iUserFileService.chunkUpload(context);
+        return R.data(fileChunkUploadVO);
+    }
+
+
+    @ApiOperation(
+            value = "查询文件分片",
+            notes = "该接口提供了查询文件分片的功能",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @GetMapping("file/chunk-upload")
+    public R<UploadedChunksVO> getUploadedChunks(@Validated @RequestBody QueryUploadedChunksPO queryUploadedChunksPO) {
+        QueryUploadedChunksContext context = this.fileConverter.convertPO2Context(queryUploadedChunksPO);
+        UploadedChunksVO vo = this.iUserFileService.getUploadedChunks(context);
+        return R.data(vo);
     }
 
 }

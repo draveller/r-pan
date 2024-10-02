@@ -95,7 +95,6 @@ public class FileUtils {
                 .append(UUIDUtil.getUUID())
                 .append(getFileSuffix(filename))
                 .toString();
-
     }
 
     /**

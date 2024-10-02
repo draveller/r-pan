@@ -2,7 +2,7 @@ package com.imooc.pan.server.modules.log.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.pan.server.modules.log.entity.RPanErrorLog;
-import com.imooc.pan.server.modules.log.service.RPanErrorLogService;
+import com.imooc.pan.server.modules.log.service.IErrorLogService;
 import com.imooc.pan.server.modules.log.mapper.RPanErrorLogMapper;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 * @createDate 2024-09-28 14:12:17
 */
 @Service
-public class RPanErrorLogServiceImpl extends ServiceImpl<RPanErrorLogMapper, RPanErrorLog>
-    implements RPanErrorLogService{
+public class ErrorLogServiceImpl extends ServiceImpl<RPanErrorLogMapper, RPanErrorLog>
+    implements IErrorLogService {
 
 }
 

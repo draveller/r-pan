@@ -13,13 +13,17 @@ import com.imooc.pan.server.modules.file.constants.FileConstants;
 import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.entity.RPanFile;
+import com.imooc.pan.server.modules.file.entity.RPanFileChunk;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.enums.FileTypeEnum;
 import com.imooc.pan.server.modules.file.enums.FolderFlagEnum;
 import com.imooc.pan.server.modules.file.mapper.RPanUserFileMapper;
+import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.server.modules.file.service.IFileService;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
+import com.imooc.pan.server.modules.file.vo.FileChunkUploadVO;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
+import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -48,6 +52,9 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
 
     @Autowired
     private FileConverter fileConverter;
+
+    @Autowired
+    private IFileChunkService iFileChunkService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -159,6 +166,45 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
                 context.getRecord().getFileId(), context.getUserId(), context.getRecord().getFileSizeDesc());
     }
 
+    /**
+     * 文件分片上传
+     * 1. 上传实体文件
+     * 2. 保存分片文件的记录
+     * 3. 校验是否所有的分片都上传完成
+     *
+     * @param context
+     * @return
+     */
+    @Override
+    public FileChunkUploadVO chunkUpload(FileChunkUploadContext context) {
+        FileChunkSaveContext fileChunkSaveContext = this.fileConverter.fileChunkUploadContext2FileChunkSaveContext(context);
+        this.iFileChunkService.saveChunkFile(fileChunkSaveContext);
+        FileChunkUploadVO vo = new FileChunkUploadVO();
+        vo.setMergeFlag(fileChunkSaveContext.getMergeFlagEnum().getCode());
+        return vo;
+    }
+
+    /**
+     * 查询用户已上传的分片列表
+     * 1. 查询已上传的分片列表
+     * 2. 封装返回实体
+     *
+     * @param context
+     * @return
+     */
+    @Override
+    public UploadedChunksVO getUploadedChunks(QueryUploadedChunksContext context) {
+        LambdaQueryWrapper<RPanFileChunk> wrapper = Wrappers.<RPanFileChunk>lambdaQuery()
+                .select(RPanFileChunk::getChunkNumber)
+                .eq(RPanFileChunk::getIdentifier, context.getIdentifier())
+                .eq(RPanFileChunk::getCreateUser, context.getUserId())
+                .gt(RPanFileChunk::getExpirationTime, new Date());
+
+        List<Integer> uploadedChunks = this.iFileChunkService.listObjs(wrapper, val -> (Integer) val);
+        UploadedChunksVO vo = new UploadedChunksVO();
+        vo.setUploadedChunks(uploadedChunks);
+        return vo;
+    }
 
     // ******************************** private ********************************
 
