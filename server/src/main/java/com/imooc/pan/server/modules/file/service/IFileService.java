@@ -19,6 +19,6 @@ public interface IFileService extends IService<RPanFile> {
      */
     void saveFile(FileSaveContext context);
 
-    void mergeFileChunkAndSaveFile(FileChunkMergeAndSaveContext anotherContext);
+    void mergeFileChunkAndSaveFile(FileChunkMergeAndSaveContext context);
 
 }

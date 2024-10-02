@@ -1,5 +1,7 @@
 package com.imooc.pan.server.modules.file.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.imooc.pan.core.exception.RPanBusinessException;
@@ -10,11 +12,14 @@ import com.imooc.pan.server.common.event.log.ErrorLogEvent;
 import com.imooc.pan.server.modules.file.context.FileChunkMergeAndSaveContext;
 import com.imooc.pan.server.modules.file.context.FileSaveContext;
 import com.imooc.pan.server.modules.file.entity.RPanFile;
+import com.imooc.pan.server.modules.file.entity.RPanFileChunk;
 import com.imooc.pan.server.modules.file.mapper.RPanFileMapper;
+import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.server.modules.file.service.IFileService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
 import com.imooc.pan.storage.engine.core.context.StoreFileContext;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 18063
@@ -38,6 +45,9 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private IFileChunkService iFileChunkService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -62,14 +72,46 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
      * 合并物理文件并保存物理文件记录
      * 1. 委托文件存储引擎合并文件分片
      * 2. 保存物理文件记录
-     * @param anotherContext
+     *
+     * @param context
      */
     @Override
-    public void mergeFileChunkAndSaveFile(FileChunkMergeAndSaveContext anotherContext) {
-
+    public void mergeFileChunkAndSaveFile(FileChunkMergeAndSaveContext context) {
+        this.doMergeFileChunk(context);
+        RPanFile record = this.doSaveFile(context.getFilename(), context.getRealPath(), context.getTotalSize(),
+                context.getIdentifier(), context.getUserId());
+        context.setRecord(record);
     }
 
+
     // ******************************** private ********************************
+
+    /**
+     * 委托文件存储引擎合并文件分片
+     * 1. 查询文件分片的记录
+     * 2. 根据文件分片的记录, 合并物理文件
+     * 3. 删除文件分片记录
+     * 4. 封装合并文件的真实存储路径到上下文信息中
+     *
+     * @param context
+     */
+    private void doMergeFileChunk(FileChunkMergeAndSaveContext context) {
+        LambdaQueryWrapper<RPanFileChunk> wrapper = Wrappers.<RPanFileChunk>lambdaQuery()
+                .eq(RPanFileChunk::getIdentifier, context.getIdentifier())
+                .eq(RPanFileChunk::getCreateUser, context.getUserId())
+                .gt(RPanFileChunk::getExpirationTime, new Date());
+        List<RPanFileChunk> chunkRecordList = this.iFileChunkService.list(wrapper);
+
+        if (CollectionUtils.isEmpty(chunkRecordList)) {
+            throw new RPanBusinessException("文件分片记录不存在, 无法合并文件");
+        }
+        List<String> realPathList = chunkRecordList.stream().map(RPanFileChunk::getRealPath).collect(Collectors.toList());
+
+        // todo: 委托存储引擎去合并文件分片
+
+        // todo: 封装实体文件的真实存储路径
+
+    }
 
     /**
      * 保存实体文件记录
