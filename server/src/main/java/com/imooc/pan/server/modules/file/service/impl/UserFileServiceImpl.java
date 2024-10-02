@@ -138,7 +138,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @return
      */
     @Override
-    public boolean secUpload(SecUploadContext context) {
+    public boolean secUpload(SecUploadFileContext context) {
         RPanFile record = this.getFileByUserIdAndIdentifier(context);
 
         if (record == null) {
@@ -206,7 +206,36 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         return vo;
     }
 
+    /**
+     * 文件分片合并
+     * 1. 文件分片物理合并
+     * 2. 保存文件实体记录
+     * 3. 保存文件用户关系映射
+     *
+     * @param context
+     */
+    @Override
+    public void mergeFile(FileChunkMergeContext context) {
+        this.mergeFileChunkAndSaveFile(context);
+        this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
+                FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
+                context.getRecord().getFileId(), context.getUserId(), context.getRecord().getFileSizeDesc());
+    }
+
+
     // ******************************** private ********************************
+
+    /**
+     * 合并文件分片并保存物理文件记录
+     *
+     * @param context
+     */
+    private void mergeFileChunkAndSaveFile(FileChunkMergeContext context) {
+        FileChunkMergeAndSaveContext anotherContext =
+                this.fileConverter.fileChunkMergeContext2FileChunkMergeAndSaveContext(context);
+        this.iFileService.mergeFileChunkAndSaveFile(anotherContext);
+        context.setRecord(anotherContext.getRecord());
+    }
 
     /**
      * 上传文件并保存实体文件记录
@@ -226,7 +255,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param context
      * @return
      */
-    private RPanFile getFileByUserIdAndIdentifier(SecUploadContext context) {
+    private RPanFile getFileByUserIdAndIdentifier(SecUploadFileContext context) {
 
         LambdaQueryWrapper<RPanFile> wrapper = Wrappers.<RPanFile>lambdaQuery()
                 .eq(RPanFile::getCreateUser, context.getUserId())

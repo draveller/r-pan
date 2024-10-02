@@ -7,6 +7,7 @@ import com.imooc.pan.core.utils.FileUtil;
 import com.imooc.pan.core.utils.FileUtils;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.event.log.ErrorLogEvent;
+import com.imooc.pan.server.modules.file.context.FileChunkMergeAndSaveContext;
 import com.imooc.pan.server.modules.file.context.FileSaveContext;
 import com.imooc.pan.server.modules.file.entity.RPanFile;
 import com.imooc.pan.server.modules.file.mapper.RPanFileMapper;
@@ -57,6 +58,16 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
         context.setRecord(record);
     }
 
+    /**
+     * 合并物理文件并保存物理文件记录
+     * 1. 委托文件存储引擎合并文件分片
+     * 2. 保存物理文件记录
+     * @param anotherContext
+     */
+    @Override
+    public void mergeFileChunkAndSaveFile(FileChunkMergeAndSaveContext anotherContext) {
+
+    }
 
     // ******************************** private ********************************
 
