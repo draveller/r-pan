@@ -2,6 +2,7 @@ package com.imooc.pan.storage.engine.oss;
 
 import com.imooc.pan.storage.engine.core.AbstractStorageEngine;
 import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
+import com.imooc.pan.storage.engine.core.context.MergeFileContext;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
 import com.imooc.pan.storage.engine.core.context.StoreFileContext;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,11 @@ public class OSSStorageEngine extends AbstractStorageEngine {
 
     @Override
     protected void doStoreChunk(StoreFileChunkContext context) throws IOException {
+
+    }
+
+    @Override
+    protected void doMergeFile(MergeFileContext context)  throws IOException{
 
     }
 }

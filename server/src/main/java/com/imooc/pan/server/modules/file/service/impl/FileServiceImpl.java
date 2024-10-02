@@ -18,6 +18,7 @@ import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.server.modules.file.service.IFileService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
+import com.imooc.pan.storage.engine.core.context.MergeFileContext;
 import com.imooc.pan.storage.engine.core.context.StoreFileContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeansException;
@@ -27,6 +28,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,12 +107,29 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
         if (CollectionUtils.isEmpty(chunkRecordList)) {
             throw new RPanBusinessException("文件分片记录不存在, 无法合并文件");
         }
-        List<String> realPathList = chunkRecordList.stream().map(RPanFileChunk::getRealPath).collect(Collectors.toList());
+        List<String> realPathList = chunkRecordList.stream()
+                .sorted(Comparator.comparingInt(RPanFileChunk::getChunkNumber))
+                .map(RPanFileChunk::getRealPath).collect(Collectors.toList());
 
-        // todo: 委托存储引擎去合并文件分片
+        try {
+            // 委托存储引擎去合并文件分片
+            MergeFileContext mergeFileContext = new MergeFileContext();
+            mergeFileContext.setFilename(context.getFilename());
+            mergeFileContext.setIdentifier(context.getIdentifier());
+            mergeFileContext.setUserId(context.getUserId());
+            mergeFileContext.setRealPathList(realPathList);
+            this.storageEngine.mergeFile(mergeFileContext);
 
-        // todo: 封装实体文件的真实存储路径
+            // 封装实体文件的真实存储路径
+            context.setRealPath(mergeFileContext.getRealPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RPanBusinessException("文件分片合并失败");
+        }
 
+        // 删除文件分片记录
+        List<Long> fileChunkRecordIdList = chunkRecordList.stream().map(RPanFileChunk::getId).collect(Collectors.toList());
+        this.iFileChunkService.removeByIds(fileChunkRecordIdList);
     }
 
     /**
