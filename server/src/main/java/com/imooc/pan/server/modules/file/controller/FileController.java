@@ -194,9 +194,23 @@ public class FileController {
     )
     @GetMapping("file/download")
     public void download(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
-                             HttpServletResponse response) {
+                         HttpServletResponse response) {
         FileDownloadContext context = new FileDownloadContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
         this.iUserFileService.download(context);
+    }
+
+
+    @ApiOperation(
+            value = "预览文件",
+            notes = "该接口提供了预览文件的功能",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @GetMapping("file/preview")
+    public void preview(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
+                        HttpServletResponse response) {
+        FilePreviewContext context = new FilePreviewContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
+        this.iUserFileService.preview(context);
     }
 
 }

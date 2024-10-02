@@ -44,4 +44,5 @@ public interface IUserFileService extends IService<RPanUserFile> {
 
     void download(FileDownloadContext context);
 
+    void preview(FilePreviewContext context);
 }

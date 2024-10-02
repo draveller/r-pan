@@ -250,8 +250,42 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         this.doDownLoad(record, context.getResponse());
     }
 
+    /**
+     * 预览文件
+     * 1. 参数校验: 校验文件是否存在, 文件是否属于当前用户,
+     * 2. 判断该文件是否是文件夹, 文件夹不支持预览
+     * 3. 执行预览动作
+     *
+     * @param context
+     */
+    @Override
+    public void preview(FilePreviewContext context) {
+        RPanUserFile record = this.getById(context.getFileId());
+        this.checkOperatePermission(record, context.getUserId());
+        if (this.checkIsFolder(record)) {
+            throw new RPanBusinessException("文件夹暂不支持下载");
+        }
+        this.doPreview(record, context.getResponse());
+    }
+
 
     // ******************************** private ********************************
+
+    /**
+     * 执行文件预览的动作
+     * 1. 查询文件的真实存储路径
+     * 2. 添加跨域的公共响应头
+     * 3. 委托文件存储引擎去读取文件内容到响应的输出流中
+     *
+     * @param record
+     * @param response
+     */
+    private void doPreview(RPanUserFile record, HttpServletResponse response) {
+        RPanFile realFileRecord = Optional.ofNullable(this.iFileService.getById(record.getRealFileId()))
+                .orElseThrow(() -> new RPanBusinessException("文件不存在"));
+        this.addCommonResponseHeader(response, realFileRecord.getFilePreviewContentType());
+        this.readFile2OutputStream(realFileRecord.getRealPath(), response);
+    }
 
     /**
      * 下载文件
