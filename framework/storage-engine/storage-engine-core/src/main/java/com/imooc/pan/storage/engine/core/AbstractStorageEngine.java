@@ -2,10 +2,7 @@ package com.imooc.pan.storage.engine.core;
 
 import cn.hutool.core.lang.Assert;
 import com.imooc.pan.cache.core.constants.CacheConstants;
-import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
-import com.imooc.pan.storage.engine.core.context.MergeFileContext;
-import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
-import com.imooc.pan.storage.engine.core.context.StoreFileContext;
+import com.imooc.pan.storage.engine.core.context.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -113,7 +110,36 @@ public abstract class AbstractStorageEngine implements StorageEngine {
         this.doMergeFile(context);
     }
 
+    /**
+     * 1. 参数校验
+     * 2. 执行动作
+     *
+     * @param context
+     * @throws IOException
+     */
+    @Override
+    public void readFile(ReadFileContext context) throws IOException {
+        this.checkReadFileContext(context);
+        this.doReadFile(context);
+    }
+
+    /**
+     * 读取文件内容并写入到输出流中
+     * 下沉到子类去实现
+     */
+    protected abstract void doReadFile(ReadFileContext context)throws IOException;
+
     // ******************************** private ********************************
+
+    /**
+     * 文件读取参数校验
+     *
+     * @param context
+     */
+    private void checkReadFileContext(ReadFileContext context) {
+        Assert.notBlank(context.getRealPath(), "文件真实存储路径不能为空");
+        Assert.notNull(context.getOutputStream(), "文件输出流不能为空");
+    }
 
     /**
      * 执行文件分片的动作

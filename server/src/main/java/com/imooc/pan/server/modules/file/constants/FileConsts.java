@@ -3,7 +3,7 @@ package com.imooc.pan.server.modules.file.constants;
 /**
  * 文件模块常量类
  */
-public interface FileConstants {
+public interface FileConsts {
 
     /**
      * 顶级父文件id
@@ -29,5 +29,21 @@ public interface FileConstants {
      * 表示所有文件类型
      */
     String ALL_FILE_TYPE = "-1";
+
+    String CONTENT_TYPE_STR = "Content-Type";
+
+    /**
+     * 文件内容的部署方式
+     */
+    String CONTENT_DISPOSITION_STR = "Content-Disposition";
+
+    /**
+     * 以附件的方式下载
+     */
+    String CONTENT_DISPOSITION_VALUE_PREFIX_STR = "attachment;fileName=";
+
+    String GB2312_STR = "GB2312";
+
+    String ISO_8859_1_STR = "ISO-8859-1";
 
 }

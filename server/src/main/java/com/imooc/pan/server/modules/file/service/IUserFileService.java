@@ -41,4 +41,7 @@ public interface IUserFileService extends IService<RPanUserFile> {
     UploadedChunksVO getUploadedChunks(QueryUploadedChunksContext context);
 
     void mergeFile(FileChunkMergeContext context);
+
+    void download(FileDownloadContext context);
+
 }

@@ -5,7 +5,7 @@ import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
-import com.imooc.pan.server.modules.file.constants.FileConstants;
+import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.po.*;
@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.List;
@@ -49,12 +50,12 @@ public class FileController {
     @GetMapping("files")
     public R<List<RPanUserFileVO>> list(
             @NotBlank(message = "父文件夹id不能为空") @RequestParam(required = false) String parentId,
-            @RequestParam(required = false, defaultValue = FileConstants.ALL_FILE_TYPE) String fileTypes) {
+            @RequestParam(required = false, defaultValue = FileConsts.ALL_FILE_TYPE) String fileTypes) {
 
         Long realParentId = IdUtil.decrypt(parentId);
 
         List<Integer> fileTypeArray = null;
-        if (!Objects.equals(FileConstants.ALL_FILE_TYPE, fileTypes)) {
+        if (!Objects.equals(FileConsts.ALL_FILE_TYPE, fileTypes)) {
             fileTypeArray = Arrays.stream(fileTypes.split(RPanConstants.COMMON_SEPARATOR))
                     .map(Integer::parseInt).collect(Collectors.toList());
         }
@@ -162,7 +163,7 @@ public class FileController {
     @ApiOperation(
             value = "查询文件分片",
             notes = "该接口提供了查询文件分片的功能",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     @GetMapping("file/chunk-upload")
@@ -183,6 +184,19 @@ public class FileController {
         FileChunkMergeContext context = this.fileConverter.convertPO2Context(fileChunkMergePO);
         this.iUserFileService.mergeFile(context);
         return R.success();
+    }
+
+    @ApiOperation(
+            value = "下载文件",
+            notes = "该接口提供了下载文件的功能",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @GetMapping("file/download")
+    public void download(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
+                             HttpServletResponse response) {
+        FileDownloadContext context = new FileDownloadContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
+        this.iUserFileService.download(context);
     }
 
 }

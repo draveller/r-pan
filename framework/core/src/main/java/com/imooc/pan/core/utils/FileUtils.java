@@ -198,18 +198,18 @@ public class FileUtils {
     /**
      * 利用零拷贝技术读取文件内容并写入到文件的输出流中
      *
-     * @param fileInputStream
-     * @param outputStream
+     * @param input
+     * @param out
      * @param length
      * @throws IOException
      */
-    public static void writeFile2OutputStream(FileInputStream fileInputStream, OutputStream outputStream, long length) throws IOException {
-        FileChannel fileChannel = fileInputStream.getChannel();
-        WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
+    public static void writeFile2OutputStream(FileInputStream input, OutputStream out, long length) throws IOException {
+        FileChannel fileChannel = input.getChannel();
+        WritableByteChannel writableByteChannel = Channels.newChannel(out);
         fileChannel.transferTo(RPanConstants.ZERO_LONG, length, writableByteChannel);
-        outputStream.flush();
-        fileInputStream.close();
-        outputStream.close();
+        out.flush();
+        input.close();
+        out.close();
         fileChannel.close();
         writableByteChannel.close();
     }

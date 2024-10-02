@@ -9,7 +9,7 @@ import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.core.utils.PasswordUtil;
-import com.imooc.pan.server.modules.file.constants.FileConstants;
+import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.CreateFolderContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
@@ -362,9 +362,9 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      */
     private void createUserRootFolder(UserRegisterContext userRegisterContext) {
         CreateFolderContext createFolderContext = new CreateFolderContext();
-        createFolderContext.setParentId(FileConstants.TOP_PARENT_ID);
+        createFolderContext.setParentId(FileConsts.TOP_PARENT_ID);
         createFolderContext.setUserId(userRegisterContext.getEntity().getUserId());
-        createFolderContext.setFolderName(FileConstants.ALL_FILE_CN_STR);
+        createFolderContext.setFolderName(FileConsts.ALL_FILE_CN_STR);
 
         iUserFileService.createFolder(createFolderContext);
     }
