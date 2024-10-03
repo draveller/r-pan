@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.FileUtil;
+import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.event.file.DeleteFileEvent;
+import com.imooc.pan.server.common.event.search.UserSearchEvent;
 import com.imooc.pan.server.common.utils.HttpUtil;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
@@ -22,10 +25,7 @@ import com.imooc.pan.server.modules.file.mapper.RPanUserFileMapper;
 import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.server.modules.file.service.IFileService;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
-import com.imooc.pan.server.modules.file.vo.FileChunkUploadVO;
-import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
-import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
-import com.imooc.pan.server.modules.file.vo.UploadedChunksVO;
+import com.imooc.pan.server.modules.file.vo.*;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.ReadFileContext;
 import org.apache.commons.collections.CollectionUtils;
@@ -296,8 +296,184 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         this.doTransfer(context);
     }
 
+    /**
+     * 文件复制
+     * 1. 条件校验
+     * 2. 执行动作
+     *
+     * @param context
+     */
+    @Override
+    public void copy(CopyFileContext context) {
+        this.checkCopyCondition(context);
+        this.doCopy(context);
+    }
+
+    /**
+     * 文件列表搜索
+     * 1. 执行文件搜索
+     * 2. 拼装文件的父文件夹名称
+     * 3. 执行文件搜索后的后置动作
+     *
+     * @param context
+     * @return
+     */
+    @Override
+    public List<FileSearchResultVO> search(FileSearchContext context) {
+        List<FileSearchResultVO> result = this.doSearch(context);
+        this.fillParentFilename(result);
+        this.afterSearch(context);
+        return result;
+    }
+
+    /**
+     * 获取面包屑列表
+     * <p>
+     * 1、获取用户所有文件夹信息
+     * 2、拼接需要用到的面包屑的列表
+     *
+     * @param context
+     * @return
+     */
+    @Override
+    public List<BreadcrumbVO> getBreadcrumbs(QueryBreadcrumbsContext context) {
+        List<RPanUserFile> folderRecords = queryFolderRecords(context.getUserId());
+        Map<Long, BreadcrumbVO> prepareBreadcrumbVOMap = folderRecords.stream()
+                .map(BreadcrumbVO::transfer).collect(Collectors.toMap(BreadcrumbVO::getId, a -> a));
+        BreadcrumbVO currentNode;
+        Long fileId = context.getFileId();
+        List<BreadcrumbVO> result = Lists.newLinkedList();
+        do {
+            currentNode = prepareBreadcrumbVOMap.get(fileId);
+            if (Objects.nonNull(currentNode)) {
+                result.add(0, currentNode);
+                fileId = currentNode.getParentId();
+            }
+        } while (Objects.nonNull(currentNode));
+        return result;
+    }
 
     // ******************************** private ********************************
+
+    /**
+     * 搜索的后置操作
+     * 1. 发布文件搜索的事件
+     */
+    private void afterSearch(FileSearchContext context) {
+        UserSearchEvent event = new UserSearchEvent(this, context.getKeyword(), context.getUserId());
+        this.applicationContext.publishEvent(event);
+    }
+
+    /**
+     * 填充父文件夹名称
+     *
+     * @param result
+     */
+    private void fillParentFilename(List<FileSearchResultVO> result) {
+        if (CollectionUtils.isEmpty(result)) {
+            return;
+        }
+        List<Long> parentIdList = result.stream().map(FileSearchResultVO::getParentId).collect(Collectors.toList());
+        List<RPanUserFile> parentRecords = listByIds(parentIdList);
+        Map<Long, String> fileId2FilenameMap = parentRecords.stream()
+                .collect(Collectors.toMap(RPanUserFile::getFileId, RPanUserFile::getFilename));
+        result.stream().forEach(vo -> vo.setParentFilename(fileId2FilenameMap.get(vo.getParentId())));
+    }
+
+    /**
+     * 搜索文件列表
+     *
+     * @param context
+     * @return
+     */
+    private List<FileSearchResultVO> doSearch(FileSearchContext context) {
+        return this.baseMapper.searchFile(context);
+    }
+
+    /**
+     * 执行文件复制的动作
+     *
+     * @param context
+     */
+    private void doCopy(CopyFileContext context) {
+        List<RPanUserFile> prepareRecords = context.getPrepareRecords();
+        if (CollectionUtils.isNotEmpty(prepareRecords)) {
+            List<RPanUserFile> allRecords = new ArrayList<>();
+
+            prepareRecords.stream().forEach(record -> this.assembleCopyChildRecord(
+                    allRecords, record, context.getTargetParentId(), context.getUserId()
+            ));
+
+
+            if (!this.saveBatch(allRecords)) {
+                throw new RPanBusinessException("文件复制失败");
+            }
+        }
+
+    }
+
+    /**
+     * 拼装当前文件记录以及所有的子文件记录
+     *
+     * @param allRecords
+     * @param record
+     * @param targetParentId
+     * @param userId
+     */
+    private void assembleCopyChildRecord(List<RPanUserFile> allRecords, RPanUserFile record, Long targetParentId, Long userId) {
+
+        Long newFileId = IdUtil.get();
+        Long oldFileId = record.getFileId();
+
+        record.setParentId(targetParentId);
+        record.setFileId(newFileId);
+        record.setUserId(userId);
+        record.setCreateTime(new Date());
+        record.setUpdateTime(new Date());
+        record.setCreateUser(userId);
+        record.setUpdateUser(userId);
+        this.handleDuplicateFilename(record);
+
+        allRecords.add(record);
+        if (this.checkIsFolder(record)) {
+            List<RPanUserFile> childRecords = this.findChildRecords(oldFileId);
+            if (CollectionUtils.isEmpty(childRecords)) {
+                return;
+            }
+            childRecords.stream().forEach(childRecord -> this.assembleCopyChildRecord(allRecords, childRecord, newFileId, userId));
+        }
+
+    }
+
+    /**
+     * 查找下一级的文件记录
+     *
+     * @param parentId
+     * @return
+     */
+    private List<RPanUserFile> findChildRecords(Long parentId) {
+        LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.<RPanUserFile>lambdaQuery()
+                .eq(RPanUserFile::getParentId, parentId)
+                .eq(RPanUserFile::getDelFlag, DelFlagEnum.NO.getCode());
+        return this.list(wrapper);
+    }
+
+    /**
+     * @param context
+     */
+    private void checkCopyCondition(CopyFileContext context) {
+        Long targetParentId = context.getTargetParentId();
+        if (!this.checkIsFolder(this.getById(targetParentId))) {
+            throw new RPanBusinessException("目标不是一个文件夹");
+        }
+
+        List<Long> fileIdList = context.getFileIdList();
+        List<RPanUserFile> prepareRecords = this.listByIds(fileIdList);
+        context.setPrepareRecords(prepareRecords);
+        if (this.checkIsChildFolder(prepareRecords, targetParentId, context.getUserId())) {
+            throw new RPanBusinessException("目标文件夹不能是选中文件夹的子文件夹");
+        }
+    }
 
     /**
      * 执行文件转移的动作
@@ -313,6 +489,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
             record.setUpdateTime(new Date());
             record.setCreateUser(context.getUserId());
             record.setUpdateUser(context.getUserId());
+            this.handleDuplicateFilename(record);
         }
         if (!this.updateBatchById(prepareRecords)) {
             throw new RPanBusinessException("文件转移失败");
@@ -362,7 +539,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         List<RPanUserFile> folderRecords = this.queryFolderRecords(userId);
         Map<Long, List<RPanUserFile>> folderRecordMap = folderRecords.stream().collect(Collectors.groupingBy(RPanUserFile::getParentId));
         List<RPanUserFile> unavailableRecords = Collections.emptyList();
-
+        unavailableRecords.addAll(prepareRecords);
         prepareRecords.stream().forEach(record -> this.findAllChildFolderRecords(unavailableRecords, folderRecordMap, record));
 
         List<Long> unavailableFolderRecordIds = unavailableRecords.stream().map(RPanUserFile::getFileId).collect(Collectors.toList());

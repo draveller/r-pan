@@ -1,8 +1,10 @@
 package com.imooc.pan.server.modules.file.mapper;
 
+import com.imooc.pan.server.modules.file.context.FileSearchContext;
 import com.imooc.pan.server.modules.file.context.QueryFileListContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.imooc.pan.server.modules.file.vo.FileSearchResultVO;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 public interface RPanUserFileMapper extends BaseMapper<RPanUserFile> {
 
     List<RPanUserFileVO> selectFileList(QueryFileListContext context);
+
+    List<FileSearchResultVO> searchFile(FileSearchContext context);
 
 }
 

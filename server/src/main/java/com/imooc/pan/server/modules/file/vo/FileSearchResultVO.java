@@ -10,12 +10,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 用户查询文件列表响应实体
- */
-@ApiModel(value = "文件列表响应实体")
+@ApiModel(value = "搜索文件列表响应实体")
 @Data
-public class RPanUserFileVO implements Serializable {
+public class FileSearchResultVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +23,9 @@ public class RPanUserFileVO implements Serializable {
     @JsonSerialize(using = IdEncryptSerializer.class)
     @ApiModelProperty("父文件夹id")
     private Long parentId;
+
+    @ApiModelProperty("父文件夹名称")
+    private String parentFilename;
 
     @ApiModelProperty("文件名")
     private String filename;

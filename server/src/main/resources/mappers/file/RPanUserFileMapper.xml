@@ -50,4 +50,22 @@
         </where>
     </select>
 
+    <select id="searchFile" resultType="com.imooc.pan.server.modules.file.vo.FileSearchResultVO">
+        SELECT file_id, parent_id, filename, file_size_desc, folder_flag, file_type, update_time
+        FROM r_pan_user_file
+        <where>
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+            <if test="fileTypeArray != null">
+                AND file_type IN
+                <foreach collection="fileTypeArray" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            AND del_flag = 0
+            AND filename LIKE CONCAT(#{keyword}, '%')
+        </where>
+    </select>
+
 </mapper>

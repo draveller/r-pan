@@ -2,16 +2,20 @@ package com.imooc.pan.server.modules.file.converter;
 
 import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.server.common.utils.UserIdUtil;
+import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.po.*;
 import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -78,5 +82,34 @@ public interface FileConverter {
         context.setTargetParentId(decryptedTargetParentId);
         return context;
     }
+
+    default CopyFileContext convertPO2Context(CopyFilePO copyFilePO) {
+        String fileIds = copyFilePO.getFileIds();
+        String targetParentId = copyFilePO.getTargetParentId();
+
+        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR)).map(IdUtil::decrypt)
+                .collect(Collectors.toList());
+        Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
+
+        CopyFileContext context = new CopyFileContext();
+        context.setFileIdList(fileIdList);
+        context.setTargetParentId(decryptedTargetParentId);
+        return context;
+    }
+
+    default FileSearchContext convertPO2Context(FileSearchPO fileSearchPO) {
+        FileSearchContext context = new FileSearchContext();
+        context.setKeyword(fileSearchPO.getKeyword());
+
+        String fileTypes = fileSearchPO.getFileTypes();
+        if (StringUtils.isNotBlank(fileTypes) && !Objects.equals(FileConsts.ALL_FILE_TYPE, fileTypes)) {
+            context.setFileTypeArray(Arrays.stream(fileTypes.split(RPanConstants.COMMON_SEPARATOR))
+                    .map(Integer::parseInt).collect(Collectors.toList()));
+        }
+
+        context.setUserId(UserIdUtil.get());
+        return context;
+    }
+
 
 }
