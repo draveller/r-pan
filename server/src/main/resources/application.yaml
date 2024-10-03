@@ -53,3 +53,15 @@ logging:
   file: ${user.home}/logs/${spring.application.name}/${spring.application.name}.log
   level:
     root: INFO
+
+com:
+  imooc:
+    pan:
+      storage:
+        engine:
+          fdfs:
+            connect-timeout: 600
+            tracker-list:
+              - 127.0.0.1:22122
+            group: group1
+

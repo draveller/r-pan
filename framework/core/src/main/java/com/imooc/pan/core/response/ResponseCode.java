@@ -13,7 +13,7 @@ public enum ResponseCode {
     /**
      * 成功
      */
-    SUCCESS(200, "SUCCESS"),
+    SUCCESS(0, "SUCCESS"),
     /**
      * 错误
      */

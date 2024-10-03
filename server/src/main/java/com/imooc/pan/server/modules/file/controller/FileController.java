@@ -50,7 +50,15 @@ public class FileController {
             @NotBlank(message = "父文件夹id不能为空") @RequestParam(required = false) String parentId,
             @RequestParam(required = false, defaultValue = FileConsts.ALL_FILE_TYPE) String fileTypes) {
 
-        Long realParentId = IdUtil.decrypt(parentId);
+        long realParentId;
+        // 临时处理: 如果前端的父文件夹传了 -1 或 0, 都视为0
+        // todo: 此处是前端传参错误, 待修改...
+
+        if ("-1".equals(parentId) || "0".equals(parentId)) {
+            realParentId = 0L;
+        } else {
+            realParentId = IdUtil.decrypt(parentId);
+        }
 
         List<Integer> fileTypeArray = null;
         if (!Objects.equals(FileConsts.ALL_FILE_TYPE, fileTypes)) {

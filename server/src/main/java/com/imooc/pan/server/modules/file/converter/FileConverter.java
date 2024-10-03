@@ -64,8 +64,8 @@ public interface FileConverter {
 
     FileChunkMergeAndSaveContext fileChunkMergeContext2FileChunkMergeAndSaveContext(FileChunkMergeContext context);
 
-    @Mapping(target = "label", source = "record.filename")
-    @Mapping(target = "id", source = "record.fileId")
+    @Mapping(target = "label", source = "rPanUserFile.filename")
+    @Mapping(target = "id", source = "rPanUserFile.fileId")
     @Mapping(target = "children", expression = "java(java.util.Collections.emptyList())")
     FolderTreeNodeVO rPanUserFile2FolderTreeNodeVO(RPanUserFile rPanUserFile);
 
