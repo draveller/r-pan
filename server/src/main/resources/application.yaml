@@ -64,4 +64,10 @@ com:
             tracker-list:
               - 127.0.0.1:22122
             group: group1
+          oss:
+            auto-create-bucket: false
+            bucket-name: public-test-1003
+            endpoint: oss-cn-qingdao.aliyuncs.com
+            access-key-id: LTAI5t6mLex1K2wN8xavaR5n
+            access-key-secret: eHfJWlbP8A7lBmQSQqkZJgCK7zWxyD
 

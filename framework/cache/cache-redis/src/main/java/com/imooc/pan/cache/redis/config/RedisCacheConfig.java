@@ -1,5 +1,7 @@
 package com.imooc.pan.cache.redis.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.cache.CacheManager;
@@ -15,8 +17,9 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * redis cache的配置类
- * 该缓存方案不支持事务
+ * Redis Cache的配置类
+ * 该缓存方案支持事务
+ * 该缓存方案直接集成spring-boot-starter-data-redis，所以舍弃自定义配置，直接默认使用spring的配置
  */
 @SpringBootConfiguration
 @EnableCaching
@@ -24,18 +27,20 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisCacheConfig {
 
     /**
-     * 定制连接和操作redis的客户端工具
+     * 定制链接和操作Redis的客户端工具
      *
      * @param redisConnectionFactory
      * @return
      */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
 
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(stringRedisSerializer);
@@ -54,10 +59,15 @@ public class RedisCacheConfig {
      */
     @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(Object.class)));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer));
 
         RedisCacheManager cacheManager = RedisCacheManager
                 .builder(RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory))
@@ -67,7 +77,6 @@ public class RedisCacheConfig {
 
         log.info("the redis cache manager is loaded successfully!");
         return cacheManager;
-
     }
 
 

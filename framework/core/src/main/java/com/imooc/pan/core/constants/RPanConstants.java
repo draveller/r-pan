@@ -1,6 +1,5 @@
 package com.imooc.pan.core.constants;
 
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -19,37 +18,37 @@ public interface RPanConstants {
     String EMPTY_STR = StringUtils.EMPTY;
 
     /**
-     * 点常量
+     * 点 常量
      */
     String POINT_STR = ".";
 
     /**
-     * 斜线
+     * 斜杠字符串
      */
     String SLASH_STR = "/";
 
     /**
-     * Long类型的0
+     * Long 常量 0
      */
     Long ZERO_LONG = 0L;
 
     /**
-     * Integer类型的0
+     * Integer 常量 0
      */
     Integer ZERO_INT = 0;
 
     /**
-     * Integer类型的1
+     * Integer 常量 1
      */
     Integer ONE_INT = 1;
 
     /**
-     * Integer类型的2
+     * Integer 常量 2
      */
     Integer TWO_INT = 2;
 
     /**
-     * Integer类型的-1
+     * Integer 常量 -1
      */
     Integer MINUS_ONE_INT = -1;
 
@@ -68,4 +67,33 @@ public interface RPanConstants {
      */
     String BASE_COMPONENT_SCAN_PATH = "com.imooc.pan";
 
+    /**
+     * 问号常量
+     */
+    String QUESTION_MARK_STR = "?";
+
+    /**
+     * 等号常量
+     */
+    String EQUALS_MARK_STR = "=";
+
+    /**
+     * 逻辑与常量
+     */
+    String AND_MARK_STR = "&";
+
+    /**
+     * 左中括号常量
+     */
+    String LEFT_BRACKET_STR = "[";
+
+    /**
+     * 右中括号常量
+     */
+    String RIGHT_BRACKET_STR = "]";
+
+    /**
+     * 公用加密字符串
+     */
+    String COMMON_ENCRYPT_STR = "****";
 }
