@@ -4,7 +4,7 @@ import com.imooc.pan.cache.core.constants.CacheConstants;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.JwtUtil;
-import com.imooc.pan.server.common.LoginIgnore;
+import com.imooc.pan.server.common.annotation.LoginIgnore;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.user.constants.UserConstants;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.imooc.pan.server.common;
+package com.imooc.pan.server.common.annotation;
 
 import java.lang.annotation.*;
 

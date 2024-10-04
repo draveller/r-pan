@@ -8,6 +8,7 @@ import com.imooc.pan.server.modules.file.context.*;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.po.*;
 import com.imooc.pan.server.modules.file.vo.FolderTreeNodeVO;
+import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
@@ -110,6 +111,8 @@ public interface FileConverter {
         context.setUserId(UserIdUtil.get());
         return context;
     }
+
+        RPanUserFileVO rPanUserFile2RPanUserFileVO(RPanUserFile record);
 
 
 }

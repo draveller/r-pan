@@ -372,7 +372,95 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         records.stream().forEach(record -> doFindAllChildRecords(result, record));
         return result;
     }
+
+    /**
+     * 文件下载 不校验用户是否是否是上传用户
+     *
+     * @param context
+     */
+    @Override
+    public void downloadWithoutCheckUser(FileDownloadContext context) {
+        RPanUserFile record = getById(context.getFileId());
+        if (Objects.isNull(record)) {
+            throw new RPanBusinessException("当前文件记录不存在");
+        }
+        if (checkIsFolder(record)) {
+            throw new RPanBusinessException("文件夹暂不支持下载");
+        }
+        doDownload(record, context.getResponse());
+    }
+  /**
+     * 递归查询所有的子文件信息
+     *
+     * @param fileIdList
+     * @return
+     */
+    @Override
+    public List<RPanUserFile> findAllFileRecordsByFileIdList(List<Long> fileIdList) {
+        if (CollectionUtils.isEmpty(fileIdList)) {
+            return Lists.newArrayList();
+        }
+        List<RPanUserFile> records = listByIds(fileIdList);
+        if (CollectionUtils.isEmpty(records)) {
+            return Lists.newArrayList();
+        }
+        return findAllFileRecords(records);
+    }
+
+    /**
+     * 实体转换
+     *
+     * @param records
+     * @return
+     */
+    @Override
+    public List<RPanUserFileVO> transferVOList(List<RPanUserFile> records) {
+        if (CollectionUtils.isEmpty(records)) {
+            return Lists.newArrayList();
+        }
+        return records.stream().map(fileConverter::rPanUserFile2RPanUserFileVO).collect(Collectors.toList());
+    }
     // ******************************** private ********************************
+
+        /**
+     * 执行文件下载的动作
+     * <p>
+     * 1、查询文件的真实存储路径
+     * 2、添加跨域的公共响应头
+     * 3、拼装下载文件的名称、长度等等响应信息
+     * 4、委托文件存储引擎去读取文件内容到响应的输出流中
+     *
+     * @param record
+     * @param response
+     */
+    private void doDownload(RPanUserFile record, HttpServletResponse response) {
+        RPanFile realFileRecord = iFileService.getById(record.getRealFileId());
+        if (Objects.isNull(realFileRecord)) {
+            throw new RPanBusinessException("当前的文件记录不存在");
+        }
+        addCommonResponseHeader(response, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        addDownloadAttribute(response, record, realFileRecord);
+        realFile2OutputStream(realFileRecord.getRealPath(), response);
+    }
+
+
+    /**
+     * 委托文件存储引擎去读取文件内容并写入到输出流中
+     *
+     * @param realPath
+     * @param response
+     */
+    private void realFile2OutputStream(String realPath, HttpServletResponse response) {
+        try {
+            ReadFileContext context = new ReadFileContext();
+            context.setRealPath(realPath);
+            context.setOutputStream(response.getOutputStream());
+            storageEngine.readFile(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RPanBusinessException("文件下载失败");
+        }
+    }
 
     /**
      * 递归查询所有的子文件列表

@@ -2,6 +2,9 @@ package com.imooc.pan.server.modules.share.mapper;
 
 import com.imooc.pan.server.modules.share.entity.RPanShare;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.imooc.pan.server.modules.share.vo.RPanShareUrlListVO;
+
+import java.util.List;
 
 /**
 * @author 18063
@@ -11,6 +14,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface RPanShareMapper extends BaseMapper<RPanShare> {
 
+    /**
+     * 查询用户的分享列表
+     *
+     * @param userId
+     * @return
+     */
+    List<RPanShareUrlListVO> selectShareVOListByUserId( Long userId);
 }
 
 
