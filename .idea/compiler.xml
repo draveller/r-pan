@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="r-pan-storage-engine-oss" />
         <module name="r-pan-schdule" />
+        <module name="r-pan-bloom-filter-core" />
         <module name="r-pan-swagger2" />
         <module name="r-pan-cache-core" />
         <module name="r-pan-cache-redis" />
@@ -16,6 +17,7 @@
         <module name="r-pan-cache-caffeine" />
         <module name="r-pan-distribution" />
         <module name="r-pan-storage-engine-fastdfs" />
+        <module name="r-pan-bloom-filter-local" />
         <module name="r-pan-core" />
         <module name="r-pan-storage-engine-core" />
         <module name="r-pan-mybatis-plus" />
@@ -44,6 +46,9 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="core" options="-parameters" />
       <module name="orm" options="-parameters" />
+      <module name="r-pan-bloom-filter" options="-parameters" />
+      <module name="r-pan-bloom-filter-core" options="-parameters" />
+      <module name="r-pan-bloom-filter-local" options="-parameters" />
       <module name="r-pan-cache" options="-parameters" />
       <module name="r-pan-cache-caffeine" options="-parameters" />
       <module name="r-pan-cache-core" options="-parameters" />
