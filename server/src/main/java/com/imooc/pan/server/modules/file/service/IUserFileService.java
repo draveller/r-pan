@@ -53,4 +53,13 @@ public interface IUserFileService extends IService<RPanUserFile> {
     List<FileSearchResultVO> search(FileSearchContext context);
 
     List<BreadcrumbVO> getBreadcrumbs(QueryBreadcrumbsContext context);
+
+
+    /**
+     * 递归查询所有的子文件信息
+     *
+     * @param records
+     * @return
+     */
+    List<RPanUserFile> findAllFileRecords(List<RPanUserFile> records);
 }
