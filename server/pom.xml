@@ -103,7 +103,7 @@
                         <path>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
-                            <version>2.1.9.RELEASE</version>
+                            <version>2.2.5.RELEASE</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

@@ -9,6 +9,7 @@ import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.core.utils.PasswordUtil;
+import com.imooc.pan.server.common.cache.AnnotationCacheService;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.CreateFolderContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
@@ -22,14 +23,14 @@ import com.imooc.pan.server.modules.user.service.IUserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * @author 18063
@@ -47,6 +48,10 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    @Qualifier(value = "userAnnotationCacheService")
+    private AnnotationCacheService<RPanUser> cacheService;
 
     /**
      * 用户注册的业务方法实现
@@ -178,9 +183,42 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
                 .orElseThrow(() -> new RPanBusinessException("用户不存在"));
 
         RPanUserFile rootFile = Optional.ofNullable(this.iUserFileService.getUserRootFile(userId))
-                .orElseThrow(()->new RPanBusinessException("用户根目录不存在"));
+                .orElseThrow(() -> new RPanBusinessException("用户根目录不存在"));
 
         return userConverter.assembleUserInfoVO(entity, rootFile);
+    }
+
+    @Override
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        throw new RPanBusinessException("请更换手动缓存");
+//        return super.removeByIds(idList);
+    }
+
+    @Override
+    public boolean updateById(RPanUser entity) {
+        return cacheService.updateById(entity.getUserId(),entity);
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        return cacheService.removeById(id);
+    }
+
+    @Override
+    public boolean updateBatchById(Collection<RPanUser> entityList) {
+        throw new RPanBusinessException("请更换手动缓存");
+        // return super.updateBatchById(entityList);
+    }
+
+    @Override
+    public RPanUser getById(Serializable id) {
+        return cacheService.getById(id);
+    }
+
+    @Override
+    public List<RPanUser> listByIds(Collection<? extends Serializable> idList) {
+        throw new RPanBusinessException("请更换手动缓存");
+        // return super.listByIds(idList);
     }
 
     // ******************************** private ********************************
