@@ -25,6 +25,14 @@
         create_user,create_time
     </sql>
 
+    <update id="rollingQueryShareId">
+        SELECT share_id
+        FROM r_pan_share
+        WHERE share_id > #{startId}
+        ORDER BY share_id
+        LIMIT #{limit}
+    </update>
+
     <select id="selectShareVOListByUserId" resultType="com.imooc.pan.server.modules.share.vo.RPanShareUrlListVO">
         SELECT share_id       AS shareId,
                share_name     AS shareName,

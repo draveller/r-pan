@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import org.apache.commons.collections.CollectionUtils;
+import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class LocalBloomFilterManager implements BloomFilterManager, Initializing
     /**
      * 容器
      */
-    private final Map<String, BloomFilter<?>> bloomFilterContainer = Maps.newConcurrentMap();
+    private final Map<String, BloomFilter> bloomFilterContainer = Maps.newConcurrentMap();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -44,7 +45,7 @@ public class LocalBloomFilterManager implements BloomFilterManager, Initializing
     }
 
     @Override
-    public BloomFilter<?> getFilter(String name) {
+    public <T>BloomFilter<T> getFilter(String name) {
         return bloomFilterContainer.get(name);
     }
 

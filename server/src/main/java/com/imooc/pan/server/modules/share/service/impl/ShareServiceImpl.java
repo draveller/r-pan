@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import com.imooc.pan.bloom.filter.core.BloomFilter;
+import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
@@ -35,6 +37,7 @@ import com.imooc.pan.server.modules.share.service.IShareService;
 import com.imooc.pan.server.modules.share.vo.*;
 import com.imooc.pan.server.modules.user.entity.RPanUser;
 import com.imooc.pan.server.modules.user.service.IUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.util.Sets;
@@ -55,6 +58,7 @@ import java.util.stream.Collectors;
  * @description 针对表【r_pan_share(用户分享表)】的数据库操作Service实现
  * @createDate 2022-11-09 18:38:38
  */
+@Slf4j
 @Service
 public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> implements IShareService, ApplicationContextAware {
 
@@ -73,6 +77,12 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     @Autowired
     @Qualifier(value = "shareManualCacheService")
     private ManualCacheService<RPanShare> cacheService;
+
+    @Autowired
+    private BloomFilterManager manager;
+
+    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
+
 
     private ApplicationContext applicationContext;
 
@@ -95,8 +105,11 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     public RPanShareUrlVO create(CreateShareUrlContext context) {
         saveShare(context);
         saveShareFiles(context);
-        return assembleShareVO(context);
+        RPanShareUrlVO vo = assembleShareVO(context);
+        afterCreate(context, vo);
+        return vo;
     }
+
 
     /**
      * 查询用户的分享列表
@@ -260,6 +273,28 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         }
         Set<Long> shareIdSet = Sets.newHashSet(shareIdList);
         shareIdSet.forEach(this::refreshOneShareStatus);
+    }
+
+    @Override
+    public List<Long> rollingQueryShareId(long startId, long limit) {
+        return baseMapper.rollingQueryShareId(startId, limit);
+    }
+
+    // -------------------------------- private --------------------------------
+
+
+    /**
+     * 创建分享链接后置处理
+     *
+     * @param context
+     * @param vo
+     */
+    private void afterCreate(CreateShareUrlContext context, RPanShareUrlVO vo) {
+        BloomFilter<Long> filter = manager.getFilter(BLOOM_FILTER_NAME);
+        if (filter != null) {
+            filter.put(context.getRecord().getShareId());
+            log.info("create share, add share id to bloom filter, share id is {}", context.getRecord().getShareId());
+        }
     }
 
     /**

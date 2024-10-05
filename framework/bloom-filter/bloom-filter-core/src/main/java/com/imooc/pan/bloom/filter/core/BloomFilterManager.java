@@ -12,7 +12,7 @@ public interface BloomFilterManager {
      *
      * @return
      */
-    BloomFilter<?> getFilter(String name);
+    <T> BloomFilter<T> getFilter(String name);
 
     /**
      * 获取目前管理器中存在的布隆过滤器名称集合
