@@ -72,4 +72,15 @@ com:
             endpoint: oss-cn-qingdao.aliyuncs.com
             access-key-id: LTAI5t6mLex1K2wN8xavaR5n
             access-key-secret: eHfJWlbP8A7lBmQSQqkZJgCK7zWxyD
+      bloom:
+        filter:
+          local:
+            items:
+              - name: SHARE_SIMPLE_DETAIL
+                funnel-type-name: LONG
+                expected-insertions: 1000_0000
+                fpp: 0.01
+
+
+
 
