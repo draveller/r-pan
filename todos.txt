@@ -1,4 +1,6 @@
 
+
+
 1. 升级到jdk17
 2. 升级到springboot3
 3. 升级到swagger3
@@ -6,8 +8,6 @@
 5. 把 Date 类换为 LocalDateTime
 6. 按照阿里Java开发手册修改代码
 7. fastDFS用不了, 待移除
-8. 确保系统全功能可用
-9. 一些类的属性默认值不应该直接赋值, 应该改为在静态块里赋值
 10. sonarLint 提示项修改
 
 学习maven插件

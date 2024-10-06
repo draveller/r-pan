@@ -1090,8 +1090,8 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
             newFilenameSuffix = filename.replace(newFilenameWithoutSuffix, StringUtils.EMPTY);
         }
 
-        int count = getDuplicateFilename(entity, newFilenameWithoutSuffix);
-        if (count == 0) {
+        long count = getDuplicateFilename(entity, newFilenameWithoutSuffix);
+        if (count == 0L) {
             return;
         }
 
@@ -1109,7 +1109,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param newFilenameSuffix
      * @return
      */
-    private String assembleNewFilename(String newFilenameWithoutSuffix, int count, String newFilenameSuffix) {
+    private String assembleNewFilename(String newFilenameWithoutSuffix, long count, String newFilenameSuffix) {
         return new StringBuilder(newFilenameWithoutSuffix)
                 .append(FileConsts.CN_LEFT_PARENTHESIS_STR)
                 .append(count)
@@ -1125,7 +1125,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param newFilenameWithoutSuffix
      * @return
      */
-    private int getDuplicateFilename(RPanUserFile entity, String newFilenameWithoutSuffix) {
+    private long getDuplicateFilename(RPanUserFile entity, String newFilenameWithoutSuffix) {
 
         LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.<RPanUserFile>lambdaQuery()
                 .eq(RPanUserFile::getParentId, entity.getParentId())

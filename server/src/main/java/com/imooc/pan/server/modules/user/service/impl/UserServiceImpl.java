@@ -131,9 +131,9 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
                 .eq(RPanUser::getQuestion, checkAnswerContext.getQuestion())
                 .eq(RPanUser::getAnswer, checkAnswerContext.getAnswer());
 
-        int count = this.baseMapper.selectCount(wrapper);
+        long count = this.baseMapper.selectCount(wrapper);
 
-        if (count == 0) {
+        if (count == 0L) {
             throw new RPanBusinessException("密保验证失败");
         }
 
@@ -189,9 +189,8 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     }
 
     @Override
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
+    public boolean removeBatchByIds(Collection<?> list) {
         throw new RPanBusinessException("请更换手动缓存");
-//        return super.removeByIds(idList);
     }
 
     @Override

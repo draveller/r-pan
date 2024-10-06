@@ -392,9 +392,10 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         return cacheService.removeById(id);
     }
 
+
     @Override
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
-        return cacheService.removeByIds(idList);
+    public boolean removeBatchByIds(Collection<?> list) {
+        return cacheService.removeBatchByIds(list);
     }
 
     @Override

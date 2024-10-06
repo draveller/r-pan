@@ -65,8 +65,8 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
         LambdaQueryWrapper<RPanFileChunk> wrapper = Wrappers.<RPanFileChunk>lambdaQuery()
                 .eq(RPanFileChunk::getIdentifier, context.getIdentifier())
                 .eq(RPanFileChunk::getCreateUser, context.getUserId());
-        int count = this.count(wrapper);
-        if (count == context.getTotalChunks()) {
+        long count = this.count(wrapper);
+        if (count ==Long.valueOf(context.getTotalChunks()) ) {
             context.setMergeFlagEnum(MergeFlagEnum.READY);
         }
     }

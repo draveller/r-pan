@@ -116,10 +116,10 @@ public class FilePhysicalDeleteEventListener implements ApplicationContextAware 
      * @return
      */
     private boolean isUnused(RPanUserFile record) {
-        Integer count = iUserFileService.lambdaQuery()
+        Long count = iUserFileService.lambdaQuery()
                 .eq(RPanUserFile::getRealFileId, record.getRealFileId())
                 .count();
-        return count.equals(0);
+        return count.equals(0L);
     }
 
 

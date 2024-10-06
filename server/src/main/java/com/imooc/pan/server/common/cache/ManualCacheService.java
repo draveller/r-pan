@@ -37,7 +37,7 @@ public interface ManualCacheService<V> extends CacheService<V> {
      * @param ids
      * @return
      */
-    boolean removeByIds(Collection<? extends Serializable> ids);
+    boolean removeBatchByIds(Collection<?> ids);
 
     /**
      * 获取缓存key的模板信息

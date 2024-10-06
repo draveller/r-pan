@@ -56,12 +56,12 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
     }
 
     @Override
-    public boolean removeByIds(Collection<? extends Serializable> ids) {
+    public boolean removeBatchByIds(Collection<?> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return false;
         }
-        for (Serializable id : ids) {
-            if (!this.removeById(id)) {
+        for (Object id : ids) {
+            if (!this.removeById((Serializable)id)) {
                 return false;
             }
         }
