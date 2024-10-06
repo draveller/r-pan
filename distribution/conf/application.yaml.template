@@ -16,9 +16,9 @@ spring:
       max-request-size: 3072MB
 
   datasource:
-    username: root
-    password: MuL!zsV8dHov346i4oY7KBXsX3
-    url: jdbc:mysql://dzl-database.mysql.rds.aliyuncs.com:3306/r_pan?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: xxx
+    password: xxx
+    url: jdbc:mysql://xxx:3306/r_pan?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:
@@ -45,9 +45,9 @@ swagger2:
   title: r-pan-server docs
   description: r-pan-server docs
   terms-of-service-url: http://127.0.0.1:${server.port}
-  contact-name: rubin
-  contact-url: https://blog.rubinchu.com
-  contact-email: rubinchu@126.com
+  contact-name: xxx
+  contact-url: xxx
+  contact-email: xxx
   version: 1.0
 
 
