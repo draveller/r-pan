@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -30,8 +31,9 @@ public class ErrorLogEventListener {
         record.setId(IdUtil.get());
         record.setLogContent(event.getErrorMsg());
         record.setLogStatus(0);
-        record.setCreateTime(new Date());
-        record.setUpdateTime(new Date());
+        LocalDateTime now = LocalDateTime.now();
+        record.setCreateTime(now);
+        record.setUpdateTime(now);
         record.setCreateUser(event.getUserId());
         record.setUpdateUser(event.getUserId());
         this.iErrorLogService.save(record);

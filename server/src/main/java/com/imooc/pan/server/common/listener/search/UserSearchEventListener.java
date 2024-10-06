@@ -10,6 +10,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -32,8 +33,9 @@ public class UserSearchEventListener {
         record.setUserId(event.getUserId());
         record.setUserId(event.getUserId());
         record.setSearchContent(event.getKeyword());
-        record.setCreateTime(new Date());
-        record.setUpdateTime(new Date());
+        LocalDateTime now = LocalDateTime.now();
+        record.setCreateTime(now);
+        record.setUpdateTime(now);
 
         try {
             this.iUserSearchHistoryService.save(record);

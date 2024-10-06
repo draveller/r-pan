@@ -1,18 +1,19 @@
 package com.imooc.pan.server.modules.file.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 用户文件信息表
+ *
  * @TableName r_pan_user_file
  */
-@TableName(value ="r_pan_user_file")
+@TableName(value = "r_pan_user_file")
 @Data
 public class RPanUserFile implements Serializable {
     /**
@@ -79,7 +80,7 @@ public class RPanUserFile implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
@@ -91,7 +92,7 @@ public class RPanUserFile implements Serializable {
      * 更新时间
      */
     @TableField(value = "update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -1,14 +1,13 @@
 package com.imooc.pan.server.modules.share.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.imooc.pan.web.serializer.Date2StringSerializer;
 import com.imooc.pan.web.serializer.IdEncryptSerializer;
-
+import com.imooc.pan.web.serializer.LocalDateTime2StringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Schema(name = "分享链接列表结果实体对象")
 @Data
@@ -39,11 +38,11 @@ public class RPanShareUrlListVO implements Serializable {
     private Integer shareDayType;
 
     @Schema(name = "分享的过期时间")
-    @JsonSerialize(using = Date2StringSerializer.class)
-    private Date shareEndTime;
+    @JsonSerialize(using = LocalDateTime2StringSerializer.class)
+    private LocalDateTime shareEndTime;
 
     @Schema(name = "分享的创建时间")
-    @JsonSerialize(using = Date2StringSerializer.class)
-    private Date createTime;
+    @JsonSerialize(using = LocalDateTime2StringSerializer.class)
+    private LocalDateTime createTime;
 
 }

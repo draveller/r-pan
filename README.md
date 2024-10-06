@@ -8,26 +8,29 @@
 
 1. **distribution**: 打包模块. 包含打包脚本和配置等
 2. **framework** (pom): 技术框架管理模块. 包含非业务代码的技术框架配置等
-    1. **cache** (pom): 缓存管理模块
+    1. **bloom-filter**(pom): 布隆过滤器管理模块
+        - **bloom-filter-core**: 布隆过滤器通用模块
+        - **bloom-filter-local**: 本地的布隆过滤器实现
+    2. **cache** (pom): 缓存管理模块
         - **cache-caffeine**: 基于 Caffeine 的本地缓存实现
         - **cache-core**: 公用的缓存模块, 定义了相关常量配置
         - **cache-redis**: 基于 Redis 的缓存
-    2. **core**: 核心公共模块. 包含全局的常量类和工具类
-    3. **orm** (pom): ORM 框架管理模块
+    3. **core**: 核心公共模块. 包含全局的常量类和工具类
+    4. **orm** (pom): ORM 框架管理模块
         - **mybatis-plus**: MyBatis Plus 的实现. 包含配置类和代码生成器
-    4. **schedule**: 定时任务模块. 包含定时任务配置
-    5. **storage-engine** (pom): 存储引擎管理模块
+    5. **schedule**: 定时任务模块. 包含定时任务配置
+    6. **spring-doc**: 后端的 API 文档模块
+    7. **storage-engine** (pom): 存储引擎管理模块
         - **storage-engine-core**: 存储引擎公用核心模块, 并且定义了存储引擎的顶级功能接口
-        - **storage-engine-fastdfs**: 基于 `fastDFS` 的存储引擎
         - **storage-engine-local**: 基于本地文件系统的存储引擎
         - **storage-engine-oss**: 基于 `阿里云 OSS` 的存储引擎
-    6. **swagger2**: 后端的 API 文档模块
-    7. **web**: 后端服务的主框架, 继承了 Spring Web, 处理了通用的跨域/日志/序列化/参数校验等问题
+    8. **web**: 后端服务的主框架, 继承了 Spring Web, 处理了通用的跨域/日志/序列化/参数校验等问题
+
 3. **server**: 后端服务模块. 包含主要的业务代码
 
 
 
-<img src="project-tree.svg" alt="project-tree.svg" style="zoom:80%;" /> 
+<img src="assets/project-tree.svg" alt="project-tree.svg" style="zoom:80%;" /> 
 
 
 
@@ -38,6 +41,15 @@
 @startuml
 
 package "Framework" {
+    package "Bloom Filter" {
+        class "bloom-filter-core" {
+            布隆过滤器通用模块
+        }
+        class "bloom-filter-local" {
+            本地的布隆过滤器实现
+        }
+    }
+    
     package "Cache" {
         class "cache-core" {
             核心缓存模块
@@ -68,9 +80,6 @@ package "Framework" {
         class "storage-engine-core" {
             核心存储引擎模块
         }
-        class "storage-engine-fastdfs" {
-            基于 FastDFS 的存储引擎
-        }
         class "storage-engine-local" {
             基于本地文件系统的存储引擎
         }
@@ -79,7 +88,7 @@ package "Framework" {
         }
     }
     
-    class "swagger2" {
+    class "spring-doc" {
         API 文档模块
     }
 
@@ -108,8 +117,7 @@ class "server" {
 
 ## 引用关系
 
-
-<img src="project-reference.svg" alt="project-reference.svg" style="zoom:80%;" />
+<img src="assets/project-reference.svg" alt="project-reference.svg" style="zoom:80%;" />
 
 
 <details>
@@ -120,15 +128,18 @@ class "server" {
 
 [distribution] --> [server] : "打包后端服务"
 
+[bloom-filter-core] --> [core] : "依赖核心模块"
+[bloom-filter-local] --> [bloom-filter-core] : "依赖通用布隆过滤器模块"
+
+[cache-core] --> [core] : "依赖核心模块"
 [cache-caffeine] --> [cache-core] : "依赖公用缓存模块"
 [cache-redis] --> [cache-core] : "依赖公用缓存模块"
 [schedule] --> [cache-core] : "依赖公用缓存模块"
 
 [mybatis-plus] --> [core] : "依赖核心模块"
-[swagger2] --> [core] : "依赖核心模块"
+[spring-doc] --> [core] : "依赖核心模块"
 [web] --> [core] : "依赖核心模块"
 
-[storage-engine-fastdfs] --> [storage-engine-core] : "实现存储引擎接口"
 [storage-engine-local] --> [storage-engine-core] : "实现存储引擎接口"
 [storage-engine-oss] --> [storage-engine-core]:  "实现存储引擎接口"
 
@@ -136,11 +147,12 @@ class "server" {
 
 [server] --> [web]:  "通用web处理"
 [server] --> [mybatis-plus]:  "选择 ORM 框架"
-[server] --> [swagger2]:  "API 文档生成工具"
+[server] --> [spring-doc]:  "API 文档生成工具"
+[server] --> [bloom-filter-local]:  "布隆过滤器"
+[server] --> [schedule]:  "定时任务支持"
 
 note right of server
 选择性引用 存储引擎:
-- storage-engine-fastdfs
 - storage-engine-local
 - storage-engine-oss
 end note
@@ -160,4 +172,4 @@ end note
 
 
 
-更新于 2024-10-04
+更新于 2024-10-07

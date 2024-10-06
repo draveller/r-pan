@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -93,9 +94,12 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
         record.setIdentifier(context.getIdentifier());
         record.setRealPath(context.getRealPath());
         record.setChunkNumber(context.getChunkNumber());
-        record.setExpirationTime(DateUtil.offsetDay(new Date(), this.panServerConfig.getChunkFileExpirationDays()));
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiration = now.plusDays(this.panServerConfig.getChunkFileExpirationDays());
+        record.setExpirationTime(expiration);
         record.setCreateUser(context.getUserId());
-        record.setCreateTime(new Date());
+        record.setCreateTime(now);
         if (!this.save(record)) {
             throw new RPanBusinessException("文件分片上传失败");
         }

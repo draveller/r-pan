@@ -28,6 +28,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -178,7 +179,7 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
         record.setFileSuffix(FileUtil.getFileSuffix(filename));
         record.setIdentifier(identifier);
         record.setCreateUser(userId);
-        record.setCreateTime(new Date());
+        record.setCreateTime(LocalDateTime.now());
         return record;
     }
 

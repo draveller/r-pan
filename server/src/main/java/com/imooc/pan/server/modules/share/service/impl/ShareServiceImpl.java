@@ -49,6 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -673,7 +674,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
             return record;
         }
 
-        if (record.getShareEndTime().before(new Date())) {
+        if (record.getShareEndTime().isBefore(LocalDateTime.now())) {
             throw new RPanBusinessException(ResponseCode.SHARE_EXPIRE);
         }
 
@@ -776,12 +777,13 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         }
 
         record.setShareDay(shareDay);
-        record.setShareEndTime(DateUtil.offsetDay(new Date(), shareDay));
+        LocalDateTime now = LocalDateTime.now();
+        record.setShareEndTime(now.plusDays(shareDay));
         record.setShareUrl(createShareUrl(record.getShareId()));
         record.setShareCode(createShareCode());
         record.setShareStatus(ShareStatusEnum.NORMAL.getCode());
         record.setCreateUser(context.getUserId());
-        record.setCreateTime(new Date());
+        record.setCreateTime(now);
 
         if (!save(record)) {
             throw new RPanBusinessException("保存分享信息失败");

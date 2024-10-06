@@ -21,18 +21,17 @@ import com.imooc.pan.server.modules.share.vo.RPanShareUrlVO;
 import com.imooc.pan.server.modules.share.vo.ShareDetailVO;
 import com.imooc.pan.server.modules.share.vo.ShareSimpleDetailVO;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Tag( "分享模块")
+@Tag("分享模块")
 @RestController
 @Validated
 public class ShareController {
@@ -47,7 +46,7 @@ public class ShareController {
             summary = "创建分享链接",
             description = "该接口提供了创建分享链接的功能"
     )
-    @PostMapping("share")
+    @PostMapping("/share")
     public R<RPanShareUrlVO> create(@Validated @RequestBody CreateShareUrlPO createShareUrlPO) {
         CreateShareUrlContext context = shareConverter.convertPO2Context(createShareUrlPO);
 
@@ -65,7 +64,7 @@ public class ShareController {
             summary = "查询分享链接列表",
             description = "该接口提供了查询分享链接列表的功能"
     )
-    @GetMapping("shares")
+    @GetMapping("/shares")
     public R<List<RPanShareUrlListVO>> getShares() {
         QueryShareListContext context = new QueryShareListContext();
         context.setUserId(UserIdUtil.get());
@@ -77,7 +76,7 @@ public class ShareController {
             summary = "取消分享",
             description = "该接口提供了取消分享的功能"
     )
-    @DeleteMapping("share")
+    @DeleteMapping("/share")
     public R cancelShare(@Validated @RequestBody CancelSharePO cancelSharePO) {
         CancelShareContext context = new CancelShareContext();
 
@@ -97,7 +96,7 @@ public class ShareController {
             description = "该接口提供了校验分享码的功能"
     )
     @LoginIgnore
-    @PostMapping("share/code/check")
+    @PostMapping("/share/code/check")
     public R<String> checkShareCode(@Validated @RequestBody CheckShareCodePO checkShareCodePO) {
         CheckShareCodeContext context = new CheckShareCodeContext();
 
@@ -114,7 +113,7 @@ public class ShareController {
     )
     @LoginIgnore
     @NeedShareCode
-    @GetMapping("share")
+    @GetMapping("/share")
     public R<ShareDetailVO> detail() {
         QueryShareDetailContext context = new QueryShareDetailContext();
         context.setShareId(ShareIdUtil.get());
@@ -127,7 +126,7 @@ public class ShareController {
             description = "该接口提供了查询分享的简单详情的功能"
     )
     @LoginIgnore
-    @GetMapping("share/simple")
+    @GetMapping("/share/simple")
     public R<ShareSimpleDetailVO> simpleDetail(@NotBlank(message = "分享的ID不能为空")
                                                @RequestParam(value = "shareId", required = false) String shareId) {
         QueryShareSimpleDetailContext context = new QueryShareSimpleDetailContext();
@@ -140,7 +139,7 @@ public class ShareController {
             summary = "获取下一级文件列表",
             description = "该接口提供了获取下一级文件列表的功能"
     )
-    @GetMapping("share/file/list")
+    @GetMapping("/share/file/list")
     @NeedShareCode
     @LoginIgnore
     public R<List<RPanUserFileVO>> fileList(@NotBlank(message = "文件的父ID不能为空")
@@ -157,7 +156,7 @@ public class ShareController {
             description = "该接口提供了保存至我的网盘的功能"
     )
     @NeedShareCode
-    @PostMapping("share/save")
+    @PostMapping("/share/save")
     public R saveFiles(@Validated @RequestBody ShareSavePO shareSavePO) {
         ShareSaveContext context = new ShareSaveContext();
 
@@ -178,7 +177,7 @@ public class ShareController {
             summary = "分享文件下载",
             description = "该接口提供了分享文件下载的功能"
     )
-    @GetMapping("share/file/download")
+    @GetMapping("/share/file/download")
     @NeedShareCode
     public void download(@NotBlank(message = "文件ID不能为空")
                          @RequestParam(value = "fileId", required = false) String fileId,

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 
@@ -43,7 +44,7 @@ public class RPanFileChunk implements Serializable {
      * 过期时间
      */
     @TableField(value = "expiration_time")
-    private Date expirationTime;
+    private LocalDateTime expirationTime;
 
     /**
      * 创建人
@@ -55,7 +56,7 @@ public class RPanFileChunk implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -168,7 +169,7 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
         records.stream().forEach(record -> {
             record.setDelFlag(DelFlagEnum.NO.getCode());
             record.setUpdateUser(context.getUserId());
-            record.setUpdateTime(new Date());
+            record.setUpdateTime(LocalDateTime.now());
         });
         boolean updateFlag = iUserFileService.updateBatchById(records);
         if (!updateFlag) {

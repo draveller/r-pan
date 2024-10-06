@@ -45,7 +45,7 @@ public class FileController {
             summary = "查询文件列表",
             description = "该接口提供了按照父文件夹id和文件类型, 查询文件列表的功能"
     )
-    @GetMapping("files")
+    @GetMapping("/files")
     public R<List<RPanUserFileVO>> list(
             @NotBlank(message = "父文件夹id不能为空") @RequestParam(required = false) String parentId,
             @RequestParam(required = false, defaultValue = FileConsts.ALL_FILE_TYPE) String fileTypes) {
@@ -80,7 +80,7 @@ public class FileController {
             summary = "创建文件夹",
             description = "该接口提供了创建文件夹的功能"
     )
-    @PostMapping("file/folder")
+    @PostMapping("/file/folder")
     public R<String> createFolder(@Validated @RequestBody CreateFolderPO createFolderPO) {
         CreateFolderContext context = this.fileConverter.convertPO2Context(createFolderPO);
         Long fileId = this.iUserFileService.createFolder(context);
@@ -91,7 +91,7 @@ public class FileController {
             summary = "文件重命名",
             description = "该接口提供了文件重命名的功能"
     )
-    @PutMapping("file")
+    @PutMapping("/file")
     public R<Object> updateFilename(@Validated @RequestBody UpdateFilenamePO updateFilenamePO) {
         UpdateFilenameContext context = this.fileConverter.convertPO2Context(updateFilenamePO);
         this.iUserFileService.updateFilename(context);
@@ -102,7 +102,7 @@ public class FileController {
             summary = "批量删除文件",
             description = "该接口提供了批量删除文件的功能"
     )
-    @DeleteMapping("file")
+    @DeleteMapping("/file")
     public R<Object> deleteFile(@Validated @RequestBody DeleteFilePO deleteFilePO) {
         DeleteFileContext context = this.fileConverter.convertPO2Context(deleteFilePO);
 
@@ -119,7 +119,7 @@ public class FileController {
             summary = "文件秒传",
             description = "该接口提供了文件秒传的功能"
     )
-    @PostMapping("file/sec-upload")
+    @PostMapping("/file/sec-upload")
     public R<Object> secUpload(@Validated @RequestBody SecUploadPO secUploadPO) {
         SecUploadFileContext context = this.fileConverter.convertPO2Context(secUploadPO);
         boolean success = this.iUserFileService.secUpload(context);
@@ -134,7 +134,7 @@ public class FileController {
             summary = "单文件上传",
             description = "该接口提供了单文件上传的功能"
     )
-    @PostMapping("file/upload")
+    @PostMapping("/file/upload")
     public R<Object> upload(@Validated FileUploadPO fileUploadPO) {
         FileUploadContext context = this.fileConverter.convertPO2Context(fileUploadPO);
         this.iUserFileService.upload(context);
@@ -146,7 +146,7 @@ public class FileController {
             summary = "文件分片上传",
             description = "该接口提供了文件分片上传的功能"
     )
-    @PostMapping("file/chunk-upload")
+    @PostMapping("/file/chunk-upload")
     public R<FileChunkUploadVO> chunkUpload(@Validated FileChunkUploadPO fileChunkUploadPO) {
         FileChunkUploadContext context = this.fileConverter.convertPO2Context(fileChunkUploadPO);
         FileChunkUploadVO fileChunkUploadVO = this.iUserFileService.chunkUpload(context);
@@ -158,7 +158,7 @@ public class FileController {
             summary = "查询文件分片",
             description = "该接口提供了查询文件分片的功能"
     )
-    @GetMapping("file/chunk-upload")
+    @GetMapping("/file/chunk-upload")
     public R<UploadedChunksVO> getUploadedChunks(@Validated QueryUploadedChunksPO queryUploadedChunksPO) {
         QueryUploadedChunksContext context = this.fileConverter.convertPO2Context(queryUploadedChunksPO);
         UploadedChunksVO vo = this.iUserFileService.getUploadedChunks(context);
@@ -169,7 +169,7 @@ public class FileController {
             summary = "合并文件分片",
             description = "该接口提供了合并文件分片的功能"
     )
-    @PostMapping("file/merge")
+    @PostMapping("/file/merge")
     public R<Object> mergeFile(@Validated @RequestBody FileChunkMergePO fileChunkMergePO) {
         FileChunkMergeContext context = this.fileConverter.convertPO2Context(fileChunkMergePO);
         this.iUserFileService.mergeFile(context);
@@ -180,7 +180,7 @@ public class FileController {
             summary = "下载文件",
             description = "该接口提供了下载文件的功能"
     )
-    @GetMapping("file/download")
+    @GetMapping("/file/download")
     public void download(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
                          HttpServletResponse response) {
         FileDownloadContext context = new FileDownloadContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
@@ -192,7 +192,7 @@ public class FileController {
             summary = "预览文件",
             description = "该接口提供了预览文件的功能"
     )
-    @GetMapping("file/preview")
+    @GetMapping("/file/preview")
     public void preview(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
                         HttpServletResponse response) {
         FilePreviewContext context = new FilePreviewContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
@@ -203,7 +203,7 @@ public class FileController {
             summary = "查询文件夹树",
             description = "该接口提供了查询文件夹树的功能"
     )
-    @GetMapping("file/folder/tree")
+    @GetMapping("/file/folder/tree")
     public R<List<FolderTreeNodeVO>> getFolderTree() {
         QueryFolderTreeContext context = new QueryFolderTreeContext();
         context.setUserId(UserIdUtil.get());
@@ -215,7 +215,7 @@ public class FileController {
             summary = "文件转移",
             description = "该接口提供了文件转移的功能"
     )
-    @PostMapping("file/transfer")
+    @PostMapping("/file/transfer")
     public R<Object> getFolderTree(@Validated @RequestBody TransferFilePO transferFilePO) {
         TransferFileContext context = this.fileConverter.convertPO2Context(transferFilePO);
         this.iUserFileService.transfer(context);
@@ -226,7 +226,7 @@ public class FileController {
             summary = "文件复制",
             description = "该接口提供了文件复制的功能"
     )
-    @PostMapping("file/copy")
+    @PostMapping("/file/copy")
     public R<Object> getFolderTree(@Validated @RequestBody CopyFilePO copyFilePO) {
         CopyFileContext context = this.fileConverter.convertPO2Context(copyFilePO);
         this.iUserFileService.copy(context);
@@ -237,7 +237,7 @@ public class FileController {
             summary = "文件搜索",
             description = "该接口提供了文件搜索的功能"
     )
-    @GetMapping("file/search")
+    @GetMapping("/file/search")
     public R<List<FileSearchResultVO>> search(@Validated FileSearchPO fileSearchPO) {
         FileSearchContext context = this.fileConverter.convertPO2Context(fileSearchPO);
         List<FileSearchResultVO> result = this.iUserFileService.search(context);
@@ -248,7 +248,7 @@ public class FileController {
             summary = "查询面包屑列表",
             description = "该接口提供了查询面包屑列表的功能"
     )
-    @GetMapping("file/breadcrumbs")
+    @GetMapping("/file/breadcrumbs")
     public R<List<BreadcrumbVO>> getBreadcrumbs(
             @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId) {
         QueryBreadcrumbsContext context = new QueryBreadcrumbsContext();

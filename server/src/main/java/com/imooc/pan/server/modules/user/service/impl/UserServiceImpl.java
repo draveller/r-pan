@@ -30,7 +30,11 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author 18063
@@ -195,7 +199,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
 
     @Override
     public boolean updateById(RPanUser entity) {
-        return cacheService.updateById(entity.getUserId(),entity);
+        return cacheService.updateById(entity.getUserId(), entity);
     }
 
     @Override
@@ -272,7 +276,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
 
         String dbPwd = PasswordUtil.encryptPassword(entity.getSalt(), password);
         entity.setPassword(dbPwd);
-        entity.setUpdateTime(new Date());
+        entity.setUpdateTime(LocalDateTime.now());
         if (!this.updateById(entity)) {
             throw new RPanBusinessException("重置密码失败");
         }
@@ -362,8 +366,9 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         entity.setSalt(salt);
         String dbPassword = PasswordUtil.encryptPassword(salt, userRegisterContext.getPassword());
         entity.setPassword(dbPassword);
-        entity.setCreateTime(new Date());
-        entity.setUpdateTime(new Date());
+        LocalDateTime now = LocalDateTime.now();
+        entity.setCreateTime(now);
+        entity.setUpdateTime(now);
         userRegisterContext.setEntity(entity);
 
         return entity;

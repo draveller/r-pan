@@ -16,7 +16,6 @@ import com.imooc.pan.server.modules.recycle.service.IRecycleService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * 回收站模块控制器
  */
-@Tag( "回收站模块")
+@Tag("回收站模块")
 @Validated
 @RestController
 public class RecycleController {
@@ -39,7 +38,7 @@ public class RecycleController {
             summary = "获取回收站文件列表",
             description = "该接口提供了获取回收站文件列表的功能"
     )
-    @GetMapping("recycles")
+    @GetMapping("/recycles")
     public R<List<RPanUserFileVO>> recycles() {
         QueryRecycleFileListContext context = new QueryRecycleFileListContext();
         context.setUserId(UserIdUtil.get());
@@ -51,7 +50,7 @@ public class RecycleController {
             summary = "批量还原已删除的文件",
             description = "该接口提供了批量还原已删除的文件的功能"
     )
-    @PutMapping("recycle/restore")
+    @PutMapping("/recycle/restore")
     public R<Object> restore(@Validated @RequestBody RestorePO restorePO) {
         RestoreContext context = new RestoreContext();
         context.setUserId(UserIdUtil.get());
@@ -67,7 +66,7 @@ public class RecycleController {
             summary = "删除的文件批量彻底删除",
             description = "该接口提供了删除的文件批量彻底删除的功能"
     )
-    @DeleteMapping("recycle")
+    @DeleteMapping("/recycle")
     public R<Object> delete(@Validated @RequestBody DeletePO deletePO) {
         DeleteContext context = new DeleteContext();
         context.setUserId(UserIdUtil.get());

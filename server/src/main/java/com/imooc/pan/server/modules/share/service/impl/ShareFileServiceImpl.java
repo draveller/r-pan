@@ -10,6 +10,7 @@ import com.imooc.pan.server.modules.share.mapper.RPanShareFileMapper;
 import com.imooc.pan.server.modules.share.service.IShareFileService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ShareFileServiceImpl extends ServiceImpl<RPanShareFileMapper, RPanS
             record.setShareId(shareId);
             record.setFileId(shareFileId);
             record.setCreateUser(userId);
-            record.setCreateTime(new Date());
+            record.setCreateTime(LocalDateTime.now());
             records.add(record);
         }
 

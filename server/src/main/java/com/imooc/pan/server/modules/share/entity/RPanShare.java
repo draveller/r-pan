@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 用户分享表
@@ -50,7 +50,7 @@ public class RPanShare implements Serializable {
      * 分享结束时间
      */
     @TableField(value = "share_end_time")
-    private Date shareEndTime;
+    private LocalDateTime shareEndTime;
 
     /**
      * 分享链接地址
@@ -80,7 +80,7 @@ public class RPanShare implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

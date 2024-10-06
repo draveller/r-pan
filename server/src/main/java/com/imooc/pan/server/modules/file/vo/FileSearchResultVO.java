@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.pan.web.serializer.Date2StringSerializer;
 import com.imooc.pan.web.serializer.IdEncryptSerializer;
 
+import com.imooc.pan.web.serializer.LocalDateTime2StringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Schema(name ="搜索文件列表响应实体")
@@ -40,7 +42,7 @@ public class FileSearchResultVO implements Serializable {
     private Integer fileType;
 
     @Schema(name = "最近更新时间")
-    @JsonSerialize(using = Date2StringSerializer.class)
-    private Date updateTime;
+    @JsonSerialize(using = LocalDateTime2StringSerializer.class)
+    private LocalDateTime updateTime;
 
 }

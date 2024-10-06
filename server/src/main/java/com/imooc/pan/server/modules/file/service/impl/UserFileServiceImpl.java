@@ -28,6 +28,7 @@ import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.*;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.ReadFileContext;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,9 +40,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -391,7 +392,8 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         }
         doDownload(record, context.getResponse());
     }
-  /**
+
+    /**
      * 递归查询所有的子文件信息
      *
      * @param fileIdList
@@ -424,7 +426,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     }
     // ******************************** private ********************************
 
-        /**
+    /**
      * 执行文件下载的动作
      * <p>
      * 1、查询文件的真实存储路径
@@ -566,15 +568,15 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param userId
      */
     private void assembleCopyChildRecord(List<RPanUserFile> allRecords, RPanUserFile record, Long targetParentId, Long userId) {
-
+        LocalDateTime now = LocalDateTime.now();
         Long newFileId = IdUtil.get();
         Long oldFileId = record.getFileId();
 
         record.setParentId(targetParentId);
         record.setFileId(newFileId);
         record.setUserId(userId);
-        record.setCreateTime(new Date());
-        record.setUpdateTime(new Date());
+        record.setCreateTime(now);
+        record.setUpdateTime(now);
         record.setCreateUser(userId);
         record.setUpdateUser(userId);
         this.handleDuplicateFilename(record);
@@ -630,8 +632,9 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         for (RPanUserFile record : prepareRecords) {
             record.setParentId(context.getTargetParentId());
             record.setUserId(context.getUserId());
-            record.setCreateTime(new Date());
-            record.setUpdateTime(new Date());
+            LocalDateTime now = LocalDateTime.now();
+            record.setCreateTime(now);
+            record.setUpdateTime(now);
             record.setCreateUser(context.getUserId());
             record.setUpdateUser(context.getUserId());
             this.handleDuplicateFilename(record);
@@ -979,7 +982,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     private void doUpdateFilename(UpdateFilenameContext context) {
         RPanUserFile entity = context.getEntity();
         entity.setFilename(context.getNewFilename());
-        entity.setUpdateTime(new Date());
+        entity.setUpdateTime(LocalDateTime.now());
         entity.setUpdateUser(context.getUserId());
 
         if (!this.updateById(entity)) {
@@ -1060,9 +1063,10 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         entity.setFileSizeDesc(fileSizeDesc);
         entity.setDelFlag(DelFlagEnum.NO.getCode());
         entity.setCreateUser(userId);
-        entity.setCreateTime(new Date());
         entity.setUpdateUser(userId);
-        entity.setUpdateTime(new Date());
+        LocalDateTime now = LocalDateTime.now();
+        entity.setCreateTime(now);
+        entity.setUpdateTime(now);
 
         this.handleDuplicateFilename(entity);
 
