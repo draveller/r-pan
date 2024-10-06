@@ -2,7 +2,6 @@ package com.imooc.pan.server.modules.share.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -575,13 +574,13 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     private void assembleShareFilesInfo(QueryShareDetailContext context) {
         List<Long> fileIdList = getShareFileIdList(context.getShareId());
 
-        QueryFileListContext queryFileListContext = new QueryFileListContext();
-        queryFileListContext.setUserId(context.getRecord().getCreateUser());
-        queryFileListContext.setDelFlag(DelFlagEnum.NO.getCode());
-        queryFileListContext.setFileIdList(fileIdList);
+        QueryFileListContext queryContext = new QueryFileListContext();
+        queryContext.setUserId(context.getRecord().getCreateUser());
+        queryContext.setDelFlag(DelFlagEnum.NO.getCode());
+        queryContext.setFileIdList(fileIdList);
 
-        List<RPanUserFileVO> rPanUserFileVOList = iUserFileService.getFileList(queryFileListContext);
-        context.getVo().setRPanUserFileVOList(rPanUserFileVOList);
+        List<RPanUserFileVO> rPanUserFileVOList = iUserFileService.getFileList(queryContext);
+        context.getVo().setUserFileVOList(rPanUserFileVOList);
     }
 
     /**
@@ -591,14 +590,16 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * @return
      */
     private List<Long> getShareFileIdList(Long shareId) {
-        if (Objects.isNull(shareId)) {
-            return Lists.newArrayList();
+        if (shareId == null) {
+            throw new RPanBusinessException("分享id不能为空");
         }
-        QueryWrapper queryWrapper = Wrappers.query();
-        queryWrapper.select("file_id");
-        queryWrapper.eq("share_id", shareId);
-        List<Long> fileIdList = iShareFileService.listObjs(queryWrapper, value -> (Long) value);
-        return fileIdList;
+
+        LambdaQueryWrapper<RPanShareFile> wrapper = Wrappers.lambdaQuery();
+        wrapper.select(RPanShareFile::getFileId);
+        wrapper.eq(RPanShareFile::getShareId, shareId);
+        List<Long> sharedFileIds = iShareFileService.listObjs(wrapper, Long.class::cast);
+        log.info(" ====>>>> shareId = {}, sharedFileIds = {}", shareId, sharedFileIds);
+        return sharedFileIds;
     }
 
     /**
@@ -808,10 +809,10 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
             throw new RPanBusinessException("分享的ID不能为空");
         }
         String sharePrefix = config.getSharePrefix();
-        if (sharePrefix.lastIndexOf(RPanConstants.SLASH_STR) == RPanConstants.MINUS_ONE_INT.intValue()) {
+        if (!sharePrefix.endsWith(RPanConstants.SLASH_STR)) {
             sharePrefix += RPanConstants.SLASH_STR;
         }
-        return sharePrefix + URLEncoder.encode(IdUtil.encrypt(shareId));
+        return sharePrefix + "share/" + URLEncoder.encode(IdUtil.encrypt(shareId));
     }
 
 }

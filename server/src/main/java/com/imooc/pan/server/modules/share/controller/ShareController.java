@@ -110,7 +110,7 @@ public class ShareController {
         CheckShareCodeContext context = new CheckShareCodeContext();
 
         context.setShareId(IdUtil.decrypt(checkShareCodePO.getShareId()));
-        context.setShareCode(checkShareCodePO.getShareCode());
+        context.setShareCode(checkShareCodePO.getShareCode().trim());
 
         String token = iShareService.checkShareCode(context);
         return R.data(token);
@@ -141,7 +141,7 @@ public class ShareController {
     @LoginIgnore
     @GetMapping("share/simple")
     public R<ShareSimpleDetailVO> simpleDetail(@NotBlank(message = "分享的ID不能为空")
-                                                   @RequestParam(value = "shareId", required = false) String shareId) {
+                                               @RequestParam(value = "shareId", required = false) String shareId) {
         QueryShareSimpleDetailContext context = new QueryShareSimpleDetailContext();
         context.setShareId(IdUtil.decrypt(shareId));
         ShareSimpleDetailVO vo = iShareService.simpleDetail(context);
@@ -158,7 +158,7 @@ public class ShareController {
     @NeedShareCode
     @LoginIgnore
     public R<List<RPanUserFileVO>> fileList(@NotBlank(message = "文件的父ID不能为空")
-                                                @RequestParam(value = "parentId", required = false) String parentId) {
+                                            @RequestParam(value = "parentId", required = false) String parentId) {
         QueryChildFileListContext context = new QueryChildFileListContext();
         context.setShareId(ShareIdUtil.get());
         context.setParentId(IdUtil.decrypt(parentId));
@@ -199,7 +199,7 @@ public class ShareController {
     @GetMapping("share/file/download")
     @NeedShareCode
     public void download(@NotBlank(message = "文件ID不能为空")
-                             @RequestParam(value = "fileId", required = false) String fileId,
+                         @RequestParam(value = "fileId", required = false) String fileId,
                          HttpServletResponse response) {
         ShareFileDownloadContext context = new ShareFileDownloadContext();
         context.setFileId(IdUtil.decrypt(fileId));

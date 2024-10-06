@@ -3,6 +3,7 @@ package com.imooc.pan.server.modules.file.controller;
 import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.server.common.utils.UrlUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
@@ -13,6 +14,7 @@ import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 /**
  * 文件模块控制器
  */
+@Slf4j
 @RestController
 @Validated
 @Api(tags = "文件模块")
@@ -57,7 +61,7 @@ public class FileController {
         if ("-1".equals(parentId) || "0".equals(parentId)) {
             realParentId = 0L;
         } else {
-            realParentId = IdUtil.decrypt(parentId);
+            realParentId = IdUtil.decrypt(UrlUtil.decodeIfNeeds(parentId));
         }
 
         List<Integer> fileTypeArray = null;
@@ -114,7 +118,7 @@ public class FileController {
 
         String fileIds = deleteFilePO.getFileIds();
         List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR))
-                .map(Long::parseLong).collect(Collectors.toList());
+                .map(IdUtil::decrypt).collect(Collectors.toList());
         context.setFileIdList(fileIdList);
 
         this.iUserFileService.deleteFile(context);
@@ -282,7 +286,8 @@ public class FileController {
     public R<List<BreadcrumbVO>> getBreadcrumbs(
             @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId) {
         QueryBreadcrumbsContext context = new QueryBreadcrumbsContext();
-        context.setFileId(IdUtil.decrypt(fileId));
+        String decoded = UrlUtil.decodeIfNeeds(fileId);
+        context.setFileId(IdUtil.decrypt(decoded));
         context.setUserId(UserIdUtil.get());
         List<BreadcrumbVO> result = this.iUserFileService.getBreadcrumbs(context);
         return R.data(result);

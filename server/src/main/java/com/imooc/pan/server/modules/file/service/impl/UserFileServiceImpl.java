@@ -28,6 +28,7 @@ import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.*;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.ReadFileContext;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
  * @description 针对表【r_pan_user_file(用户文件信息表)】的数据库操作Service实现
  * @createDate 2024-09-28 14:11:44
  */
+@Slf4j
 @Service
 public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUserFile>
         implements IUserFileService, ApplicationContextAware {
@@ -728,7 +730,8 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         for (FolderTreeNodeVO node : mappedFolderTreeNodeVOList) {
             List<FolderTreeNodeVO> children = mappedFolderTreeNodeVOMap.get(node.getId());
             if (CollectionUtils.isNotEmpty(children)) {
-                node.getChildren().addAll(children);
+                List<FolderTreeNodeVO> nodeChildren = node.getChildren();
+                nodeChildren.addAll(children);
             }
         }
 

@@ -23,6 +23,8 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:mappers/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 server:
@@ -58,7 +60,7 @@ com:
   imooc:
     pan:
       server:
-        share-prefix: http://127.0.0.1:5173
+        share-prefix: http://localhost:5173
       storage:
         engine:
           fdfs:
@@ -80,7 +82,3 @@ com:
                 funnel-type-name: LONG
                 expected-insertions: 1000_0000
                 fpp: 0.01
-
-
-
-

@@ -32,14 +32,17 @@
         SELECT file_id, parent_id, filename, file_size_desc, folder_flag, file_type, update_time
         FROM r_pan_user_file
         <where>
+            <if test="fileIdList != null and !fileIdList.isEmpty()">
+                AND file_id IN
+                <foreach collection="fileIdList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
             <if test="userId != null and userId != ''">
                 AND user_id = #{userId}
             </if>
             <if test="parentId != null and parentId != ''">
                 AND parent_id = #{parentId}
-            </if>
-            <if test="delFlag != null and delFlag != ''">
-                AND del_flag = #{delFlag}
             </if>
             <if test="fileTypeArray != null">
                 AND file_type IN
@@ -47,6 +50,7 @@
                     #{item}
                 </foreach>
             </if>
+            AND del_flag = #{delFlag}
         </where>
     </select>
 

@@ -135,7 +135,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
-    @GetMapping("/")
+    @GetMapping
     public R<UserInfoVO> info() {
         UserInfoVO userInfoVO = this.iUserService.info(UserIdUtil.get());
         return R.data(userInfoVO);

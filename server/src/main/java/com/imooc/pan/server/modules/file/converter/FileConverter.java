@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +31,8 @@ public interface FileConverter {
     CreateFolderContext convertPO2Context(CreateFolderPO createFolderPO);
 
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
-    UpdateFilenameContext convertPO2Context(UpdateFilenamePO updateFilenamePO);
+    @Mapping(target = "fileId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(po.getFileId()))")
+    UpdateFilenameContext convertPO2Context(UpdateFilenamePO po);
 
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     DeleteFileContext convertPO2Context(DeleteFilePO deleteFilePO);
@@ -67,7 +69,7 @@ public interface FileConverter {
 
     @Mapping(target = "label", source = "rPanUserFile.filename")
     @Mapping(target = "id", source = "rPanUserFile.fileId")
-    @Mapping(target = "children", expression = "java(java.util.Collections.emptyList())")
+    @Mapping(target = "children", expression = "java(new java.util.ArrayList())")
     FolderTreeNodeVO rPanUserFile2FolderTreeNodeVO(RPanUserFile rPanUserFile);
 
     default TransferFileContext convertPO2Context(TransferFilePO transferFilePO) {
@@ -95,6 +97,7 @@ public interface FileConverter {
         CopyFileContext context = new CopyFileContext();
         context.setFileIdList(fileIdList);
         context.setTargetParentId(decryptedTargetParentId);
+        context.setUserId(UserIdUtil.get());
         return context;
     }
 

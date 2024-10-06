@@ -38,7 +38,7 @@ public class ShareDetailVO implements Serializable {
     private Date shareEndTime;
 
     @ApiModelProperty("分享的文件列表")
-    private List<RPanUserFileVO> rPanUserFileVOList;
+    private List<RPanUserFileVO> userFileVOList;
 
     @ApiModelProperty("分享者的信息")
     private ShareUserInfoVO shareUserInfoVO;
