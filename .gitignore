@@ -1,0 +1,20 @@
+# Compiled class file
+**/*.class
+
+# Log file
+**/*.log
+
+
+**/target/
+**/.idea/
+
+# Package Files #
+**/*.jar
+**/*.war
+**/*.zip
+**/*.tar.gz
+**/*.rar
+
+**/application.properties
+**/application.yml
+**/application.yaml
