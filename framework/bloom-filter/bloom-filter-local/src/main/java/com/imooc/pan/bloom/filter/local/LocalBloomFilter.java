@@ -15,7 +15,7 @@ public class LocalBloomFilter<T> implements BloomFilter<T> {
     /**
      * 数据类型通道
      */
-    private Funnel<?> funnel;
+    private Funnel funnel;
 
     /**
      * 数组的长度
@@ -27,7 +27,7 @@ public class LocalBloomFilter<T> implements BloomFilter<T> {
      */
     private double fpp;
 
-    public LocalBloomFilter(Funnel<?> funnel, long expectedInsertions, double fpp) {
+    public LocalBloomFilter(Funnel funnel, long expectedInsertions, double fpp) {
         this.funnel = funnel;
         this.expectedInsertions = expectedInsertions;
         this.fpp = fpp;
