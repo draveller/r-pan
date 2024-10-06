@@ -1,5 +1,6 @@
 package com.imooc.pan.server.modules.recycle.controller;
 
+
 import com.google.common.base.Splitter;
 import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.core.response.R;
@@ -12,8 +13,8 @@ import com.imooc.pan.server.modules.recycle.context.RestoreContext;
 import com.imooc.pan.server.modules.recycle.po.DeletePO;
 import com.imooc.pan.server.modules.recycle.po.RestorePO;
 import com.imooc.pan.server.modules.recycle.service.IRecycleService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * 回收站模块控制器
  */
-@Api(tags = "回收站模块")
+@Tag( "回收站模块")
 @Validated
 @RestController
 public class RecycleController {
@@ -34,11 +35,9 @@ public class RecycleController {
     @Autowired
     private IRecycleService iRecycleService;
 
-    @ApiOperation(
-            value = "获取回收站文件列表",
-            notes = "该接口提供了获取回收站文件列表的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "获取回收站文件列表",
+            description = "该接口提供了获取回收站文件列表的功能"
     )
     @GetMapping("recycles")
     public R<List<RPanUserFileVO>> recycles() {
@@ -48,11 +47,9 @@ public class RecycleController {
         return R.data(result);
     }
 
-    @ApiOperation(
-            value = "批量还原已删除的文件",
-            notes = "该接口提供了批量还原已删除的文件的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "批量还原已删除的文件",
+            description = "该接口提供了批量还原已删除的文件的功能"
     )
     @PutMapping("recycle/restore")
     public R<Object> restore(@Validated @RequestBody RestorePO restorePO) {
@@ -66,11 +63,9 @@ public class RecycleController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "删除的文件批量彻底删除",
-            notes = "该接口提供了删除的文件批量彻底删除的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "删除的文件批量彻底删除",
+            description = "该接口提供了删除的文件批量彻底删除的功能"
     )
     @DeleteMapping("recycle")
     public R<Object> delete(@Validated @RequestBody DeletePO deletePO) {

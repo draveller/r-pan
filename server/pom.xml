@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>com.imooc.pan</groupId>
-            <artifactId>r-pan-swagger2</artifactId>
+            <artifactId>r-pan-spring-doc</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
@@ -108,7 +108,7 @@
                         <path>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
-                            <version>2.5.9</version>
+                            <version>3.3.4</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

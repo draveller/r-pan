@@ -14,12 +14,12 @@
     <modules>
         <module>core</module>
         <module>web</module>
-        <module>swagger2</module>
         <module>cache</module>
         <module>orm</module>
         <module>schedule</module>
         <module>storage-engine</module>
         <module>bloom-filter</module>
+        <module>spring-doc</module>
     </modules>
 
     <properties>

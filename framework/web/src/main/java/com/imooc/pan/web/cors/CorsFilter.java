@@ -1,12 +1,16 @@
 package com.imooc.pan.web.cors;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.core.annotation.Order;
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

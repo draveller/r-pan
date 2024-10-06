@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Objects;
@@ -45,7 +45,7 @@ public class HttpLogEntityBuilder {
         } else {
             httpLogEntity.setResponseData("Stream Body...");
         }
-        httpLogEntity.setStatus(responseWrapper.getStatusCode())
+        httpLogEntity.setStatus(responseWrapper.getStatus())
                 .setResponseHeaders(getResponseHeaderMap(responseWrapper))
                 .setResolveTime(stopWatch.toString());
         return httpLogEntity;

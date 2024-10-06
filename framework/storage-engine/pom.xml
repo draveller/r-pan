@@ -15,7 +15,6 @@
         <module>storage-engine-core</module>
         <module>storage-engine-local</module>
         <module>storage-engine-oss</module>
-        <module>storage-engine-fastdfs</module>
     </modules>
 
     <properties>

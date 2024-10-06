@@ -3,7 +3,7 @@ package com.imooc.pan.server.common.utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Http工具类

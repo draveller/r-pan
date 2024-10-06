@@ -38,7 +38,7 @@ management:
         exclude: env,beans
 
 
-swagger2:
+springfox:
   show: true
   group-name: ${spring.application.name}
   base-package: com.imooc.pan

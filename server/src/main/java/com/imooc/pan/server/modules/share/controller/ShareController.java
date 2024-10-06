@@ -20,19 +20,19 @@ import com.imooc.pan.server.modules.share.vo.RPanShareUrlListVO;
 import com.imooc.pan.server.modules.share.vo.RPanShareUrlVO;
 import com.imooc.pan.server.modules.share.vo.ShareDetailVO;
 import com.imooc.pan.server.modules.share.vo.ShareSimpleDetailVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Api(tags = "分享模块")
+@Tag( "分享模块")
 @RestController
 @Validated
 public class ShareController {
@@ -43,11 +43,9 @@ public class ShareController {
     @Autowired
     private ShareConverter shareConverter;
 
-    @ApiOperation(
-            value = "创建分享链接",
-            notes = "该接口提供了创建分享链接的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "创建分享链接",
+            description = "该接口提供了创建分享链接的功能"
     )
     @PostMapping("share")
     public R<RPanShareUrlVO> create(@Validated @RequestBody CreateShareUrlPO createShareUrlPO) {
@@ -63,11 +61,9 @@ public class ShareController {
         return R.data(vo);
     }
 
-    @ApiOperation(
-            value = "查询分享链接列表",
-            notes = "该接口提供了查询分享链接列表的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "查询分享链接列表",
+            description = "该接口提供了查询分享链接列表的功能"
     )
     @GetMapping("shares")
     public R<List<RPanShareUrlListVO>> getShares() {
@@ -77,11 +73,9 @@ public class ShareController {
         return R.data(result);
     }
 
-    @ApiOperation(
-            value = "取消分享",
-            notes = "该接口提供了取消分享的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "取消分享",
+            description = "该接口提供了取消分享的功能"
     )
     @DeleteMapping("share")
     public R cancelShare(@Validated @RequestBody CancelSharePO cancelSharePO) {
@@ -98,11 +92,9 @@ public class ShareController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "校验分享码",
-            notes = "该接口提供了校验分享码的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "校验分享码",
+            description = "该接口提供了校验分享码的功能"
     )
     @LoginIgnore
     @PostMapping("share/code/check")
@@ -116,11 +108,9 @@ public class ShareController {
         return R.data(token);
     }
 
-    @ApiOperation(
-            value = "查询分享的详情",
-            notes = "该接口提供了查询分享的详情的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "查询分享的详情",
+            description = "该接口提供了查询分享的详情的功能"
     )
     @LoginIgnore
     @NeedShareCode
@@ -132,11 +122,9 @@ public class ShareController {
         return R.data(vo);
     }
 
-    @ApiOperation(
-            value = "查询分享的简单详情",
-            notes = "该接口提供了查询分享的简单详情的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "查询分享的简单详情",
+            description = "该接口提供了查询分享的简单详情的功能"
     )
     @LoginIgnore
     @GetMapping("share/simple")
@@ -148,11 +136,9 @@ public class ShareController {
         return R.data(vo);
     }
 
-    @ApiOperation(
-            value = "获取下一级文件列表",
-            notes = "该接口提供了获取下一级文件列表的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "获取下一级文件列表",
+            description = "该接口提供了获取下一级文件列表的功能"
     )
     @GetMapping("share/file/list")
     @NeedShareCode
@@ -166,11 +152,9 @@ public class ShareController {
         return R.data(result);
     }
 
-    @ApiOperation(
-            value = "保存至我的网盘",
-            notes = "该接口提供了保存至我的网盘的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "保存至我的网盘",
+            description = "该接口提供了保存至我的网盘的功能"
     )
     @NeedShareCode
     @PostMapping("share/save")
@@ -190,11 +174,9 @@ public class ShareController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "分享文件下载",
-            notes = "该接口提供了分享文件下载的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "分享文件下载",
+            description = "该接口提供了分享文件下载的功能"
     )
     @GetMapping("share/file/download")
     @NeedShareCode

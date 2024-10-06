@@ -33,7 +33,7 @@ public class StartedListener implements ApplicationListener<ApplicationReadyEven
     }
 
     private boolean checkShowServerDoc(ApplicationContext applicationContext) {
-        return applicationContext.getEnvironment().getProperty("swagger2.show",Boolean.class,true)&&
-                applicationContext.containsBean("swagger2Config");
+        return applicationContext.getEnvironment().getProperty("springfox.show",Boolean.class,true)&&
+                applicationContext.containsBean("springfoxConfig");
     }
 }

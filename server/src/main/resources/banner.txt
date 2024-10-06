@@ -7,5 +7,5 @@ ${AnsiColor.BLUE}
     /'    /'              /'        /'    /'  /'    /'
 (,/'     (_,          (,/'         (___,/(__/'    /(__
 
- ${AnsiColor.YELLOW}ENV:${spring.profiles.active:default}                         ${AnsiColor.BRIGHT_RED}VERSION:${swagger2.version:1.0}
+ ${AnsiColor.YELLOW}ENV:${spring.profiles.active:default}                         ${AnsiColor.BRIGHT_RED}VERSION:${springfox.version:1.0}
  ${AnsiColor.DEFAULT}

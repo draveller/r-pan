@@ -12,17 +12,15 @@ import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.po.*;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
-import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @Validated
-@Api(tags = "文件模块")
+@Tag("文件模块")
 public class FileController {
 
     @Autowired
@@ -43,11 +41,9 @@ public class FileController {
     @Autowired
     private FileConverter fileConverter;
 
-    @ApiOperation(
-            value = "查询文件列表",
-            notes = "该接口提供了按照父文件夹id和文件类型, 查询文件列表的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "查询文件列表",
+            description = "该接口提供了按照父文件夹id和文件类型, 查询文件列表的功能"
     )
     @GetMapping("files")
     public R<List<RPanUserFileVO>> list(
@@ -80,11 +76,9 @@ public class FileController {
         return R.data(fileList);
     }
 
-    @ApiOperation(
-            value = "创建文件夹",
-            notes = "该接口提供了创建文件夹的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "创建文件夹",
+            description = "该接口提供了创建文件夹的功能"
     )
     @PostMapping("file/folder")
     public R<String> createFolder(@Validated @RequestBody CreateFolderPO createFolderPO) {
@@ -93,11 +87,9 @@ public class FileController {
         return R.data(IdUtil.encrypt(fileId));
     }
 
-    @ApiOperation(
-            value = "文件重命名",
-            notes = "该接口提供了文件重命名的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "文件重命名",
+            description = "该接口提供了文件重命名的功能"
     )
     @PutMapping("file")
     public R<Object> updateFilename(@Validated @RequestBody UpdateFilenamePO updateFilenamePO) {
@@ -106,11 +98,9 @@ public class FileController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "批量删除文件",
-            notes = "该接口提供了批量删除文件的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "批量删除文件",
+            description = "该接口提供了批量删除文件的功能"
     )
     @DeleteMapping("file")
     public R<Object> deleteFile(@Validated @RequestBody DeleteFilePO deleteFilePO) {
@@ -125,11 +115,9 @@ public class FileController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "文件秒传",
-            notes = "该接口提供了文件秒传的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "文件秒传",
+            description = "该接口提供了文件秒传的功能"
     )
     @PostMapping("file/sec-upload")
     public R<Object> secUpload(@Validated @RequestBody SecUploadPO secUploadPO) {
@@ -142,11 +130,9 @@ public class FileController {
         }
     }
 
-    @ApiOperation(
-            value = "单文件上传",
-            notes = "该接口提供了单文件上传的功能",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "单文件上传",
+            description = "该接口提供了单文件上传的功能"
     )
     @PostMapping("file/upload")
     public R<Object> upload(@Validated FileUploadPO fileUploadPO) {
@@ -156,11 +142,9 @@ public class FileController {
     }
 
 
-    @ApiOperation(
-            value = "文件分片上传",
-            notes = "该接口提供了文件分片上传的功能",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "文件分片上传",
+            description = "该接口提供了文件分片上传的功能"
     )
     @PostMapping("file/chunk-upload")
     public R<FileChunkUploadVO> chunkUpload(@Validated FileChunkUploadPO fileChunkUploadPO) {
@@ -170,11 +154,9 @@ public class FileController {
     }
 
 
-    @ApiOperation(
-            value = "查询文件分片",
-            notes = "该接口提供了查询文件分片的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "查询文件分片",
+            description = "该接口提供了查询文件分片的功能"
     )
     @GetMapping("file/chunk-upload")
     public R<UploadedChunksVO> getUploadedChunks(@Validated QueryUploadedChunksPO queryUploadedChunksPO) {
@@ -183,11 +165,9 @@ public class FileController {
         return R.data(vo);
     }
 
-    @ApiOperation(
-            value = "合并文件分片",
-            notes = "该接口提供了合并文件分片的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "合并文件分片",
+            description = "该接口提供了合并文件分片的功能"
     )
     @PostMapping("file/merge")
     public R<Object> mergeFile(@Validated @RequestBody FileChunkMergePO fileChunkMergePO) {
@@ -196,11 +176,9 @@ public class FileController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "下载文件",
-            notes = "该接口提供了下载文件的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+    @Operation(
+            summary = "下载文件",
+            description = "该接口提供了下载文件的功能"
     )
     @GetMapping("file/download")
     public void download(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
@@ -210,11 +188,9 @@ public class FileController {
     }
 
 
-    @ApiOperation(
-            value = "预览文件",
-            notes = "该接口提供了预览文件的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+    @Operation(
+            summary = "预览文件",
+            description = "该接口提供了预览文件的功能"
     )
     @GetMapping("file/preview")
     public void preview(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
@@ -223,11 +199,9 @@ public class FileController {
         this.iUserFileService.preview(context);
     }
 
-    @ApiOperation(
-            value = "查询文件夹树",
-            notes = "该接口提供了查询文件夹树的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "查询文件夹树",
+            description = "该接口提供了查询文件夹树的功能"
     )
     @GetMapping("file/folder/tree")
     public R<List<FolderTreeNodeVO>> getFolderTree() {
@@ -237,11 +211,9 @@ public class FileController {
         return R.data(result);
     }
 
-    @ApiOperation(
-            value = "文件转移",
-            notes = "该接口提供了文件转移的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "文件转移",
+            description = "该接口提供了文件转移的功能"
     )
     @PostMapping("file/transfer")
     public R<Object> getFolderTree(@Validated @RequestBody TransferFilePO transferFilePO) {
@@ -250,11 +222,9 @@ public class FileController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "文件复制",
-            notes = "该接口提供了文件复制的功能",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "文件复制",
+            description = "该接口提供了文件复制的功能"
     )
     @PostMapping("file/copy")
     public R<Object> getFolderTree(@Validated @RequestBody CopyFilePO copyFilePO) {
@@ -263,11 +233,9 @@ public class FileController {
         return R.success();
     }
 
-    @ApiOperation(
-            value = "文件搜索",
-            notes = "该接口提供了文件搜索的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "文件搜索",
+            description = "该接口提供了文件搜索的功能"
     )
     @GetMapping("file/search")
     public R<List<FileSearchResultVO>> search(@Validated FileSearchPO fileSearchPO) {
@@ -276,11 +244,9 @@ public class FileController {
         return R.data(result);
     }
 
-    @ApiOperation(
-            value = "查询面包屑列表",
-            notes = "该接口提供了查询面包屑列表的功能",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    @Operation(
+            summary = "查询面包屑列表",
+            description = "该接口提供了查询面包屑列表的功能"
     )
     @GetMapping("file/breadcrumbs")
     public R<List<BreadcrumbVO>> getBreadcrumbs(

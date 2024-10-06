@@ -15,7 +15,6 @@ import com.imooc.pan.server.modules.file.mapper.RPanFileChunkMapper;
 import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
-import com.imooc.pan.storage.engine.core.context.StoreFileContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

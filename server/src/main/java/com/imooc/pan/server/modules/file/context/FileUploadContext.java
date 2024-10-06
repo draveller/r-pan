@@ -1,13 +1,9 @@
 package com.imooc.pan.server.modules.file.context;
 
 import com.imooc.pan.server.modules.file.entity.RPanFile;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

@@ -1,23 +1,23 @@
 package com.imooc.pan.server.modules.file.po;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 
-@ApiModel(value = "创建文件夹参数实体")
+@Schema(name ="创建文件夹参数实体")
 @Data
 public class CreateFolderPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "加密的父文件夹ID", required = true)
+    @Schema(name = "加密的父文件夹ID", required = true)
     @NotBlank(message = "父文件夹ID不能为空")
     private String parentId;
 
-    @ApiModelProperty(value = "文件夹名称")
+    @Schema(name = "文件夹名称")
     @NotBlank(message = "文件夹名称不能为空")
     private String folderName;
 
