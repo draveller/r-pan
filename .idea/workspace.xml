@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ce119fe7-baa3-4621-81b1-f390aaaafe03" name="Changes" comment="update: 准备发版" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="AnnotationType" />
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2mezAXvbpouMtkACbUn401Eeg8w" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.MpGeneratorTest.executor": "Run",
+    "JUnit.CaffeineCacheTest.caffeineCacheAnnotationTest.executor": "Run",
+    "JUnit.CaffeineCacheTest.caffeineCacheManagerTest (1).executor": "Run",
+    "JUnit.CaffeineCacheTest.caffeineCacheManagerTest.executor": "Run",
+    "JUnit.CaffeineCacheTest.executor": "Run",
+    "JUnit.RedisCacheTests.caffeineCacheAnnotationTest.executor": "Run",
+    "JUnit.RedisCacheTests.caffeineCacheManagerTest.executor": "Run",
+    "JUnit.ScheduleTaskTests.test_run_schedule_task.executor": "Run",
+    "JUnit.UserTests.executor": "Run",
+    "JUnit.UserTests.test_register_user.executor": "Run",
+    "Maven.r-pan-distribution [install].executor": "Run",
+    "Maven.r-pan-distribution [package].executor": "Run",
+    "Maven.r-pan-parent [clean].executor": "Run",
+    "Maven.r-pan-parent [compile].executor": "Run",
+    "Maven.r-pan-parent [install].executor": "Run",
+    "Maven.r-pan-parent [package].executor": "Run",
+    "Maven.r-pan-server [compile].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "false",
+    "Spring Boot.RPanServerLauncher.executor": "Run",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/workSpace/r-pan/distribution/conf",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "postgresql",
+      "redis"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\workSpace\r-pan\distribution\conf" />
+      <recent name="D:\workSpace\r-pan\server\src\main\resources" />
+      <recent name="D:\workSpace\r-pan\framework\bloom-filter\bloom-filter-local\src\main\resources" />
+      <recent name="D:\workSpace\r-pan\server\src\main\java\com\imooc\pan\server\common\aspect" />
+      <recent name="D:\workSpace\r-pan\server\src\main\java\com\imooc\pan\server\common\config" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\workSpace\r-pan\server\src\main\resources\mappers\share" />
+      <recent name="D:\workSpace\r-pan\server\src\main\resources\mappers\log" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.imooc.pan.server.common.schedule.launcher" />
+      <recent name="com.imooc.pan.server.common.launcher" />
+      <recent name="com.imooc.pan.server.common.schedule.task" />
+      <recent name="com.imooc.pan.server.modules.file.vo" />
+      <recent name="com.imooc.pan.server.modules.file.context" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.RPanServerLauncher">
+    <configuration name="RedisCacheTests.caffeineCacheAnnotationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="r-pan-cache-redis" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.imooc.pan.cache.redis.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.imooc.pan.cache.redis.test" />
+      <option name="MAIN_CLASS_NAME" value="com.imooc.pan.cache.redis.test.RedisCacheTests" />
+      <option name="METHOD_NAME" value="caffeineCacheAnnotationTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedisCacheTests.caffeineCacheManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="r-pan-cache-redis" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.imooc.pan.cache.redis.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.imooc.pan.cache.redis.test" />
+      <option name="MAIN_CLASS_NAME" value="com.imooc.pan.cache.redis.test.RedisCacheTests" />
+      <option name="METHOD_NAME" value="caffeineCacheManagerTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ScheduleTaskTests.test_run_schedule_task" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="r-pan-schdule" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.imooc.pan.schedule.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.imooc.pan.schedule.test" />
+      <option name="MAIN_CLASS_NAME" value="com.imooc.pan.schedule.test.ScheduleTaskTests" />
+      <option name="METHOD_NAME" value="test_run_schedule_task" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="r-pan-server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.imooc.pan.server.modules.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.imooc.pan.server.modules.user" />
+      <option name="MAIN_CLASS_NAME" value="com.imooc.pan.server.modules.user.UserTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserTests.test_register_user" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="r-pan-server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.imooc.pan.server.modules.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.imooc.pan.server.modules.user" />
+      <option name="MAIN_CLASS_NAME" value="com.imooc.pan.server.modules.user.UserTests" />
+      <option name="METHOD_NAME" value="test_register_user" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RPanServerLauncher" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="r-pan-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.imooc.pan.server.RPanServerLauncher" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.UserTests" />
+        <item itemvalue="JUnit.UserTests.test_register_user" />
+        <item itemvalue="JUnit.ScheduleTaskTests.test_run_schedule_task" />
+        <item itemvalue="JUnit.RedisCacheTests.caffeineCacheAnnotationTest" />
+        <item itemvalue="JUnit.RedisCacheTests.caffeineCacheManagerTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19072.14" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ce119fe7-baa3-4621-81b1-f390aaaafe03" name="Changes" comment="" />
+      <created>1727451688366</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727451688366</updated>
+      <workItem from="1727451689959" duration="5050000" />
+      <workItem from="1727495419883" duration="12862000" />
+      <workItem from="1727654126830" duration="217000" />
+      <workItem from="1727654544436" duration="9000" />
+      <workItem from="1727654782496" duration="6022000" />
+      <workItem from="1727660827145" duration="60000" />
+      <workItem from="1727660896952" duration="64942000" />
+      <workItem from="1727852497141" duration="20000" />
+      <workItem from="1727852525002" duration="19322000" />
+      <workItem from="1727946541498" duration="1695000" />
+      <workItem from="1727956877396" duration="375000" />
+      <workItem from="1727957265725" duration="95000" />
+      <workItem from="1727957369397" duration="3151000" />
+      <workItem from="1727960546792" duration="38225000" />
+      <workItem from="1728143254152" duration="9719000" />
+    </task>
+    <task id="LOCAL-00001" summary="update: 项目骨架搭建">
+      <option name="closed" value="true" />
+      <created>1727453095228</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1727453095228</updated>
+    </task>
+    <task id="LOCAL-00002" summary="update: 更新readme文件">
+      <option name="closed" value="true" />
+      <created>1727454174109</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727454174109</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update: --">
+      <option name="closed" value="true" />
+      <created>1727455550923</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727455550923</updated>
+    </task>
+    <task id="LOCAL-00004" summary="update: 骨架搭建, 添加热重载依赖配置和打包模块">
+      <option name="closed" value="true" />
+      <created>1727498980971</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727498980971</updated>
+    </task>
+    <task id="LOCAL-00005" summary="update: 骨架搭建完成, 引入orm框架并生成基本代码">
+      <option name="closed" value="true" />
+      <created>1727504306847</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727504306847</updated>
+    </task>
+    <task id="LOCAL-00006" summary="update: 更新说明文件">
+      <option name="closed" value="true" />
+      <created>1727505718308</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727505718308</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update: 集成caffeine缓存">
+      <option name="closed" value="true" />
+      <created>1727658227734</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727658227734</updated>
+    </task>
+    <task id="LOCAL-00008" summary="update: 集成redis缓存">
+      <option name="closed" value="true" />
+      <created>1727660451104</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727660451104</updated>
+    </task>
+    <task id="LOCAL-00009" summary="update: --">
+      <option name="closed" value="true" />
+      <created>1727660986978</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1727660986978</updated>
+    </task>
+    <task id="LOCAL-00010" summary="update: 定时任务模块和readme文件">
+      <option name="closed" value="true" />
+      <created>1727666170953</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1727666170953</updated>
+    </task>
+    <task id="LOCAL-00011" summary="update: 添加用户注册接口">
+      <option name="closed" value="true" />
+      <created>1727688670680</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1727688670680</updated>
+    </task>
+    <task id="LOCAL-00012" summary="update: 添加用户登录和登出接口">
+      <option name="closed" value="true" />
+      <created>1727742851494</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1727742851494</updated>
+    </task>
+    <task id="LOCAL-00013" summary="update: 添加登录校验切面">
+      <option name="closed" value="true" />
+      <created>1727746988161</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1727746988161</updated>
+    </task>
+    <task id="LOCAL-00014" summary="update: 用户模块接口基本开发完成">
+      <option name="closed" value="true" />
+      <created>1727754526445</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1727754526445</updated>
+    </task>
+    <task id="LOCAL-00015" summary="update: 文件模块接口">
+      <option name="closed" value="true" />
+      <created>1727776396426</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1727776396426</updated>
+    </task>
+    <task id="LOCAL-00016" summary="update: 文件模块接口">
+      <option name="closed" value="true" />
+      <created>1727778026225</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1727778026225</updated>
+    </task>
+    <task id="LOCAL-00017" summary="update: 文件秒传接口">
+      <option name="closed" value="true" />
+      <created>1727787152366</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1727787152366</updated>
+    </task>
+    <task id="LOCAL-00018" summary="update: 存储引擎骨架搭建">
+      <option name="closed" value="true" />
+      <created>1727794233710</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1727794233710</updated>
+    </task>
+    <task id="LOCAL-00019" summary="update: 文件上传功能开发">
+      <option name="closed" value="true" />
+      <created>1727796172123</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1727796172123</updated>
+    </task>
+    <task id="LOCAL-00020" summary="update: 文件分片功能开发">
+      <option name="closed" value="true" />
+      <created>1727854500065</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1727854500065</updated>
+    </task>
+    <task id="LOCAL-00021" summary="update: --">
+      <option name="closed" value="true" />
+      <created>1727857368028</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1727857368028</updated>
+    </task>
+    <task id="LOCAL-00022" summary="update: --">
+      <option name="closed" value="true" />
+      <created>1727857375176</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1727857375176</updated>
+    </task>
+    <task id="LOCAL-00023" summary="update: --">
+      <option name="closed" value="true" />
+      <created>1727857985728</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1727857985728</updated>
+    </task>
+    <task id="LOCAL-00024" summary="update: --">
+      <option name="closed" value="true" />
+      <created>1727867632942</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1727867632942</updated>
+    </task>
+    <task id="LOCAL-00025" summary="update: 文件分片上传/文件下载功能">
+      <option name="closed" value="true" />
+      <created>1727876007819</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1727876007819</updated>
+    </task>
+    <task id="LOCAL-00026" summary="update: 文件预览功能">
+      <option name="closed" value="true" />
+      <created>1727876436169</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1727876436169</updated>
+    </task>
+    <task id="LOCAL-00027" summary="update: 查询文件目录树接口">
+      <option name="closed" value="true" />
+      <created>1727879304208</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1727879304208</updated>
+    </task>
+    <task id="LOCAL-00028" summary="update: 转移文件接口">
+      <option name="closed" value="true" />
+      <created>1727881464217</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1727881464217</updated>
+    </task>
+    <task id="LOCAL-00029" summary="update: 文件模块接口">
+      <option name="closed" value="true" />
+      <created>1727961186164</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1727961186164</updated>
+    </task>
+    <task id="LOCAL-00030" summary="update: 文件模块接口">
+      <option name="closed" value="true" />
+      <created>1727968233048</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1727968233048</updated>
+    </task>
+    <task id="LOCAL-00031" summary="update: 阿里云OSS文件模块接口">
+      <option name="closed" value="true" />
+      <created>1727971811090</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1727971811090</updated>
+    </task>
+    <task id="LOCAL-00032" summary="update: 文件模块基本完成">
+      <option name="closed" value="true" />
+      <created>1727972333239</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1727972333239</updated>
+    </task>
+    <task id="LOCAL-00033" summary="update: 更新md文件">
+      <option name="closed" value="true" />
+      <created>1727975045618</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1727975045618</updated>
+    </task>
+    <task id="LOCAL-00034" summary="update: 更新md文件">
+      <option name="closed" value="true" />
+      <created>1727975506404</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1727975506404</updated>
+    </task>
+    <task id="LOCAL-00035" summary="update: 回收站模块功能">
+      <option name="closed" value="true" />
+      <created>1728036636898</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1728036636898</updated>
+    </task>
+    <task id="LOCAL-00036" summary="update: 后端项目基本完成">
+      <option name="closed" value="true" />
+      <created>1728043563433</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1728043563433</updated>
+    </task>
+    <task id="LOCAL-00037" summary="update: 缓存优化">
+      <option name="closed" value="true" />
+      <created>1728053770679</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1728053770679</updated>
+    </task>
+    <task id="LOCAL-00038" summary="update: 缓存优化">
+      <option name="closed" value="true" />
+      <created>1728056033876</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1728056033876</updated>
+    </task>
+    <task id="LOCAL-00039" summary="update: 本地布隆过滤器开发">
+      <option name="closed" value="true" />
+      <created>1728058082289</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1728058082289</updated>
+    </task>
+    <task id="LOCAL-00040" summary="update: 集成布隆过滤器">
+      <option name="closed" value="true" />
+      <created>1728143598471</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1728143598471</updated>
+    </task>
+    <task id="LOCAL-00041" summary="update: 集成布隆过滤器">
+      <option name="closed" value="true" />
+      <created>1728143903048</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1728143903048</updated>
+    </task>
+    <task id="LOCAL-00042" summary="bugfix: 修复由于泛型问题引起的编译异常">
+      <option name="closed" value="true" />
+      <created>1728219017117</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1728219017117</updated>
+    </task>
+    <task id="LOCAL-00043" summary="bugfix: 问题修复">
+      <option name="closed" value="true" />
+      <created>1728219336849</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1728219336849</updated>
+    </task>
+    <task id="LOCAL-00044" summary="bugfix: 问题修复">
+      <option name="closed" value="true" />
+      <created>1728227593907</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1728227593907</updated>
+    </task>
+    <task id="LOCAL-00045" summary="update: 准备发版">
+      <option name="closed" value="true" />
+      <created>1728228044292</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1728228044292</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="update: 添加用户注册接口" />
+    <MESSAGE value="update: 添加用户登录和登出接口" />
+    <MESSAGE value="update: 添加登录校验切面" />
+    <MESSAGE value="update: 用户模块接口基本开发完成" />
+    <MESSAGE value="update: 文件秒传接口" />
+    <MESSAGE value="update: 存储引擎骨架搭建" />
+    <MESSAGE value="update: 文件上传功能开发" />
+    <MESSAGE value="update: 文件分片功能开发" />
+    <MESSAGE value="update: --" />
+    <MESSAGE value="update: 文件分片上传/文件下载功能" />
+    <MESSAGE value="update: 文件预览功能" />
+    <MESSAGE value="update: 查询文件目录树接口" />
+    <MESSAGE value="update: 转移文件接口" />
+    <MESSAGE value="update: 文件模块接口" />
+    <MESSAGE value="update: 阿里云OSS文件模块接口" />
+    <MESSAGE value="update: 文件模块基本完成" />
+    <MESSAGE value="update: 更新md文件" />
+    <MESSAGE value="update: 回收站模块功能" />
+    <MESSAGE value="update: 后端项目基本完成" />
+    <MESSAGE value="update: 缓存优化" />
+    <MESSAGE value="update: 本地布隆过滤器开发" />
+    <MESSAGE value="update: 集成布隆过滤器" />
+    <MESSAGE value="bugfix: 修复由于泛型问题引起的编译异常" />
+    <MESSAGE value="bugfix: 问题修复" />
+    <MESSAGE value="update: 准备发版" />
+    <option name="LAST_COMMIT_MESSAGE" value="update: 准备发版" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
