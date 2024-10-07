@@ -1058,7 +1058,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         entity.setFilename(filename);
         entity.setFolderFlag(folderFlagEnum.getCode());
         entity.setFileType(fileType);
-        entity.setRealFileId(realFileId);
+        entity.setRealFileId(Optional.ofNullable(realFileId).orElse(0L));
         entity.setUserId(userId);
         entity.setFileSizeDesc(fileSizeDesc);
         entity.setDelFlag(DelFlagEnum.NO.getCode());

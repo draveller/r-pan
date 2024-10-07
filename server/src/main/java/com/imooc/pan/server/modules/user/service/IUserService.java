@@ -16,6 +16,8 @@ public interface IUserService extends IService<RPanUser> {
 
     String login(UserLoginContext userLoginContext);
 
+    String loginByGithub(UserLoginByGithubContext context);
+
     void exit(Long aLong);
 
     String checkUsername(CheckUsernameContext checkUsernameContext);
@@ -27,4 +29,5 @@ public interface IUserService extends IService<RPanUser> {
     void changePassword(ChangePasswordContext context);
 
     UserInfoVO info(Long userId);
+
 }

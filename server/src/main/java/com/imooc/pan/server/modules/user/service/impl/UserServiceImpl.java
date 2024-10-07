@@ -17,10 +17,15 @@ import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.user.constants.UserConstants;
 import com.imooc.pan.server.modules.user.context.*;
 import com.imooc.pan.server.modules.user.converter.UserConverter;
+import com.imooc.pan.server.modules.user.entity.RPanThirdPartyAuth;
 import com.imooc.pan.server.modules.user.entity.RPanUser;
+import com.imooc.pan.server.modules.user.enums.ThirdPartyProviderEnum;
 import com.imooc.pan.server.modules.user.mapper.RPanUserMapper;
+import com.imooc.pan.server.modules.user.service.GithubService;
+import com.imooc.pan.server.modules.user.service.IThirdPartyAuthService;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,19 +33,18 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author 18063
  * @description 针对表【r_pan_user(用户信息表)】的数据库操作Service实现
  * @createDate 2024-09-28 14:06:46
  */
+@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> implements IUserService {
 
@@ -54,8 +58,16 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     private CacheManager cacheManager;
 
     @Autowired
+    private GithubService githubService;
+
+    @Autowired
+    private IThirdPartyAuthService iThirdPartyAuthService;
+
+    @Autowired
     @Qualifier(value = "userAnnotationCacheService")
     private AnnotationCacheService<RPanUser> cacheService;
+    @Autowired
+    private ThirdPartyAuthServiceImpl thirdPartyAuthServiceImpl;
 
     /**
      * 用户注册的业务方法实现
@@ -66,12 +78,11 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      * @return 注册成功的用户ID
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long register(UserRegisterContext userRegisterContext) {
-
         RPanUser entity = this.assembleUserEntity(userRegisterContext);
         this.doRegister(entity);
         this.createUserRootFolder(userRegisterContext);
-
         return userRegisterContext.getEntity().getUserId();
     }
 
@@ -87,10 +98,72 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     @Override
     public String login(UserLoginContext userLoginContext) {
         checkLoginInfo(userLoginContext);
-
         generateAndSaveAccessToken(userLoginContext);
-
         return userLoginContext.getAccessToken();
+    }
+
+    /**
+     * github授权登录
+     * <p>
+     * 1. 调用github接口获取用户访问令牌和个人信息, 如果失败就直接抛错
+     * 2. 如果用户尚未注册账号, 就自动进行注册
+     * 3. 执行登录动作, 返回令牌
+     *
+     * @param context
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String loginByGithub(UserLoginByGithubContext context) {
+        String code = context.getCode();
+        if (StringUtils.isBlank(code)) {
+            throw new RPanBusinessException("code为空");
+        }
+
+        String githubAccessToken = Optional.ofNullable(githubService.getAccessToken(code))
+                .orElseThrow(() -> new RPanBusinessException("获取github访问令牌失败"));
+        Map<String, Object> githubUserInfo = Optional.ofNullable(githubService.getUserInfo(githubAccessToken))
+                .orElseThrow(() -> new RPanBusinessException("获取github用户信息失败"));
+        log.info("githubAccessToken = {}", githubAccessToken);
+        log.info("githubUserInfo = {}", githubUserInfo);
+        String githubUsername = String.valueOf(githubUserInfo.get("login"));
+        String githubUid = String.valueOf(githubUserInfo.get("id"));
+
+        // -------------------------------- 通过 渠道名+uid 判断用户是否已存在, 否则自动注册 --------------------------------
+        RPanThirdPartyAuth certificationRecord = this.iThirdPartyAuthService.lambdaQuery()
+                .eq(RPanThirdPartyAuth::getProvider, ThirdPartyProviderEnum.GITHUB.getProvider())
+                .eq(RPanThirdPartyAuth::getProviderUid, githubUid)
+                .one();
+
+        Long userId;
+
+        // 如果没有第三方认证记录, 表示当前是第1次授权登录, 自动注册账号, 关联第三方, 并执行登录...
+        if (certificationRecord == null) {
+            UserRegisterContext registerContext = new UserRegisterContext();
+            registerContext.setUsername(githubUsername);
+            registerContext.setPassword("");
+            registerContext.setQuestion("");
+            registerContext.setAnswer("");
+            userId = this.register(registerContext);
+
+            // 插入一条第三方认证记录
+            RPanThirdPartyAuth authRecord = new RPanThirdPartyAuth();
+            authRecord.setProvider(ThirdPartyProviderEnum.GITHUB.getProvider());
+            authRecord.setProviderUid(githubUid);
+            authRecord.setUserId(userId);
+            authRecord.setCreateTime(LocalDateTime.now());
+            thirdPartyAuthServiceImpl.save(authRecord);
+        } else {
+            // 如果有第三方认证记录, 则直接通过此记录找到关联的用户, 并执行登录...
+            userId = certificationRecord.getUserId();
+            Optional.ofNullable(this.getById(userId)).orElseThrow(() -> new RPanBusinessException(ResponseCode.USER_NOT_EXISTS));
+        }
+
+        // 执行登录动作, 返回令牌
+        UserLoginContext loginContext = new UserLoginContext();
+        loginContext.setEntity(getById(userId));
+        generateAndSaveAccessToken(loginContext);
+        return loginContext.getAccessToken();
     }
 
     /**
@@ -355,21 +428,21 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      * 工具方法
      * 将上下文对象的属性值集成为entity, 并封装进上下文对象的属性中
      *
-     * @param userRegisterContext 上下文对象
+     * @param context 上下文对象
      * @return 已经集成的上下文对象
      */
-    private RPanUser assembleUserEntity(UserRegisterContext userRegisterContext) {
-        RPanUser entity = userConverter.userRegisterContext2RPanUser(userRegisterContext);
+    private RPanUser assembleUserEntity(UserRegisterContext context) {
+        RPanUser entity = userConverter.userRegisterContext2RPanUser(context);
         String salt = PasswordUtil.getSalt();
 
         entity.setUserId(IdUtil.get());
         entity.setSalt(salt);
-        String dbPassword = PasswordUtil.encryptPassword(salt, userRegisterContext.getPassword());
+        String dbPassword = PasswordUtil.encryptPassword(salt, context.getPassword());
         entity.setPassword(dbPassword);
         LocalDateTime now = LocalDateTime.now();
         entity.setCreateTime(now);
         entity.setUpdateTime(now);
-        userRegisterContext.setEntity(entity);
+        context.setEntity(entity);
 
         return entity;
     }

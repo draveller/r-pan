@@ -10,6 +10,7 @@ import com.imooc.pan.server.modules.user.po.*;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -53,6 +54,18 @@ public class UserController {
         UserLoginContext userLoginContext = this.userConverter.convertPO2Context(userLoginPO);
 
         String accessToken = this.iUserService.login(userLoginContext);
+        return R.data(accessToken);
+    }
+
+    @LoginIgnore
+    @Operation(
+            summary = "用户github登录接口",
+            description = "该接口提供了用户登录功能, 成功登录之后会返回有时效性的accessToken, 供后续服务使用"
+    )
+    @PostMapping("/login-by-github")
+    public R<Object> loginByGithub(@Validated @RequestBody UserLoginByGithubPO po) {
+        UserLoginByGithubContext context = this.userConverter.convertPO2Context(po);
+        String accessToken = this.iUserService.loginByGithub(context);
         return R.data(accessToken);
     }
 

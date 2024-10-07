@@ -40,4 +40,6 @@ public interface UserConverter {
     @Mapping(source = "rPanUserFile.filename", target = "rootFileName")
     UserInfoVO assembleUserInfoVO(RPanUser rPanUser, RPanUserFile rPanUserFile);
 
+    UserLoginByGithubContext convertPO2Context(UserLoginByGithubPO po);
+
 }

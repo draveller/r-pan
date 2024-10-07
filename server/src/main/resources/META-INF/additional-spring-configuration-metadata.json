@@ -1,6 +1,18 @@
 {
   "properties": [
     {
+      "name": "com.imooc.pan.auth.github.client-id",
+      "type": "java.lang.String",
+      "description": "github的clientId",
+      "defaultValue": ""
+    },
+    {
+      "name": "com.imooc.pan.auth.github.client-secret",
+      "type": "java.lang.String",
+      "description": "github的clientSecret",
+      "defaultValue": ""
+    },
+    {
       "name": "com.imooc.pan.server.chunk-file-expiration-days",
       "type": "java.lang.Integer",
       "description": "分片文件的过期天数",

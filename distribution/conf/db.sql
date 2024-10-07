@@ -89,6 +89,25 @@ CREATE TABLE `r_pan_user`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for r_pan_third_party_auth
+-- ----------------------------
+DROP TABLE IF EXISTS `r_pan_third_party_auth`;
+CREATE TABLE `r_pan_third_party_auth`
+(
+    `id`           BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `user_id`      BIGINT       NOT NULL COMMENT '关联的用户 ID',
+    `provider`     VARCHAR(100) NOT NULL COMMENT 'OAuth 提供商名称（如 github, google）',
+    `provider_uid` VARCHAR(255) NOT NULL COMMENT '提供商用户唯一标识符',
+    `create_time`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `uk_provider_uid` (`provider`, `provider_uid`) USING BTREE COMMENT '提供商和其用户 ID 的唯一索引',
+    INDEX `idx_user_id` (`user_id`) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin COMMENT = '第三方授权登录表'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for r_pan_user_file
 -- ----------------------------
 DROP TABLE IF EXISTS `r_pan_user_file`;

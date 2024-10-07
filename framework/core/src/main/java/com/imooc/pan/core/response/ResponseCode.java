@@ -45,7 +45,11 @@ public enum ResponseCode {
     /**
      * 需要登录
      */
-    NEED_LOGIN(10, "NEED_LOGIN");
+    NEED_LOGIN(10, "需要登录"),
+    /**
+     * 用户不存在
+     */
+    USER_NOT_EXISTS(11, "用户不存在");
 
     /**
      * 状态码
