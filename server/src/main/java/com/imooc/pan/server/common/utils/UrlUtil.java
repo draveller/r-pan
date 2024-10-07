@@ -2,6 +2,7 @@ package com.imooc.pan.server.common.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 前端传的参数字符串, 有时候需要解码, 有时候则不需要...
@@ -30,11 +31,7 @@ public class UrlUtil {
     }
 
     public static String decodeIfNeeds(String input) {
-        try {
-            return needsUrlDecode(input) ? URLDecoder.decode(input, "UTF-8") : input;
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return needsUrlDecode(input) ? URLDecoder.decode(input, StandardCharsets.UTF_8) : input;
     }
 
 }

@@ -108,7 +108,7 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
         }
         List<String> realPathList = chunkRecordList.stream()
                 .sorted(Comparator.comparingInt(RPanFileChunk::getChunkNumber))
-                .map(RPanFileChunk::getRealPath).collect(Collectors.toList());
+                .map(RPanFileChunk::getRealPath).toList();
 
         try {
             // 委托存储引擎去合并文件分片
@@ -127,7 +127,7 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
         }
 
         // 删除文件分片记录
-        List<Long> fileChunkRecordIdList = chunkRecordList.stream().map(RPanFileChunk::getId).collect(Collectors.toList());
+        List<Long> fileChunkRecordIdList = chunkRecordList.stream().map(RPanFileChunk::getId).toList();
         this.iFileChunkService.removeByIds(fileChunkRecordIdList);
     }
 

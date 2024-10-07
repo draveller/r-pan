@@ -13,6 +13,9 @@ import java.security.MessageDigest;
  */
 public class MessageDigestUtil {
 
+    private MessageDigestUtil() {
+    }
+
     private static final String MD5_STR = "MD5";
     private static final String SHA1_STR = "SHA1";
     private static final String SHA256_STR = "SHA-256";

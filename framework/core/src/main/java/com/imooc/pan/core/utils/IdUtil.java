@@ -2,20 +2,14 @@ package com.imooc.pan.core.utils;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.PrimitiveArrayUtil;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.core.exception.RPanBusinessException;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 雪花算法id生成器
@@ -114,6 +108,7 @@ public class IdUtil {
             e = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e1) {
             e1.printStackTrace();
+            throw new RPanBusinessException("getMachineNum failed");
         }
         while (e.hasMoreElements()) {
             NetworkInterface ni = e.nextElement();
@@ -197,7 +192,7 @@ public class IdUtil {
             ByteBuffer byteBuffer = ByteBuffer.allocate(8);
             byteBuffer.putLong(0, id);
             byte[] content = byteBuffer.array();
-            byte[] encrypt = AES128Util.aesEncrypt(content);
+            byte[] encrypt = CryptoUtil.aesEncrypt(content);
             return Base64.encode(encrypt);
         }
         return StringUtils.EMPTY;
@@ -212,7 +207,7 @@ public class IdUtil {
     public static Long decrypt(String decryptId) {
         if (StringUtils.isNotBlank(decryptId)) {
             byte[] encrypt = Base64.decode(decryptId);
-            byte[] content = AES128Util.aesDecode(encrypt);
+            byte[] content = CryptoUtil.aesDecode(encrypt);
             if (PrimitiveArrayUtil.isNotEmpty(content)) {
                 ByteBuffer byteBuffer = ByteBuffer.wrap(content);
                 return byteBuffer.getLong();
@@ -222,18 +217,5 @@ public class IdUtil {
         throw new RPanBusinessException("the decryptId can not be empty");
     }
 
-    /**
-     * 解密多个加密ID拼接的字符串
-     */
-    public static List<Long> decryptIdList(String decryptIdStr) {
-        if (StringUtils.isBlank(decryptIdStr)) {
-            return Lists.newArrayList();
-        }
-        List<String> decryptIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR).splitToList(decryptIdStr);
-        if (CollectionUtils.isEmpty(decryptIdList)) {
-            return Lists.newArrayList();
-        }
-        return decryptIdList.stream().map(IdUtil::decrypt).collect(Collectors.toList());
-    }
 
 }

@@ -31,6 +31,6 @@ public class ShareFileDownloadContext implements Serializable {
     /**
      * 相应实体
      */
-    private HttpServletResponse response;
+    private transient HttpServletResponse response;
 
 }

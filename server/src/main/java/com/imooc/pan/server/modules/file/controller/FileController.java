@@ -1,6 +1,6 @@
 package com.imooc.pan.server.modules.file.controller;
 
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.utils.UrlUtil;
@@ -51,8 +51,6 @@ public class FileController {
 
         long realParentId;
         // 临时处理: 如果前端的父文件夹传了 -1 或 0, 都视为0
-        // todo: 此处是前端传参错误, 待修改...
-
         if ("-1".equals(parentId) || "0".equals(parentId)) {
             realParentId = 0L;
         } else {
@@ -61,7 +59,7 @@ public class FileController {
 
         List<Integer> fileTypeArray = null;
         if (!Objects.equals(FileConsts.ALL_FILE_TYPE, fileTypes)) {
-            fileTypeArray = Arrays.stream(fileTypes.split(RPanConstants.COMMON_SEPARATOR))
+            fileTypeArray = Arrays.stream(fileTypes.split(GlobalConst.COMMON_SEPARATOR))
                     .map(Integer::parseInt).toList();
         }
 
@@ -106,7 +104,7 @@ public class FileController {
         DeleteFileContext context = this.fileConverter.convertPO2Context(deleteFilePO);
 
         String fileIds = deleteFilePO.getFileIds();
-        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR))
+        List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR))
                 .map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 

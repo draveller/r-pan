@@ -19,8 +19,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
 
-    private static final Long BATCH_SIZE = 500L;
-
     @Resource
     private BloomFilterManager manager;
 

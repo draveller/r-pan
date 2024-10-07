@@ -27,7 +27,7 @@ public class StoreFileContext implements Serializable {
     /**
      * 文件输入流
      */
-    private InputStream inputStream;
+    private transient InputStream inputStream;
 
     /**
      * 文件上传后的物理路径

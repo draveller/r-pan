@@ -1,5 +1,6 @@
 package com.imooc.pan.server.modules.file.context;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @Data
 public class FileChunkUploadContext implements Serializable {
     @Serial
-private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 文件名
@@ -47,7 +48,7 @@ private static final long serialVersionUID = 1L;
     /**
      * 文件分片实体
      */
-    private MultipartFile file;
+    private transient MultipartFile file;
 
     /**
      * 用户ID

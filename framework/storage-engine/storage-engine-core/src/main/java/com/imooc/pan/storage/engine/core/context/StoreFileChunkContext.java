@@ -29,7 +29,7 @@ public class StoreFileChunkContext implements Serializable {
     /**
      * 文件输入流
      */
-    private InputStream inputStream;
+    private transient InputStream inputStream;
 
     /**
      * 文件的真实存储路径

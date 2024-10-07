@@ -1,9 +1,9 @@
 package com.imooc.pan.server.modules.file.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.config.PanServerConfig;
@@ -16,12 +16,10 @@ import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author 18063
@@ -45,8 +43,6 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
      * 文件分片保存
      * 1. 保存文件分片和记录
      * 2. 判断文件分片是否全部上传完成
-     *
-     * @param context
      */
     @Override
     public synchronized void saveChunkFile(FileChunkSaveContext context) {
@@ -59,15 +55,13 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
 
     /**
      * 判断是否所有的文件均上传完成
-     *
-     * @param context
      */
     private void doJudgeMergeFile(FileChunkSaveContext context) {
         LambdaQueryWrapper<RPanFileChunk> wrapper = Wrappers.<RPanFileChunk>lambdaQuery()
                 .eq(RPanFileChunk::getIdentifier, context.getIdentifier())
                 .eq(RPanFileChunk::getCreateUser, context.getUserId());
         long count = this.count(wrapper);
-        if (count ==Long.valueOf(context.getTotalChunks()) ) {
+        if (count == Long.valueOf(context.getTotalChunks())) {
             context.setMergeFlagEnum(MergeFlagEnum.READY);
         }
     }
@@ -76,8 +70,6 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
      * 执行文件分片上传保存的操作
      * 1. 委托文件存储引擎存储文件分片
      * 2. 保存文件分片记录
-     *
-     * @param context
      */
     private void doSaveChunkFile(FileChunkSaveContext context) {
         this.doStoreFileChunk(context);
@@ -86,8 +78,6 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
 
     /**
      * 保存文件分片记录
-     *
-     * @param context
      */
     private void doSaveRecord(FileChunkSaveContext context) {
         RPanFileChunk fileChunk = new RPanFileChunk();
@@ -102,15 +92,10 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
         fileChunk.setCreateUser(context.getUserId());
         fileChunk.setCreateTime(now);
         if (!this.save(fileChunk)) {
-            throw new RPanBusinessException("文件分片上传失败");
+            throw new RPanBusinessException(MsgConst.FILE_CHUNK_UPLOAD_FAILED);
         }
     }
 
-    /**
-     * 委托文件存储引擎保存文件分片
-     *
-     * @param context
-     */
     private void doStoreFileChunk(FileChunkSaveContext context) {
         try {
             StoreFileChunkContext storeFileChunkContext = fileConverter.fileChunkSaveContext2StoreFileChunkContext(context);
@@ -119,7 +104,7 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
             context.setRealPath(storeFileChunkContext.getRealPath());
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RPanBusinessException("文件分片上传失败");
+            throw new RPanBusinessException(MsgConst.FILE_CHUNK_UPLOAD_FAILED);
         }
     }
 

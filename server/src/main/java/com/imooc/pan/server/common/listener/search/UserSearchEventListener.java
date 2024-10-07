@@ -6,7 +6,6 @@ import com.imooc.pan.server.common.event.search.UserSearchEvent;
 import com.imooc.pan.server.modules.user.entity.RPanUserSearchHistory;
 import com.imooc.pan.server.modules.user.service.IUserSearchHistoryService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;

@@ -7,7 +7,7 @@ import com.aliyun.oss.model.*;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanFrameworkException;
 import com.imooc.pan.core.utils.FileUtils;
 import com.imooc.pan.core.utils.UUIDUtil;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 对接阿里云OSS的文件存储引擎实现方案
@@ -262,11 +261,11 @@ public class OSSStorageEngine extends AbstractStorageEngine {
     private String getFilePath(String fileSuffix) {
         return new StringBuffer()
                 .append(DateUtil.thisYear())
-                .append(RPanConstants.SLASH_STR)
+                .append(GlobalConst.SLASH_STR)
                 .append(DateUtil.thisMonth() + 1)
-                .append(RPanConstants.SLASH_STR)
+                .append(GlobalConst.SLASH_STR)
                 .append(DateUtil.thisDayOfMonth())
-                .append(RPanConstants.SLASH_STR)
+                .append(GlobalConst.SLASH_STR)
                 .append(UUIDUtil.getUUID())
                 .append(fileSuffix)
                 .toString();
@@ -284,17 +283,17 @@ public class OSSStorageEngine extends AbstractStorageEngine {
             return baseUrl;
         }
         StringBuilder urlStringBuffer = new StringBuilder(baseUrl);
-        urlStringBuffer.append(RPanConstants.QUESTION_MARK_STR);
+        urlStringBuffer.append(GlobalConst.QUESTION_MARK_STR);
         List<String> paramsList = Lists.newArrayList();
         StringBuilder urlParamsStringBuilder = new StringBuilder();
         params.forEach((key, value) -> {
-            urlParamsStringBuilder.setLength(RPanConstants.ZERO_INT);
+            urlParamsStringBuilder.setLength(GlobalConst.ZERO_INT);
             urlParamsStringBuilder.append(key);
-            urlParamsStringBuilder.append(RPanConstants.EQUALS_MARK_STR);
+            urlParamsStringBuilder.append(GlobalConst.EQUALS_MARK_STR);
             urlParamsStringBuilder.append(value);
             paramsList.add(urlParamsStringBuilder.toString());
         });
-        return urlStringBuffer.append(Joiner.on(RPanConstants.AND_MARK_STR).join(paramsList)).toString();
+        return urlStringBuffer.append(Joiner.on(GlobalConst.AND_MARK_STR).join(paramsList)).toString();
     }
 
     /**
@@ -305,10 +304,10 @@ public class OSSStorageEngine extends AbstractStorageEngine {
      */
     private String getBaseUrl(String url) {
         if (StringUtils.isBlank(url)) {
-            return RPanConstants.EMPTY_STR;
+            return GlobalConst.EMPTY_STR;
         }
         if (checkHaveParams(url)) {
-            return url.split(getSplitMark(RPanConstants.QUESTION_MARK_STR))[0];
+            return url.split(getSplitMark(GlobalConst.QUESTION_MARK_STR))[0];
         }
         return url;
     }
@@ -322,9 +321,9 @@ public class OSSStorageEngine extends AbstractStorageEngine {
      * @return
      */
     private String getSplitMark(String mark) {
-        return new StringBuffer(RPanConstants.LEFT_BRACKET_STR)
+        return new StringBuffer(GlobalConst.LEFT_BRACKET_STR)
                 .append(mark)
-                .append(RPanConstants.RIGHT_BRACKET_STR)
+                .append(GlobalConst.RIGHT_BRACKET_STR)
                 .toString();
     }
 
@@ -339,12 +338,12 @@ public class OSSStorageEngine extends AbstractStorageEngine {
         if (!checkHaveParams(url)) {
             return result;
         }
-        String paramsPart = url.split(getSplitMark(RPanConstants.QUESTION_MARK_STR))[1];
+        String paramsPart = url.split(getSplitMark(GlobalConst.QUESTION_MARK_STR))[1];
         if (StringUtils.isNotBlank(paramsPart)) {
-            List<String> paramPairList = Splitter.on(RPanConstants.AND_MARK_STR).splitToList(paramsPart);
+            List<String> paramPairList = Splitter.on(GlobalConst.AND_MARK_STR).splitToList(paramsPart);
             paramPairList.stream().forEach(paramPair -> {
-                String[] paramArr = paramPair.split(getSplitMark(RPanConstants.EQUALS_MARK_STR));
-                if (paramArr != null && paramArr.length == RPanConstants.TWO_INT) {
+                String[] paramArr = paramPair.split(getSplitMark(GlobalConst.EQUALS_MARK_STR));
+                if (paramArr != null && paramArr.length == GlobalConst.TWO_INT) {
                     result.put(paramArr[0], paramArr[1]);
                 }
             });
@@ -359,7 +358,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
      * @return
      */
     private boolean checkHaveParams(String url) {
-        return StringUtils.isNotBlank(url) && url.indexOf(RPanConstants.QUESTION_MARK_STR) != RPanConstants.MINUS_ONE_INT;
+        return StringUtils.isNotBlank(url) && url.indexOf(GlobalConst.QUESTION_MARK_STR) != GlobalConst.MINUS_ONE_INT;
     }
 
     /**

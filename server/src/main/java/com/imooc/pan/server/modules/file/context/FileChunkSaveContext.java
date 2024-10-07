@@ -12,8 +12,9 @@ import java.io.Serializable;
  */
 @Data
 public class FileChunkSaveContext implements Serializable {
+
     @Serial
-private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 文件名
@@ -48,7 +49,7 @@ private static final long serialVersionUID = 1L;
     /**
      * 文件分片实体
      */
-    private MultipartFile file;
+    private transient MultipartFile file;
 
     /**
      * 用户ID

@@ -19,16 +19,13 @@ import java.util.Objects;
  */
 public class HttpLogEntityBuilder {
 
+    private static final String UNKNOWN_STR = "unknown";
+
     private HttpLogEntityBuilder() {
     }
 
     /**
      * 构建HTTP日志对象
-     *
-     * @param requestWrapper
-     * @param responseWrapper
-     * @param stopWatch
-     * @return
      */
     public static HttpLogEntity build(ContentCachingRequestWrapper requestWrapper, ContentCachingResponseWrapper responseWrapper, StopWatch stopWatch) {
         HttpLogEntity httpLogEntity = new HttpLogEntity();
@@ -56,29 +53,26 @@ public class HttpLogEntityBuilder {
 
     /**
      * 获取IP地址
-     *
-     * @param request
-     * @return
      */
     public static String getIpAddress(HttpServletRequest request) {
         if (request == null) {
-            return "unknown";
+            return UNKNOWN_STR;
         }
         String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || UNKNOWN_STR.equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || UNKNOWN_STR.equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Forwarded-For");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || UNKNOWN_STR.equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || UNKNOWN_STR.equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");
         }
 
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || UNKNOWN_STR.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
 
@@ -87,9 +81,6 @@ public class HttpLogEntityBuilder {
 
     /**
      * 获取请求头MAP
-     *
-     * @param request
-     * @return
      */
     public static Map<String, String> getRequestHeaderMap(HttpServletRequest request) {
         Map<String, String> result = Maps.newHashMap();
@@ -108,9 +99,6 @@ public class HttpLogEntityBuilder {
 
     /**
      * 获取响应头MAP
-     *
-     * @param response
-     * @return
      */
     public static Map<String, String> getResponseHeaderMap(HttpServletResponse response) {
         Map<String, String> result = Maps.newHashMap();

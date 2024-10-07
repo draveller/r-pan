@@ -1,6 +1,6 @@
 package com.imooc.pan.server.common.utils;
 
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 
 /**
  * 用户id存储工具类
@@ -29,7 +29,7 @@ public class UserIdUtil {
     public static Long get() {
         Long userId = UserIdUtil.threadLocal.get();
         if (userId == null) {
-            return RPanConstants.ZERO_LONG;
+            return GlobalConst.ZERO_LONG;
         }
         return userId;
     }

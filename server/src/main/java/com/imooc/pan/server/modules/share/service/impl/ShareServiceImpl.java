@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.IdUtil;
@@ -48,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -105,7 +106,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         saveShare(context);
         saveShareFiles(context);
         RPanShareUrlVO vo = assembleShareVO(context);
-        afterCreate(context, vo);
+        afterCreate(context);
         return vo;
     }
 
@@ -288,7 +289,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * @param context
      * @param vo
      */
-    private void afterCreate(CreateShareUrlContext context, RPanShareUrlVO vo) {
+    private void afterCreate(CreateShareUrlContext context) {
         BloomFilter<Long> filter = manager.getFilter(BLOOM_FILTER_NAME);
         if (filter != null) {
             filter.put(context.getEntity().getShareId());
@@ -334,7 +335,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
         if (!updateById(entity)) {
             applicationContext.publishEvent(new ErrorLogEvent(this, "更新分享状态失败，请手动更改状态，分享ID为："
-                    + entity.getShareId() + ", 分享" + "状态改为：" + shareStatus.getCode(), RPanConstants.ZERO_LONG));
+                    + entity.getShareId() + ", 分享" + "状态改为：" + shareStatus.getCode(), GlobalConst.ZERO_LONG));
         }
     }
 
@@ -483,9 +484,9 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         allFileRecords = allFileRecords.stream()
                 .filter(Objects::nonNull)
                 .filter(entity -> Objects.equals(entity.getDelFlag(), DelFlagEnum.NO.getCode()))
-                .collect(Collectors.toList());
+                .toList();
 
-        List<Long> allFileIdList = allFileRecords.stream().map(RPanUserFile::getFileId).collect(Collectors.toList());
+        List<Long> allFileIdList = allFileRecords.stream().map(RPanUserFile::getFileId).toList();
 
         if (allFileIdList.containsAll(fileIdList)) {
             return iUserFileService.transferVOList(allFileRecords);
@@ -560,7 +561,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      */
     private String encryptUsername(String username) {
         StringBuilder stringBuffer = new StringBuilder(username);
-        stringBuffer.replace(RPanConstants.TWO_INT, username.length() - RPanConstants.TWO_INT, RPanConstants.COMMON_ENCRYPT_STR);
+        stringBuffer.replace(GlobalConst.TWO_INT, username.length() - GlobalConst.TWO_INT, GlobalConst.COMMON_ENCRYPT_STR);
         return stringBuffer.toString();
     }
 
@@ -770,7 +771,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         entity.setShareDayType(context.getShareDayType());
 
         Integer shareDay = ShareDayTypeEnum.getShareDayByCode(context.getShareDayType());
-        if (Objects.equals(RPanConstants.MINUS_ONE_INT, shareDay)) {
+        if (Objects.equals(GlobalConst.MINUS_ONE_INT, shareDay)) {
             throw new RPanBusinessException("分享天数非法");
         }
 
@@ -810,10 +811,10 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
             throw new RPanBusinessException("分享的ID不能为空");
         }
         String sharePrefix = config.getSharePrefix();
-        if (!sharePrefix.endsWith(RPanConstants.SLASH_STR)) {
-            sharePrefix += RPanConstants.SLASH_STR;
+        if (!sharePrefix.endsWith(GlobalConst.SLASH_STR)) {
+            sharePrefix += GlobalConst.SLASH_STR;
         }
-        return sharePrefix + URLEncoder.encode(IdUtil.encrypt(shareId));
+        return sharePrefix + URLEncoder.encode(IdUtil.encrypt(shareId), StandardCharsets.UTF_8);
     }
 
 }

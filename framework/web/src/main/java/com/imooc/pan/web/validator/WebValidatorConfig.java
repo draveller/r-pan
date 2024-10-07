@@ -1,6 +1,6 @@
 package com.imooc.pan.web.validator;
 
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.boot.SpringBootConfiguration;
@@ -33,7 +33,7 @@ public class WebValidatorConfig {
     private Validator rPanValidator() {
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
                 .configure()
-                .addProperty(FAIL_FAST_KEY, RPanConstants.TRUE_STR)
+                .addProperty(FAIL_FAST_KEY, GlobalConst.TRUE_STR)
                 .buildValidatorFactory();
 
         return validatorFactory.getValidator();

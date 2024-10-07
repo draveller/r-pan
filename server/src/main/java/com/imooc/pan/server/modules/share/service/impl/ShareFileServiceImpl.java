@@ -9,6 +9,7 @@ import com.imooc.pan.server.modules.share.entity.RPanShareFile;
 import com.imooc.pan.server.modules.share.mapper.RPanShareFileMapper;
 import com.imooc.pan.server.modules.share.service.IShareFileService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +28,7 @@ public class ShareFileServiceImpl extends ServiceImpl<RPanShareFileMapper, RPanS
      * @param context
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveShareFiles(SaveShareFilesContext context) {
         Long shareId = context.getShareId();
         List<Long> shareFileIdList = context.getShareFileIdList();

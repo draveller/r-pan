@@ -1,15 +1,15 @@
 package com.imooc.pan.server.common.cache;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.imooc.pan.cache.core.constants.CacheConsts;
+import com.imooc.pan.cache.core.constants.CacheConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
+import jakarta.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.lang.Nullable;
 
-import jakarta.annotation.Resource;
 import java.io.Serializable;
 import java.util.*;
 
@@ -60,7 +60,7 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
             return false;
         }
         for (Object id : ids) {
-            if (!this.removeById((Serializable)id)) {
+            if (!this.removeById((Serializable) id)) {
                 return false;
             }
         }
@@ -72,7 +72,7 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
         if (this.cacheManager == null) {
             throw new RPanBusinessException("the cache manager is empty");
         }
-        return this.cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+        return this.cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME);
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.imooc.pan.server.modules.share.enums;
 
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -31,14 +31,14 @@ public enum ShareDayTypeEnum {
      */
     public static Integer getShareDayByCode(Integer code) {
         if (Objects.isNull(code)) {
-            return RPanConstants.MINUS_ONE_INT;
+            return GlobalConst.MINUS_ONE_INT;
         }
         for (ShareDayTypeEnum value : values()) {
             if (Objects.equals(value.getCode(), code)) {
                 return value.getDays();
             }
         }
-        return RPanConstants.MINUS_ONE_INT;
+        return GlobalConst.MINUS_ONE_INT;
     }
 
 }

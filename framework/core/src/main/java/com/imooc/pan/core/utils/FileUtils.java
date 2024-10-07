@@ -1,7 +1,7 @@
 package com.imooc.pan.core.utils;
 
 import cn.hutool.core.date.DateUtil;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,10 +31,10 @@ public class FileUtils {
      * @return
      */
     public static String getFileSuffix(String filename) {
-        if (StringUtils.isBlank(filename) || filename.lastIndexOf(RPanConstants.POINT_STR) == RPanConstants.MINUS_ONE_INT) {
-            return RPanConstants.EMPTY_STR;
+        if (StringUtils.isBlank(filename) || filename.lastIndexOf(GlobalConst.POINT_STR) == GlobalConst.MINUS_ONE_INT) {
+            return GlobalConst.EMPTY_STR;
         }
-        return filename.substring(filename.lastIndexOf(RPanConstants.POINT_STR)).toLowerCase();
+        return filename.substring(filename.lastIndexOf(GlobalConst.POINT_STR)).toLowerCase();
     }
 
     /**
@@ -44,10 +44,10 @@ public class FileUtils {
      * @return
      */
     public static String getFileExtName(String filename) {
-        if (StringUtils.isBlank(filename) || filename.lastIndexOf(RPanConstants.POINT_STR) == RPanConstants.MINUS_ONE_INT) {
-            return RPanConstants.EMPTY_STR;
+        if (StringUtils.isBlank(filename) || filename.lastIndexOf(GlobalConst.POINT_STR) == GlobalConst.MINUS_ONE_INT) {
+            return GlobalConst.EMPTY_STR;
         }
-        return filename.substring(filename.lastIndexOf(RPanConstants.POINT_STR) + RPanConstants.ONE_INT).toLowerCase();
+        return filename.substring(filename.lastIndexOf(GlobalConst.POINT_STR) + GlobalConst.ONE_INT).toLowerCase();
     }
 
     /**
@@ -58,7 +58,7 @@ public class FileUtils {
      */
     public static String byteCountToDisplaySize(Long totalSize) {
         if (Objects.isNull(totalSize)) {
-            return RPanConstants.EMPTY_STR;
+            return GlobalConst.EMPTY_STR;
         }
         return org.apache.commons.io.FileUtils.byteCountToDisplaySize(totalSize);
     }
@@ -110,14 +110,13 @@ public class FileUtils {
      */
     public static void writeStream2File(InputStream inputStream, File targetFile, Long totalSize) throws IOException {
         createFile(targetFile);
-        RandomAccessFile randomAccessFile = new RandomAccessFile(targetFile, "rw");
-        FileChannel outputChannel = randomAccessFile.getChannel();
-        ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
-        outputChannel.transferFrom(inputChannel, 0L, totalSize);
-        inputChannel.close();
-        outputChannel.close();
-        randomAccessFile.close();
-        inputStream.close();
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(targetFile, "rw");
+             FileChannel outputChannel = randomAccessFile.getChannel();
+             ReadableByteChannel inputChannel = Channels.newChannel(inputStream)) {
+            outputChannel.transferFrom(inputChannel, 0L, totalSize);
+            inputStream.close();
+        }
+
     }
 
     /**
@@ -143,10 +142,7 @@ public class FileUtils {
      * @return
      */
     public static String generateDefaultStoreFileRealPath() {
-        return new StringBuffer(System.getProperty("user.home"))
-                .append(File.separator)
-                .append("rpan")
-                .toString();
+        return System.getProperty("user.home") + File.separator + "rpan";
     }
 
     /**
@@ -155,12 +151,9 @@ public class FileUtils {
      * @return
      */
     public static String generateDefaultStoreFileChunkRealPath() {
-        return new StringBuffer(System.getProperty("user.home"))
-                .append(File.separator)
-                .append("rpan")
-                .append(File.separator)
-                .append("chunks")
-                .toString();
+        return System.getProperty("user.home") +
+                File.separator + "rpan" +
+                File.separator + "chunks";
     }
 
     /**
@@ -174,20 +167,13 @@ public class FileUtils {
      * @return
      */
     public static String generateStoreFileChunkRealPath(String basePath, String identifier, Integer chunkNumber) {
-        return new StringBuffer(basePath)
-                .append(File.separator)
-                .append(DateUtil.thisYear())
-                .append(File.separator)
-                .append(DateUtil.thisMonth() + 1)
-                .append(File.separator)
-                .append(DateUtil.thisDayOfMonth())
-                .append(File.separator)
-                .append(identifier)
-                .append(File.separator)
-                .append(UUIDUtil.getUUID())
-                .append(RPanConstants.COMMON_SEPARATOR)
-                .append(chunkNumber)
-                .toString();
+        return basePath +
+                File.separator + DateUtil.thisYear() +
+                File.separator + (DateUtil.thisMonth() + 1) +
+                File.separator + DateUtil.thisDayOfMonth() +
+                File.separator + identifier +
+                File.separator + UUIDUtil.getUUID() +
+                GlobalConst.COMMON_SEPARATOR + chunkNumber;
     }
 
     /**
@@ -211,7 +197,7 @@ public class FileUtils {
     public static void writeFile2OutputStream(FileInputStream input, OutputStream out, long length) throws IOException {
         FileChannel fileChannel = input.getChannel();
         WritableByteChannel writableByteChannel = Channels.newChannel(out);
-        fileChannel.transferTo(RPanConstants.ZERO_LONG, length, writableByteChannel);
+        fileChannel.transferTo(GlobalConst.ZERO_LONG, length, writableByteChannel);
         out.flush();
         input.close();
         out.close();
@@ -228,8 +214,8 @@ public class FileUtils {
     public static void writeStream2StreamNormal(InputStream inputStream, OutputStream outputStream) throws IOException {
         byte[] buffer = new byte[1024];
         int len;
-        while ((len = inputStream.read(buffer)) != RPanConstants.MINUS_ONE_INT) {
-            outputStream.write(buffer, RPanConstants.ZERO_INT, len);
+        while ((len = inputStream.read(buffer)) != GlobalConst.MINUS_ONE_INT) {
+            outputStream.write(buffer, GlobalConst.ZERO_INT, len);
         }
         outputStream.flush();
         inputStream.close();

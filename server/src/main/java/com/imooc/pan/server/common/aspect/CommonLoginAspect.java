@@ -1,6 +1,7 @@
 package com.imooc.pan.server.common.aspect;
 
-import com.imooc.pan.cache.core.constants.CacheConsts;
+import com.imooc.pan.cache.core.constants.CacheConst;
+import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.JwtUtil;
@@ -25,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 统一的登录拦截校验切面
@@ -113,7 +115,9 @@ public class CommonLoginAspect {
             return false;
         }
 
-        Cache cache = cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+        Cache cache = Optional.ofNullable(cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME))
+                .orElseThrow(() -> new RuntimeException(MsgConst.CACHE_NOT_FOUND));
+
         String redisAccessToken = cache.get(UserConsts.USER_LOGIN_PREFIX + userId, String.class);
         if (StringUtils.isBlank(redisAccessToken)) {
             return false;

@@ -23,6 +23,6 @@ public class ReadFileContext implements Serializable {
     /**
      * 文件的输出流
      */
-    private OutputStream outputStream;
+    private transient OutputStream outputStream;
 
 }

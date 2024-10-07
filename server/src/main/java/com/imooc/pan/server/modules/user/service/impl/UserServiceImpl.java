@@ -3,7 +3,8 @@ package com.imooc.pan.server.modules.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.imooc.pan.cache.core.constants.CacheConsts;
+import com.imooc.pan.cache.core.constants.CacheConst;
+import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.IdUtil;
@@ -175,7 +176,8 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     @Override
     public void exit(Long userId) {
         try {
-            Cache cache = cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+            Cache cache = Optional.ofNullable(cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME))
+                    .orElseThrow(()-> new RPanBusinessException(MsgConst.CACHE_NOT_FOUND));
             cache.evict(UserConsts.USER_LOGIN_PREFIX + userId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,7 +259,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     @Override
     public UserInfoVO info(Long userId) {
         RPanUser entity = Optional.ofNullable(this.getById(userId))
-                .orElseThrow(() -> new RPanBusinessException("用户不存在"));
+                .orElseThrow(() -> new RPanBusinessException(MsgConst.USER_DOES_NOT_EXISTS));
 
         RPanUserFile rootFile = Optional.ofNullable(this.iUserFileService.getUserRootFile(userId))
                 .orElseThrow(() -> new RPanBusinessException("用户根目录不存在"));
@@ -324,7 +326,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         Long userId = context.getUserId();
         String oldPassword = context.getOldPassword();
         RPanUser entity = Optional.ofNullable(this.getById(userId))
-                .orElseThrow(() -> new RPanBusinessException("用户不存在"));
+                .orElseThrow(() -> new RPanBusinessException(MsgConst.USER_DOES_NOT_EXISTS));
 
         context.setEntity(entity);
         String encOldPwd = PasswordUtil.encryptPassword(entity.getSalt(), oldPassword);
@@ -343,7 +345,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         String username = context.getUsername();
         String password = context.getPassword();
         RPanUser entity = Optional.ofNullable(this.getRPanUserByUsername(username))
-                .orElseThrow(() -> new RPanBusinessException("用户不存在"));
+                .orElseThrow(() -> new RPanBusinessException(MsgConst.USER_DOES_NOT_EXISTS));
 
         String dbPwd = PasswordUtil.encryptPassword(entity.getSalt(), password);
         entity.setPassword(dbPwd);
@@ -389,7 +391,8 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         String accessToken = JwtUtil.generateToken(entity.getUsername(), UserConsts.LOGIN_USER_ID,
                 entity.getUserId(), UserConsts.ONE_DAY_LONG);
 
-        Cache cache = this.cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+        Cache cache = Optional.ofNullable(this.cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME))
+                .orElseThrow(()-> new RPanBusinessException(MsgConst.CACHE_NOT_FOUND));
         cache.put(UserConsts.USER_LOGIN_PREFIX + entity.getUserId(), accessToken);
 
         userLoginContext.setAccessToken(accessToken);

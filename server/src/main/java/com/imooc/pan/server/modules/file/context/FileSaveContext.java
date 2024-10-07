@@ -35,7 +35,7 @@ public class FileSaveContext implements Serializable {
     /**
      * 文件
      */
-    private MultipartFile file;
+    private transient MultipartFile file;
 
     /**
      * 当前用户ID

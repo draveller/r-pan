@@ -36,5 +36,5 @@ public class FileUploadPO implements Serializable {
 
     @Schema(name = "文件实体", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "文件实体不能为空")
-    private MultipartFile file;
+    private transient MultipartFile file;
 }

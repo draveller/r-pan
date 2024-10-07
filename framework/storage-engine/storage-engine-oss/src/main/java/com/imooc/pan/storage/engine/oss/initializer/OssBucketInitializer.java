@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 /**
  * OSS桶初始化器
  */
-@Component
 @Slf4j
+@Component
 public class OssBucketInitializer implements CommandLineRunner {
 
     @Resource
@@ -25,16 +25,16 @@ public class OssBucketInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         boolean bucketExist = client.doesBucketExist(config.getBucketName());
+        boolean autoCreateBucket = Boolean.TRUE.equals(config.getAutoCreateBucket());
 
-        if (!bucketExist && config.getAutoCreateBucket()) {
+        if (!bucketExist && autoCreateBucket) {
             client.createBucket(config.getBucketName());
         }
-
-        if (!bucketExist && !config.getAutoCreateBucket()) {
+        if (!bucketExist && !autoCreateBucket) {
             throw new RPanFrameworkException("the bucket " + config.getBucketName() + " is not available");
         }
 
-        log.info("the bucket " + config.getBucketName() + " have been created!");
+        log.info("the bucket {} have been created!", config.getBucketName());
     }
 
 }

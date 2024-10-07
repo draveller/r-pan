@@ -11,7 +11,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class GithubService {
@@ -40,10 +42,11 @@ public class GithubService {
 
         ResponseEntity<Map> response = restTemplate.postForEntity(url, requestEntity, Map.class);
 
-        return (String) response.getBody().get("access_token");
+        return (String) Optional.ofNullable(response.getBody())
+                .orElse(new HashMap<String, String>(0)).get("access_token");
     }
 
-    public Map<String, Object> getUserInfo(String accessToken) {
+    public Map getUserInfo(String accessToken) {
         String url = "https://api.github.com/user";
 
         HttpHeaders headers = new HttpHeaders();

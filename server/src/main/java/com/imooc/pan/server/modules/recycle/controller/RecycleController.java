@@ -2,7 +2,7 @@ package com.imooc.pan.server.modules.recycle.controller;
 
 
 import com.google.common.base.Splitter;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
@@ -16,13 +16,11 @@ import com.imooc.pan.server.modules.recycle.service.IRecycleService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 回收站模块控制器
@@ -56,7 +54,7 @@ public class RecycleController {
         RestoreContext context = new RestoreContext();
         context.setUserId(UserIdUtil.get());
         String fileIds = restorePO.getFileIds();
-        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR))
+        List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR))
                 .map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
         this.iRecycleService.restore(context);
@@ -73,7 +71,7 @@ public class RecycleController {
         context.setUserId(UserIdUtil.get());
 
         String fileIds = deletePO.getFileIds();
-        List<Long> fileIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
+        List<Long> fileIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
                 .splitToList(fileIds).stream().map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 

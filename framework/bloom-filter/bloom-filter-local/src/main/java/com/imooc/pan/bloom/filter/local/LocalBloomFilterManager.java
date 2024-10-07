@@ -5,9 +5,7 @@ import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
-import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -46,7 +44,7 @@ public class LocalBloomFilterManager implements BloomFilterManager, Initializing
     }
 
     @Override
-    public <T>BloomFilter<T> getFilter(String name) {
+    public <T> BloomFilter<T> getFilter(String name) {
         return bloomFilterContainer.get(name);
     }
 

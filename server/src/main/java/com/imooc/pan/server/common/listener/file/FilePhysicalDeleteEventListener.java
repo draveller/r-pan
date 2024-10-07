@@ -82,7 +82,7 @@ public class FilePhysicalDeleteEventListener implements ApplicationContextAware 
      * 委托文件存储引擎执行物理文件的删除
      */
     private void physicalDeleteFileByStorageEngine(List<RPanFile> realFileRecords) {
-        List<String> realPathList = realFileRecords.stream().map(RPanFile::getRealPath).collect(Collectors.toList());
+        List<String> realPathList = realFileRecords.stream().map(RPanFile::getRealPath).toList();
         DeleteFileContext deleteFileContext = new DeleteFileContext();
         deleteFileContext.setRealFilePathList(realPathList);
         try {
@@ -101,7 +101,7 @@ public class FilePhysicalDeleteEventListener implements ApplicationContextAware 
                 .filter(ele -> Objects.equals(ele.getFolderFlag(), FolderFlagEnum.NO.getCode()))
                 .filter(this::isUnused)
                 .map(RPanUserFile::getRealFileId)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

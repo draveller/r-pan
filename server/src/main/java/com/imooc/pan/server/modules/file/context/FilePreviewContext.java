@@ -27,7 +27,7 @@ public class FilePreviewContext implements Serializable {
     /**
      * 响应对象
      */
-    private HttpServletResponse response;
+    private transient HttpServletResponse response;
 
     /**
      * 用户ID

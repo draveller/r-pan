@@ -3,7 +3,7 @@ package com.imooc.pan.server.common.schedule.task;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.schedule.ScheduleTask;
 import com.imooc.pan.server.common.event.log.ErrorLogEvent;
 import com.imooc.pan.server.modules.file.entity.RPanFileChunk;
@@ -105,7 +105,7 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
      */
     private void deleteRealChunkFiles(List<RPanFileChunk> expireFileChunkRecords) {
         DeleteFileContext deleteFileContext = new DeleteFileContext();
-        List<String> realPaths = expireFileChunkRecords.stream().map(RPanFileChunk::getRealPath).collect(Collectors.toList());
+        List<String> realPaths = expireFileChunkRecords.stream().map(RPanFileChunk::getRealPath).toList();
         deleteFileContext.setRealFilePathList(realPaths);
         try {
             storageEngine.delete(deleteFileContext);
@@ -118,7 +118,7 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
      * @param realPaths
      */
     private void saveErrorLog(List<String> realPaths) {
-        ErrorLogEvent event = new ErrorLogEvent(this, "文件物理删除失败，请手动执行文件删除！文件路径为：" + JSON.toJSONString(realPaths), RPanConstants.ZERO_LONG);
+        ErrorLogEvent event = new ErrorLogEvent(this, "文件物理删除失败，请手动执行文件删除！文件路径为：" + JSON.toJSONString(realPaths), GlobalConst.ZERO_LONG);
         applicationContext.publishEvent(event);
     }
 
@@ -129,7 +129,7 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
      * @return
      */
     private List<Long> deleteChunkFileRecords(List<RPanFileChunk> expireFileChunkRecords) {
-        List<Long> idList = expireFileChunkRecords.stream().map(RPanFileChunk::getId).collect(Collectors.toList());
+        List<Long> idList = expireFileChunkRecords.stream().map(RPanFileChunk::getId).toList();
         iFileChunkService.removeByIds(idList);
         return idList;
     }

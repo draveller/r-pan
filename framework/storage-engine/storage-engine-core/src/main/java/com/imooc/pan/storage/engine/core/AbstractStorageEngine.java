@@ -1,7 +1,8 @@
 package com.imooc.pan.storage.engine.core;
 
 import cn.hutool.core.lang.Assert;
-import com.imooc.pan.cache.core.constants.CacheConsts;
+import com.imooc.pan.cache.core.constants.CacheConst;
+import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.storage.engine.core.context.*;
 import jakarta.annotation.Resource;
@@ -25,7 +26,7 @@ public abstract class AbstractStorageEngine implements StorageEngine {
         if (this.cacheManager == null) {
             throw new RPanBusinessException("the cacheManager is empty");
         }
-        return this.cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+        return this.cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME);
     }
 
     /**
@@ -136,8 +137,8 @@ public abstract class AbstractStorageEngine implements StorageEngine {
      * @param context
      */
     private void checkReadFileContext(ReadFileContext context) {
-        Assert.notBlank(context.getRealPath(), "文件真实存储路径不能为空");
-        Assert.notNull(context.getOutputStream(), "文件输出流不能为空");
+        Assert.notBlank(context.getRealPath(), MsgConst.FILE_REAL_PATH_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getOutputStream(), MsgConst.FILE_OUTPUT_STREAM_CANNOT_BE_EMPTY);
     }
 
     /**
@@ -154,10 +155,10 @@ public abstract class AbstractStorageEngine implements StorageEngine {
      * @param context
      */
     private void checkMergeFileContext(MergeFileContext context) {
-        Assert.notBlank(context.getFilename(), "文件名称不能为空");
-        Assert.notBlank(context.getIdentifier(), "文件唯一标识不能为空");
-        Assert.notNull(context.getUserId(), "用户id不能为空");
-        Assert.notEmpty(context.getRealPathList(), "文件分片路径列表不能为空");
+        Assert.notBlank(context.getFilename(), MsgConst.FILE_NAME_CANNOT_BE_EMPTY);
+        Assert.notBlank(context.getIdentifier(), MsgConst.FILE_UNIFICATION_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getUserId(), MsgConst.USER_ID_CANNOT_BE_EMPTY);
+        Assert.notEmpty(context.getRealPathList(), MsgConst.FILE_CHUNK_PATHS_CANNOT_BE_EMPTY);
     }
 
     /**
@@ -166,31 +167,30 @@ public abstract class AbstractStorageEngine implements StorageEngine {
      * @param context
      */
     private void checkStoreFileChunkContext(StoreFileChunkContext context) {
-        Assert.notBlank(context.getFilename(), "文件名称不能为空");
-        Assert.notNull(context.getIdentifier(), "文件唯一标识不能为空");
-        Assert.notNull(context.getTotalSize(), "文件大小不能为空");
-        Assert.notNull(context.getInputStream(), "文件分片输入流不能为空");
-        Assert.notNull(context.getTotalChunks(), "文件分片总数不能为空");
-        Assert.notNull(context.getChunkNumber(), "文件分片序号不能为空");
-        Assert.notNull(context.getCurrentChunkSize(), "文件分片的大小不能为空");
-        Assert.notNull(context.getUserId(), "当前用户ID不能为空");
+        Assert.notBlank(context.getFilename(), MsgConst.FILE_NAME_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getIdentifier(), MsgConst.FILE_UNIFICATION_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getTotalSize(), MsgConst.FILE_SIZE_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getInputStream(), MsgConst.FILE_INPUT_STREAM_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getTotalChunks(), MsgConst.FILE_TOTAL_CHUNKS_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getChunkNumber(), MsgConst.FILE_CHUNK_NUMBER_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getCurrentChunkSize(), MsgConst.FILE_CHUNK_SIZE_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getUserId(), MsgConst.USER_ID_CANNOT_BE_EMPTY);
     }
 
     /**
      * 校验上传物理文件的上下文信息
      */
     private void checkDeleteFileContext(DeleteFileContext context) {
-        Assert.notEmpty(context.getRealFilePathList(), "要删除的文件路径列表不能为空");
+        Assert.notEmpty(context.getRealFilePathList(), MsgConst.FILE_PATHS_CANNOT_BE_EMPTY);
     }
 
     /**
      * 校验上传物理文件的上下文信息
      */
     private void checkStoreFileContext(StoreFileContext context) {
-
-        Assert.notBlank(context.getFilename(), "文件名称不能为空");
-        Assert.notNull(context.getTotalSize(), "文件大小不能为空");
-        Assert.notNull(context.getInputStream(), "文件输入流不能为空");
+        Assert.notBlank(context.getFilename(), MsgConst.FILE_NAME_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getTotalSize(), MsgConst.FILE_SIZE_CANNOT_BE_EMPTY);
+        Assert.notNull(context.getInputStream(), MsgConst.FILE_INPUT_STREAM_CANNOT_BE_EMPTY);
     }
 
 }

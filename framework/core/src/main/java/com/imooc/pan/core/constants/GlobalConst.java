@@ -5,7 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * RPan公用基础常量类
  */
-public final class RPanConstants {
+public final class GlobalConst {
+
+    private GlobalConst() {
+    }
 
     /**
      * 公用的字符串分隔符

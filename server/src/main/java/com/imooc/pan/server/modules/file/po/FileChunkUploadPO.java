@@ -43,6 +43,6 @@ public class FileChunkUploadPO implements Serializable {
 
     @Schema(name = "文件分片实体", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "文件分片实体不能为空")
-    private MultipartFile file;
+    private transient MultipartFile file;
 
 }

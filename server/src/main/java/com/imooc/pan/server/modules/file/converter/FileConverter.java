@@ -1,6 +1,6 @@
 package com.imooc.pan.server.modules.file.converter;
 
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
@@ -17,7 +17,6 @@ import org.mapstruct.Mapping;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 用户模块实体转化工具类
@@ -75,7 +74,7 @@ public interface FileConverter {
         String fileIds = transferFilePO.getFileIds();
         String targetParentId = transferFilePO.getTargetParentId();
 
-        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR))
+        List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR))
                 .map(IdUtil::decrypt).toList();
         Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
 
@@ -89,7 +88,7 @@ public interface FileConverter {
         String fileIds = copyFilePO.getFileIds();
         String targetParentId = copyFilePO.getTargetParentId();
 
-        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR)).map(IdUtil::decrypt)
+        List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR)).map(IdUtil::decrypt)
                 .toList();
         Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
 
@@ -106,7 +105,7 @@ public interface FileConverter {
 
         String fileTypes = fileSearchPO.getFileTypes();
         if (StringUtils.isNotBlank(fileTypes) && !Objects.equals(FileConsts.ALL_FILE_TYPE, fileTypes)) {
-            context.setFileTypeArray(Arrays.stream(fileTypes.split(RPanConstants.COMMON_SEPARATOR))
+            context.setFileTypeArray(Arrays.stream(fileTypes.split(GlobalConst.COMMON_SEPARATOR))
                     .map(Integer::parseInt).toList());
         }
 

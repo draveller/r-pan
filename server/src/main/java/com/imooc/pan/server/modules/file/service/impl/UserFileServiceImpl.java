@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
+import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.FileUtil;
 import com.imooc.pan.core.utils.IdUtil;
@@ -42,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -153,14 +155,14 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     @Override
     public boolean secUpload(SecUploadFileContext context) {
-        RPanFile record = this.getFileByUserIdAndIdentifier(context);
+        RPanFile fileRecord = this.getFileByUserIdAndIdentifier(context);
 
-        if (record == null) {
+        if (fileRecord == null) {
             return false;
         }
         this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
                 FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
-                record.getFileId(), context.getUserId(), record.getFileSizeDesc());
+                fileRecord.getFileId(), context.getUserId(), fileRecord.getFileSizeDesc());
         return true;
     }
 
@@ -214,7 +216,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
                 .eq(RPanFileChunk::getCreateUser, context.getUserId())
                 .gt(RPanFileChunk::getExpirationTime, new Date());
 
-        List<Integer> uploadedChunks = this.iFileChunkService.listObjs(wrapper, val -> (Integer) val);
+        List<Integer> uploadedChunks = this.iFileChunkService.listObjs(wrapper, Integer.class::cast);
         UploadedChunksVO vo = new UploadedChunksVO();
         vo.setUploadedChunks(uploadedChunks);
         return vo;
@@ -246,12 +248,12 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     @Override
     public void download(FileDownloadContext context) {
-        RPanUserFile record = this.getById(context.getFileId());
-        this.checkOperatePermission(record, context.getUserId());
-        if (this.checkIsFolder(record)) {
-            throw new RPanBusinessException("文件夹暂不支持下载");
+        RPanUserFile fileRecord = this.getById(context.getFileId());
+        this.checkOperatePermission(fileRecord, context.getUserId());
+        if (this.checkIsFolder(fileRecord)) {
+            throw new RPanBusinessException(MsgConst.FOLDERS_DOWNLOADING_UNSUPPORTED);
         }
-        this.doDownLoad(record, context.getResponse());
+        this.downLoadFile(fileRecord, context.getResponse());
     }
 
     /**
@@ -267,7 +269,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         RPanUserFile fileRecord = this.getById(context.getFileId());
         this.checkOperatePermission(fileRecord, context.getUserId());
         if (this.checkIsFolder(fileRecord)) {
-            throw new RPanBusinessException("文件夹暂不支持下载");
+            throw new RPanBusinessException(MsgConst.FOLDERS_DOWNLOADING_UNSUPPORTED);
         }
         this.doPreview(fileRecord, context.getResponse());
     }
@@ -389,7 +391,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
             throw new RPanBusinessException("当前文件记录不存在");
         }
         if (checkIsFolder(fileRecord)) {
-            throw new RPanBusinessException("文件夹暂不支持下载");
+            throw new RPanBusinessException(MsgConst.FOLDERS_DOWNLOADING_UNSUPPORTED);
         }
         doDownload(fileRecord, context.getResponse());
     }
@@ -423,7 +425,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         if (CollectionUtils.isEmpty(records)) {
             return Lists.newArrayList();
         }
-        return records.stream().map(fileConverter::rPanUserFile2RPanUserFileVO).collect(Collectors.toList());
+        return records.stream().map(fileConverter::rPanUserFile2RPanUserFileVO).toList();
     }
     // ******************************** private ********************************
 
@@ -463,7 +465,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
             storageEngine.readFile(context);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RPanBusinessException("文件下载失败");
+            throw new RPanBusinessException(MsgConst.FILE_DOWNLOAD_FAILED);
         }
     }
 
@@ -498,7 +500,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @return
      */
     private List<RPanUserFile> findChildRecordsIgnoreDelFlag(Long fileId) {
-        LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.<RPanUserFile>lambdaQuery();
+        LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(RPanUserFile::getParentId, fileId);
         return list(wrapper);
     }
@@ -521,7 +523,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         if (CollectionUtils.isEmpty(result)) {
             return;
         }
-        List<Long> parentIdList = result.stream().map(FileSearchResultVO::getParentId).collect(Collectors.toList());
+        List<Long> parentIdList = result.stream().map(FileSearchResultVO::getParentId).toList();
         List<RPanUserFile> parentRecords = listByIds(parentIdList);
         Map<Long, String> fileId2FilenameMap = parentRecords.stream()
                 .collect(Collectors.toMap(RPanUserFile::getFileId, RPanUserFile::getFilename));
@@ -680,7 +682,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     private boolean checkIsChildFolder(List<RPanUserFile> prepareRecords, Long targetParentId, Long userId) {
         prepareRecords = prepareRecords.stream()
                 .filter(fileRecord -> Objects.equals(fileRecord.getFolderFlag(), FolderFlagEnum.YES.getCode()))
-                .collect(Collectors.toList());
+                .toList();
 
         if (CollectionUtils.isEmpty(prepareRecords)) {
             return false;
@@ -689,10 +691,9 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         Map<Long, List<RPanUserFile>> folderRecordMap = folderRecords.stream().collect(Collectors.groupingBy(RPanUserFile::getParentId));
         List<RPanUserFile> unavailableRecords = Collections.emptyList();
         unavailableRecords.addAll(prepareRecords);
-        prepareRecords.stream().forEach(fileRecord -> this.findAllChildFolderRecords(unavailableRecords, folderRecordMap, fileRecord));
+        prepareRecords.forEach(fileRecord -> this.findAllChildFolderRecords(unavailableRecords, folderRecordMap, fileRecord));
 
-        List<Long> unavailableFolderRecordIds = unavailableRecords.stream().map(RPanUserFile::getFileId).collect(Collectors.toList());
-
+        List<Long> unavailableFolderRecordIds = unavailableRecords.stream().map(RPanUserFile::getFileId).toList();
         return unavailableFolderRecordIds.contains(targetParentId);
     }
 
@@ -727,7 +728,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         }
 
         List<FolderTreeNodeVO> mappedFolderTreeNodeVOList = folderRecords.stream()
-                .map(fileConverter::rPanUserFile2FolderTreeNodeVO).collect(Collectors.toList());
+                .map(fileConverter::rPanUserFile2FolderTreeNodeVO).toList();
         Map<Long, List<FolderTreeNodeVO>> mappedFolderTreeNodeVOMap = mappedFolderTreeNodeVOList.stream()
                 .collect(Collectors.groupingBy(FolderTreeNodeVO::getParentId));
 
@@ -740,7 +741,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         }
 
         return mappedFolderTreeNodeVOList.stream()
-                .filter(node -> Objects.equals(node.getParentId(), 0L)).collect(Collectors.toList());
+                .filter(node -> Objects.equals(node.getParentId(), 0L)).toList();
     }
 
     /**
@@ -768,7 +769,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     private void doPreview(RPanUserFile fileRecord, HttpServletResponse response) {
         RPanFile realFileRecord = Optional.ofNullable(this.iFileService.getById(fileRecord.getRealFileId()))
-                .orElseThrow(() -> new RPanBusinessException("文件不存在"));
+                .orElseThrow(() -> new RPanBusinessException(MsgConst.FILE_DOES_NOT_EXISTS));
         this.addCommonResponseHeader(response, realFileRecord.getFilePreviewContentType());
         this.readFile2OutputStream(realFileRecord.getRealPath(), response);
     }
@@ -783,9 +784,9 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param fileRecord
      * @param response
      */
-    private void doDownLoad(RPanUserFile fileRecord, HttpServletResponse response) {
+    private void downLoadFile(RPanUserFile fileRecord, HttpServletResponse response) {
         RPanFile realFileRecord = Optional.ofNullable(this.iFileService.getById(fileRecord.getRealFileId()))
-                .orElseThrow(() -> new RPanBusinessException("文件不存在"));
+                .orElseThrow(() -> new RPanBusinessException(MsgConst.FILE_DOES_NOT_EXISTS));
         this.addCommonResponseHeader(response, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         this.addDownloadAttribute(response, fileRecord, realFileRecord);
         this.readFile2OutputStream(realFileRecord.getRealPath(), response);
@@ -820,7 +821,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         try {
             response.addHeader(FileConsts.CONTENT_DISPOSITION_STR,
                     FileConsts.CONTENT_DISPOSITION_VALUE_PREFIX_STR +
-                            new String(fileRecord.getFilename().getBytes(FileConsts.GB2312_STR), FileConsts.ISO_8859_1_STR));
+                            new String(fileRecord.getFilename().getBytes(FileConsts.GB2312_STR), StandardCharsets.ISO_8859_1));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new RPanBusinessException("文件下载失败");
@@ -849,7 +850,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     private boolean checkIsFolder(RPanUserFile fileRecord) {
         if (fileRecord == null) {
-            throw new RPanBusinessException("文件不存在");
+            throw new RPanBusinessException(MsgConst.FILE_DOES_NOT_EXISTS);
         }
         return FolderFlagEnum.YES.getCode().equals(fileRecord.getFolderFlag());
     }
@@ -864,7 +865,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     private void checkOperatePermission(RPanUserFile fileRecord, Long userId) {
         if (fileRecord == null) {
-            throw new RPanBusinessException("文件不存在");
+            throw new RPanBusinessException(MsgConst.FILE_DOES_NOT_EXISTS);
         }
         if (!Objects.equals(userId, fileRecord.getCreateUser())) {
             throw new RPanBusinessException("无权操作该文件");
@@ -1003,7 +1004,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     private void checkUpdateFilenameCondition(UpdateFilenameContext context) {
         Long fileId = context.getFileId();
         RPanUserFile entity = Optional.ofNullable(this.getById(fileId))
-                .orElseThrow(() -> new RPanBusinessException("文件(夹)不存在"));
+                .orElseThrow(() -> new RPanBusinessException(MsgConst.FILE_DOES_NOT_EXISTS));
 
         if (!Objects.equals(entity.getUserId(), context.getUserId())) {
             throw new RPanBusinessException("当前用户没有权限更新该文件(夹)的名称");
@@ -1085,13 +1086,13 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         String newFilenameWithoutSuffix;
         String newFilenameSuffix;
 
-        int newFilenamePointPosition = filename.lastIndexOf(RPanConstants.POINT_STR);
+        int newFilenamePointPosition = filename.lastIndexOf(GlobalConst.POINT_STR);
 
-        if (newFilenamePointPosition == RPanConstants.MINUS_ONE_INT) {
+        if (newFilenamePointPosition == GlobalConst.MINUS_ONE_INT) {
             newFilenameWithoutSuffix = filename;
             newFilenameSuffix = StringUtils.EMPTY;
         } else {
-            newFilenameWithoutSuffix = filename.substring(RPanConstants.ZERO_INT, newFilenamePointPosition);
+            newFilenameWithoutSuffix = filename.substring(GlobalConst.ZERO_INT, newFilenamePointPosition);
             newFilenameSuffix = filename.replace(newFilenameWithoutSuffix, StringUtils.EMPTY);
         }
 

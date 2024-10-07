@@ -19,11 +19,11 @@ public class ScheduleTaskHolder implements Serializable {
     /**
      * 执行的任务
      */
-    private ScheduleTask scheduleTask;
+    private transient ScheduleTask scheduleTask;
 
     /**
      * 执行任务的结果
      */
-    private ScheduledFuture<?> scheduledFuture;
+    private transient ScheduledFuture<?> scheduledFuture;
 
 }

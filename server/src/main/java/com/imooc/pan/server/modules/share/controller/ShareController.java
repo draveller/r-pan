@@ -1,7 +1,7 @@
 package com.imooc.pan.server.modules.share.controller;
 
 import com.google.common.base.Splitter;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.annotation.LoginIgnore;
@@ -25,12 +25,10 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag("分享模块")
 @RestController
@@ -52,7 +50,7 @@ public class ShareController {
         CreateShareUrlContext context = shareConverter.convertPO2Context(createShareUrlPO);
 
         String shareFileIds = createShareUrlPO.getShareFileIds();
-        List<Long> shareFileIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
+        List<Long> shareFileIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
                 .splitToList(shareFileIds).stream().map(IdUtil::decrypt).toList();
 
         context.setShareFileIdList(shareFileIdList);
@@ -84,7 +82,7 @@ public class ShareController {
         context.setUserId(UserIdUtil.get());
 
         String shareIds = cancelSharePO.getShareIds();
-        List<Long> shareIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
+        List<Long> shareIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
                 .splitToList(shareIds).stream().map(IdUtil::decrypt).toList();
         context.setShareIdList(shareIdList);
 
@@ -162,7 +160,7 @@ public class ShareController {
         ShareSaveContext context = new ShareSaveContext();
 
         String fileIds = shareSavePO.getFileIds();
-        List<Long> fileIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
+        List<Long> fileIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
                 .splitToList(fileIds).stream().map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 

@@ -1,9 +1,8 @@
 package com.imooc.pan.server.modules.recycle.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.server.common.event.file.FilePhysicalDeleteEvent;
 import com.imooc.pan.server.common.event.file.FileRestoreEvent;
@@ -188,7 +187,7 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
         List<RPanUserFile> records = context.getRecords();
 
         Set<String> filenameSet = records.stream().map(ele ->
-                ele.getFilename() + RPanConstants.COMMON_SEPARATOR + ele.getParentId()).collect(Collectors.toSet());
+                ele.getFilename() + GlobalConst.COMMON_SEPARATOR + ele.getParentId()).collect(Collectors.toSet());
         if (filenameSet.size() != records.size()) {
             throw new RPanBusinessException("文件还原失败，该还原文件中存在同名文件，请逐个还原并重命名");
         }

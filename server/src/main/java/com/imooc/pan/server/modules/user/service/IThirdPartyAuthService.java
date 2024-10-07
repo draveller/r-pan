@@ -1,10 +1,7 @@
 package com.imooc.pan.server.modules.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.imooc.pan.server.modules.user.context.*;
 import com.imooc.pan.server.modules.user.entity.RPanThirdPartyAuth;
-import com.imooc.pan.server.modules.user.entity.RPanUser;
-import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 
 /**
  * @author 18063

@@ -1,6 +1,6 @@
 package com.imooc.pan.server.common.utils;
 
-import com.imooc.pan.core.constants.RPanConstants;
+import com.imooc.pan.core.constants.GlobalConst;
 
 import java.util.Objects;
 
@@ -31,7 +31,7 @@ public class ShareIdUtil {
     public static Long get() {
         Long shareId = threadLocal.get();
         if (Objects.isNull(shareId)) {
-            return RPanConstants.ZERO_LONG;
+            return GlobalConst.ZERO_LONG;
         }
         return shareId;
     }
