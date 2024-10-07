@@ -1,21 +1,18 @@
 package com.imooc.pan.server.modules.file.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.imooc.pan.web.serializer.Date2StringSerializer;
 import com.imooc.pan.web.serializer.IdEncryptSerializer;
-
 import com.imooc.pan.web.serializer.LocalDateTime2StringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 用户查询文件列表响应实体
  */
-@Schema(name ="文件列表响应实体")
+@Schema(name = "文件列表响应实体")
 @Data
 public class RPanUserFileVO implements Serializable {
 

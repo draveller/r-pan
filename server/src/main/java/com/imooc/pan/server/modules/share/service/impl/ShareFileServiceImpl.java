@@ -11,7 +11,6 @@ import com.imooc.pan.server.modules.share.service.IShareFileService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,13 +35,13 @@ public class ShareFileServiceImpl extends ServiceImpl<RPanShareFileMapper, RPanS
         List<RPanShareFile> records = Lists.newArrayList();
 
         for (Long shareFileId : shareFileIdList) {
-            RPanShareFile record = new RPanShareFile();
-            record.setId(IdUtil.get());
-            record.setShareId(shareId);
-            record.setFileId(shareFileId);
-            record.setCreateUser(userId);
-            record.setCreateTime(LocalDateTime.now());
-            records.add(record);
+            RPanShareFile fileRecord = new RPanShareFile();
+            fileRecord.setId(IdUtil.get());
+            fileRecord.setShareId(shareId);
+            fileRecord.setFileId(shareFileId);
+            fileRecord.setCreateUser(userId);
+            fileRecord.setCreateTime(LocalDateTime.now());
+            records.add(fileRecord);
         }
 
         if (!saveBatch(records)) {

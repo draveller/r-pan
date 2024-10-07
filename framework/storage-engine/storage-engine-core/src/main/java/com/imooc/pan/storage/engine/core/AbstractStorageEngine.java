@@ -1,9 +1,10 @@
 package com.imooc.pan.storage.engine.core;
 
 import cn.hutool.core.lang.Assert;
-import com.imooc.pan.cache.core.constants.CacheConstants;
+import com.imooc.pan.cache.core.constants.CacheConsts;
+import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.storage.engine.core.context.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
@@ -14,19 +15,17 @@ import java.io.IOException;
  */
 public abstract class AbstractStorageEngine implements StorageEngine {
 
-    @Autowired
+    @Resource
     private CacheManager cacheManager;
 
     /**
      * 公用的获取缓存的方法
-     *
-     * @return
      */
     protected Cache getCache() {
         if (this.cacheManager == null) {
-            throw new RuntimeException("the cacheManager is empty");
+            throw new RPanBusinessException("the cacheManager is empty");
         }
-        return this.cacheManager.getCache(CacheConstants.R_PAN_CACHE_NAME);
+        return this.cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
     }
 
     /**
@@ -127,7 +126,7 @@ public abstract class AbstractStorageEngine implements StorageEngine {
      * 读取文件内容并写入到输出流中
      * 下沉到子类去实现
      */
-    protected abstract void doReadFile(ReadFileContext context)throws IOException;
+    protected abstract void doReadFile(ReadFileContext context) throws IOException;
 
     // ******************************** private ********************************
 

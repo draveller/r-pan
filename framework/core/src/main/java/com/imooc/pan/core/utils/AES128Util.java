@@ -2,6 +2,8 @@ package com.imooc.pan.core.utils;
 
 import cn.hutool.core.codec.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -9,6 +11,11 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 public class AES128Util {
+
+    private static final Logger log = LoggerFactory.getLogger(AES128Util.class);
+
+    private AES128Util() {
+    }
 
     /**
      * 默认向量常量
@@ -35,8 +42,7 @@ public class AES128Util {
             Cipher cipher = Cipher.getInstance(INSTANCE_STR);
             IvParameterSpec iv = new IvParameterSpec(IV.getBytes());
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, iv);
-            byte[] encrypted = cipher.doFinal(content);
-            return encrypted;
+            return cipher.doFinal(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,8 +62,7 @@ public class AES128Util {
             IvParameterSpec iv = new IvParameterSpec(IV.getBytes(StandardCharsets.UTF_8));
             Cipher cipher = Cipher.getInstance(INSTANCE_STR);
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, iv);
-            byte[] result = cipher.doFinal(content);
-            return result;
+            return cipher.doFinal(content);
         } catch (Exception e) {
             e.printStackTrace();
         }

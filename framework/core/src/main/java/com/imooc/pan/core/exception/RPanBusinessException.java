@@ -2,22 +2,24 @@ package com.imooc.pan.core.exception;
 
 import com.imooc.pan.core.response.ResponseCode;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 自定义全局业务异常类
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class RPanBusinessException extends RuntimeException {
 
     /**
      * 错误码
      */
-    private Integer code;
+    private final Integer code;
 
     /**
      * 错误信息
      */
-    private String message;
+    private final String message;
 
     public RPanBusinessException(ResponseCode responseCode) {
         this.code = responseCode.getCode();

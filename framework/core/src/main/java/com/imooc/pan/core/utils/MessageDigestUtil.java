@@ -31,8 +31,7 @@ public class MessageDigestUtil {
             return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         MessageDigest md = MessageDigest.getInstance(mode);
-        byte[] digestBytes = md.digest(originBytes);
-        return digestBytes;
+        return md.digest(originBytes);
     }
 
     /**

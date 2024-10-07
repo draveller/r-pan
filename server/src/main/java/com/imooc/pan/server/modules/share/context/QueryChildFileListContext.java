@@ -3,6 +3,7 @@ package com.imooc.pan.server.modules.share.context;
 import com.imooc.pan.server.modules.share.entity.RPanShare;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -11,7 +12,8 @@ import java.io.Serializable;
 @Data
 public class QueryChildFileListContext implements Serializable {
 
-    private static final long serialVersionUID = 884255624221527918L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 分享的ID
@@ -26,6 +28,6 @@ public class QueryChildFileListContext implements Serializable {
     /**
      * 分享对应的实体信息
      */
-    private RPanShare record;
+    private RPanShare entity;
 
 }

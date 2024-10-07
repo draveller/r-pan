@@ -3,6 +3,7 @@ package com.imooc.pan.server.modules.share.context;
 import com.imooc.pan.server.modules.share.entity.RPanShare;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import java.util.List;
 @Data
 public class CreateShareUrlContext implements Serializable {
 
-    private static final long serialVersionUID = 2945253863400727173L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 分享的名称
@@ -42,6 +44,6 @@ public class CreateShareUrlContext implements Serializable {
     /**
      * 已经保存的分享实体信息
      */
-    private RPanShare record;
+    private RPanShare entity;
 
 }

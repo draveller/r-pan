@@ -3,7 +3,7 @@ package com.imooc.pan.cache.core.constants;
 /**
  * r pan 服务端公用缓存常量类
  */
-public interface CacheConstants {
+public interface CacheConsts {
 
     /**
      * 缓存名称

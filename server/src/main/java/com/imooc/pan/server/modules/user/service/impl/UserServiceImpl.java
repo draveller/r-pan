@@ -3,7 +3,7 @@ package com.imooc.pan.server.modules.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.imooc.pan.cache.core.constants.CacheConstants;
+import com.imooc.pan.cache.core.constants.CacheConsts;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.IdUtil;
@@ -14,7 +14,7 @@ import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.CreateFolderContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
-import com.imooc.pan.server.modules.user.constants.UserConstants;
+import com.imooc.pan.server.modules.user.constants.UserConsts;
 import com.imooc.pan.server.modules.user.context.*;
 import com.imooc.pan.server.modules.user.converter.UserConverter;
 import com.imooc.pan.server.modules.user.entity.RPanThirdPartyAuth;
@@ -25,9 +25,9 @@ import com.imooc.pan.server.modules.user.service.GithubService;
 import com.imooc.pan.server.modules.user.service.IThirdPartyAuthService;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -48,25 +48,25 @@ import java.util.*;
 @Service
 public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> implements IUserService {
 
-    @Autowired
+    @Resource
     private UserConverter userConverter;
 
-    @Autowired
+    @Resource
     private IUserFileService iUserFileService;
 
-    @Autowired
+    @Resource
     private CacheManager cacheManager;
 
-    @Autowired
+    @Resource
     private GithubService githubService;
 
-    @Autowired
+    @Resource
     private IThirdPartyAuthService iThirdPartyAuthService;
 
-    @Autowired
+    @Resource
     @Qualifier(value = "userAnnotationCacheService")
     private AnnotationCacheService<RPanUser> cacheService;
-    @Autowired
+    @Resource
     private ThirdPartyAuthServiceImpl thirdPartyAuthServiceImpl;
 
     /**
@@ -175,8 +175,8 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     @Override
     public void exit(Long userId) {
         try {
-            Cache cache = cacheManager.getCache(CacheConstants.R_PAN_CACHE_NAME);
-            cache.evict(UserConstants.USER_LOGIN_PREFIX + userId);
+            Cache cache = cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+            cache.evict(UserConsts.USER_LOGIN_PREFIX + userId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RPanBusinessException("退出登录失败");
@@ -194,7 +194,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
                 .map(RPanUser::getQuestion).orElse(null);
 
         if (StringUtils.isBlank(question)) {
-            throw new RPanBusinessException("用户不存在");
+            throw new RPanBusinessException(ResponseCode.USER_NOT_EXISTS);
         }
 
         return question;
@@ -283,7 +283,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     @Override
     public boolean updateBatchById(Collection<RPanUser> entityList) {
         throw new RPanBusinessException("请更换手动缓存");
-        // return super.updateBatchById(entityList);
     }
 
     @Override
@@ -294,7 +293,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     @Override
     public List<RPanUser> listByIds(Collection<? extends Serializable> idList) {
         throw new RPanBusinessException("请更换手动缓存");
-        // return super.listByIds(idList);
     }
 
     // ******************************** private ********************************
@@ -363,7 +361,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      */
     private void checkForgetPwdToken(ResetPasswordContext context) {
         String token = context.getToken();
-        Object value = JwtUtil.analyzeToken(token, UserConstants.FORGET_USERNAME);
+        Object value = JwtUtil.analyzeToken(token, UserConsts.FORGET_USERNAME);
         if (value == null) {
             throw new RPanBusinessException(ResponseCode.TOKEN_EXPIRE);
         }
@@ -381,18 +379,18 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      * @return
      */
     private String generateCheckAccessToken(CheckAnswerContext checkAnswerContext) {
-        return JwtUtil.generateToken(checkAnswerContext.getUsername(), UserConstants.FORGET_USERNAME,
-                checkAnswerContext.getUsername(), UserConstants.FIVE_MINUTES_LONG);
+        return JwtUtil.generateToken(checkAnswerContext.getUsername(), UserConsts.FORGET_USERNAME,
+                checkAnswerContext.getUsername(), UserConsts.FIVE_MINUTES_LONG);
     }
 
     private void generateAndSaveAccessToken(UserLoginContext userLoginContext) {
         RPanUser entity = userLoginContext.getEntity();
 
-        String accessToken = JwtUtil.generateToken(entity.getUsername(), UserConstants.LOGIN_USER_ID,
-                entity.getUserId(), UserConstants.ONE_DAY_LONG);
+        String accessToken = JwtUtil.generateToken(entity.getUsername(), UserConsts.LOGIN_USER_ID,
+                entity.getUserId(), UserConsts.ONE_DAY_LONG);
 
-        Cache cache = this.cacheManager.getCache(CacheConstants.R_PAN_CACHE_NAME);
-        cache.put(UserConstants.USER_LOGIN_PREFIX + entity.getUserId(), accessToken);
+        Cache cache = this.cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+        cache.put(UserConsts.USER_LOGIN_PREFIX + entity.getUserId(), accessToken);
 
         userLoginContext.setAccessToken(accessToken);
     }

@@ -21,6 +21,9 @@ import java.util.Objects;
  */
 public class FileUtils {
 
+    private FileUtils() {
+    }
+
     /**
      * 获取文件的后缀
      *
@@ -127,7 +130,9 @@ public class FileUtils {
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();
         }
-        targetFile.createNewFile();
+        if (!Boolean.TRUE.equals(targetFile.createNewFile())) {
+            throw new RuntimeException("文件创建失败");
+        }
     }
 
     /**

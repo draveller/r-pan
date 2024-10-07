@@ -1,10 +1,11 @@
 package com.imooc.pan.server.modules.file.context;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileDownloadContext implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

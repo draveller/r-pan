@@ -25,7 +25,7 @@ public class OssStorageEngineConfig {
 
     private String bucketName;
 
-    private Boolean autoCreateBucket = Boolean.TRUE;
+    private Boolean autoCreateBucket;
 
     /**
      * 注入OSS操作客户端对象

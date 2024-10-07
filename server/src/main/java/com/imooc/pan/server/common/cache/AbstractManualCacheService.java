@@ -1,7 +1,7 @@
 package com.imooc.pan.server.common.cache;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.imooc.pan.cache.core.constants.CacheConstants;
+import com.imooc.pan.cache.core.constants.CacheConsts;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -12,7 +12,6 @@ import org.springframework.lang.Nullable;
 import jakarta.annotation.Resource;
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 手动处理缓存的公用顶级弗雷
@@ -24,7 +23,7 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
     /**
      * 注入属性时设置 required = false, 防止在某些情况下报错
      */
-//    @Autowired(required = false)
+//    @Resource(required = false)
     @Resource
     @Nullable
     private CacheManager cacheManager;
@@ -38,7 +37,7 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
         }
-        return ids.stream().map(this::getById).collect(Collectors.toList());
+        return ids.stream().map(this::getById).toList();
     }
 
     @Override
@@ -73,7 +72,7 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
         if (this.cacheManager == null) {
             throw new RPanBusinessException("the cache manager is empty");
         }
-        return this.cacheManager.getCache(CacheConstants.R_PAN_CACHE_NAME);
+        return this.cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
     }
 
     /**

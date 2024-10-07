@@ -8,6 +8,9 @@ import java.util.UUID;
  */
 public class UUIDUtil {
 
+    private UUIDUtil() {
+    }
+
     public static final String EMPTY_STR = "";
     public static final String HYPHEN_STR = "-";
 

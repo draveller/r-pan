@@ -1,9 +1,9 @@
 package com.imooc.pan.cache.caffeine.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.imooc.pan.cache.core.constants.CacheConstants;
+import com.imooc.pan.cache.core.constants.CacheConsts;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -15,12 +15,12 @@ import org.springframework.context.annotation.Bean;
 @SpringBootConfiguration
 public class CaffeineConfig {
 
-    @Autowired
+    @Resource
     private CaffeineCacheProperties properties;
 
     @Bean
     public CacheManager caffeineCacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager(CacheConstants.R_PAN_CACHE_NAME);
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager(CacheConsts.R_PAN_CACHE_NAME);
         cacheManager.setAllowNullValues(properties.getAllowNullValue());
         Caffeine<Object, Object> caffeineBuilder = Caffeine.newBuilder()
                 .initialCapacity(properties.getInitCacheCapacity())

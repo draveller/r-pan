@@ -4,7 +4,7 @@ import com.imooc.pan.core.utils.FileUtils;
 import com.imooc.pan.storage.engine.core.AbstractStorageEngine;
 import com.imooc.pan.storage.engine.core.context.*;
 import com.imooc.pan.storage.engine.local.config.LocalStorageEngineConfig;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 public class LocalStorageEngine extends AbstractStorageEngine {
 
-    @Autowired
+    @Resource
     private LocalStorageEngineConfig config;
 
     @Override

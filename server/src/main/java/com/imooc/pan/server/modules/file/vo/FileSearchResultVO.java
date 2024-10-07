@@ -1,21 +1,20 @@
 package com.imooc.pan.server.modules.file.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.imooc.pan.web.serializer.Date2StringSerializer;
 import com.imooc.pan.web.serializer.IdEncryptSerializer;
-
 import com.imooc.pan.web.serializer.LocalDateTime2StringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Schema(name ="搜索文件列表响应实体")
+@Schema(name = "搜索文件列表响应实体")
 @Data
 public class FileSearchResultVO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @JsonSerialize(using = IdEncryptSerializer.class)

@@ -14,6 +14,7 @@ import com.imooc.pan.server.modules.recycle.po.DeletePO;
 import com.imooc.pan.server.modules.recycle.po.RestorePO;
 import com.imooc.pan.server.modules.recycle.service.IRecycleService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 @RestController
 public class RecycleController {
 
-    @Autowired
+    @Resource
     private IRecycleService iRecycleService;
 
     @Operation(
@@ -56,7 +57,7 @@ public class RecycleController {
         context.setUserId(UserIdUtil.get());
         String fileIds = restorePO.getFileIds();
         List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR))
-                .map(IdUtil::decrypt).collect(Collectors.toList());
+                .map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
         this.iRecycleService.restore(context);
         return R.success();
@@ -73,7 +74,7 @@ public class RecycleController {
 
         String fileIds = deletePO.getFileIds();
         List<Long> fileIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
-                .splitToList(fileIds).stream().map(IdUtil::decrypt).collect(Collectors.toList());
+                .splitToList(fileIds).stream().map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 
         iRecycleService.delete(context);

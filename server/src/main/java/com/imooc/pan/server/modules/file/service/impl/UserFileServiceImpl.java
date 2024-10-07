@@ -28,12 +28,12 @@ import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.*;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.ReadFileContext;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
@@ -58,16 +58,16 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
 
     private ApplicationContext applicationContext;
 
-    @Autowired
+    @Resource
     private IFileService iFileService;
 
-    @Autowired
+    @Resource
     private FileConverter fileConverter;
 
-    @Autowired
+    @Resource
     private IFileChunkService iFileChunkService;
 
-    @Autowired
+    @Resource
     private StorageEngine storageEngine;
 
     @Override
@@ -177,7 +177,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         this.saveFile(context);
         this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
                 FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
-                context.getRecord().getFileId(), context.getUserId(), context.getRecord().getFileSizeDesc());
+                context.getEntity().getFileId(), context.getUserId(), context.getEntity().getFileSizeDesc());
     }
 
     /**
@@ -233,7 +233,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         this.mergeFileChunkAndSaveFile(context);
         this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
                 FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
-                context.getRecord().getFileId(), context.getUserId(), context.getRecord().getFileSizeDesc());
+                context.getEntity().getFileId(), context.getUserId(), context.getEntity().getFileSizeDesc());
     }
 
     /**
@@ -264,12 +264,12 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     @Override
     public void preview(FilePreviewContext context) {
-        RPanUserFile record = this.getById(context.getFileId());
-        this.checkOperatePermission(record, context.getUserId());
-        if (this.checkIsFolder(record)) {
+        RPanUserFile fileRecord = this.getById(context.getFileId());
+        this.checkOperatePermission(fileRecord, context.getUserId());
+        if (this.checkIsFolder(fileRecord)) {
             throw new RPanBusinessException("文件夹暂不支持下载");
         }
-        this.doPreview(record, context.getResponse());
+        this.doPreview(fileRecord, context.getResponse());
     }
 
     /**
@@ -368,11 +368,12 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         if (CollectionUtils.isEmpty(result)) {
             return result;
         }
-        long folderCount = result.stream().filter(record -> Objects.equals(record.getFolderFlag(), FolderFlagEnum.YES.getCode())).count();
+        long folderCount = result.stream()
+                .filter(ele -> Objects.equals(ele.getFolderFlag(), FolderFlagEnum.YES.getCode())).count();
         if (folderCount == 0) {
             return result;
         }
-        records.stream().forEach(record -> doFindAllChildRecords(result, record));
+        records.forEach(ele -> doFindAllChildRecords(result, ele));
         return result;
     }
 
@@ -383,14 +384,14 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     @Override
     public void downloadWithoutCheckUser(FileDownloadContext context) {
-        RPanUserFile record = getById(context.getFileId());
-        if (Objects.isNull(record)) {
+        RPanUserFile fileRecord = getById(context.getFileId());
+        if (Objects.isNull(fileRecord)) {
             throw new RPanBusinessException("当前文件记录不存在");
         }
-        if (checkIsFolder(record)) {
+        if (checkIsFolder(fileRecord)) {
             throw new RPanBusinessException("文件夹暂不支持下载");
         }
-        doDownload(record, context.getResponse());
+        doDownload(fileRecord, context.getResponse());
     }
 
     /**
@@ -434,16 +435,16 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 3、拼装下载文件的名称、长度等等响应信息
      * 4、委托文件存储引擎去读取文件内容到响应的输出流中
      *
-     * @param record
+     * @param fileRecord
      * @param response
      */
-    private void doDownload(RPanUserFile record, HttpServletResponse response) {
-        RPanFile realFileRecord = iFileService.getById(record.getRealFileId());
+    private void doDownload(RPanUserFile fileRecord, HttpServletResponse response) {
+        RPanFile realFileRecord = iFileService.getById(fileRecord.getRealFileId());
         if (Objects.isNull(realFileRecord)) {
             throw new RPanBusinessException("当前的文件记录不存在");
         }
         addCommonResponseHeader(response, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        addDownloadAttribute(response, record, realFileRecord);
+        addDownloadAttribute(response, fileRecord, realFileRecord);
         realFile2OutputStream(realFileRecord.getRealPath(), response);
     }
 
@@ -471,16 +472,16 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 忽略是否删除的标识
      *
      * @param result
-     * @param record
+     * @param fileRecord
      */
-    private void doFindAllChildRecords(List<RPanUserFile> result, RPanUserFile record) {
-        if (Objects.isNull(record)) {
+    private void doFindAllChildRecords(List<RPanUserFile> result, RPanUserFile fileRecord) {
+        if (Objects.isNull(fileRecord)) {
             return;
         }
-        if (!checkIsFolder(record)) {
+        if (!checkIsFolder(fileRecord)) {
             return;
         }
-        List<RPanUserFile> childRecords = findChildRecordsIgnoreDelFlag(record.getFileId());
+        List<RPanUserFile> childRecords = findChildRecordsIgnoreDelFlag(fileRecord.getFileId());
         if (CollectionUtils.isEmpty(childRecords)) {
             return;
         }
@@ -547,8 +548,8 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         if (CollectionUtils.isNotEmpty(prepareRecords)) {
             List<RPanUserFile> allRecords = new ArrayList<>();
 
-            prepareRecords.stream().forEach(record -> this.assembleCopyChildRecord(
-                    allRecords, record, context.getTargetParentId(), context.getUserId()
+            prepareRecords.stream().forEach(fileRecord -> this.assembleCopyChildRecord(
+                    allRecords, fileRecord, context.getTargetParentId(), context.getUserId()
             ));
 
 
@@ -563,26 +564,26 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 拼装当前文件记录以及所有的子文件记录
      *
      * @param allRecords
-     * @param record
+     * @param fileRecord
      * @param targetParentId
      * @param userId
      */
-    private void assembleCopyChildRecord(List<RPanUserFile> allRecords, RPanUserFile record, Long targetParentId, Long userId) {
+    private void assembleCopyChildRecord(List<RPanUserFile> allRecords, RPanUserFile fileRecord, Long targetParentId, Long userId) {
         LocalDateTime now = LocalDateTime.now();
         Long newFileId = IdUtil.get();
-        Long oldFileId = record.getFileId();
+        Long oldFileId = fileRecord.getFileId();
 
-        record.setParentId(targetParentId);
-        record.setFileId(newFileId);
-        record.setUserId(userId);
-        record.setCreateTime(now);
-        record.setUpdateTime(now);
-        record.setCreateUser(userId);
-        record.setUpdateUser(userId);
-        this.handleDuplicateFilename(record);
+        fileRecord.setParentId(targetParentId);
+        fileRecord.setFileId(newFileId);
+        fileRecord.setUserId(userId);
+        fileRecord.setCreateTime(now);
+        fileRecord.setUpdateTime(now);
+        fileRecord.setCreateUser(userId);
+        fileRecord.setUpdateUser(userId);
+        this.handleDuplicateFilename(fileRecord);
 
-        allRecords.add(record);
-        if (this.checkIsFolder(record)) {
+        allRecords.add(fileRecord);
+        if (this.checkIsFolder(fileRecord)) {
             List<RPanUserFile> childRecords = this.findChildRecords(oldFileId);
             if (CollectionUtils.isEmpty(childRecords)) {
                 return;
@@ -629,15 +630,15 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     private void doTransfer(TransferFileContext context) {
         List<RPanUserFile> prepareRecords = context.getPrepareRecords();
-        for (RPanUserFile record : prepareRecords) {
-            record.setParentId(context.getTargetParentId());
-            record.setUserId(context.getUserId());
+        for (RPanUserFile fileRecord : prepareRecords) {
+            fileRecord.setParentId(context.getTargetParentId());
+            fileRecord.setUserId(context.getUserId());
             LocalDateTime now = LocalDateTime.now();
-            record.setCreateTime(now);
-            record.setUpdateTime(now);
-            record.setCreateUser(context.getUserId());
-            record.setUpdateUser(context.getUserId());
-            this.handleDuplicateFilename(record);
+            fileRecord.setCreateTime(now);
+            fileRecord.setUpdateTime(now);
+            fileRecord.setCreateUser(context.getUserId());
+            fileRecord.setUpdateUser(context.getUserId());
+            this.handleDuplicateFilename(fileRecord);
         }
         if (!this.updateBatchById(prepareRecords)) {
             throw new RPanBusinessException("文件转移失败");
@@ -678,7 +679,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      */
     private boolean checkIsChildFolder(List<RPanUserFile> prepareRecords, Long targetParentId, Long userId) {
         prepareRecords = prepareRecords.stream()
-                .filter(record -> Objects.equals(record.getFolderFlag(), FolderFlagEnum.YES.getCode()))
+                .filter(fileRecord -> Objects.equals(fileRecord.getFolderFlag(), FolderFlagEnum.YES.getCode()))
                 .collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(prepareRecords)) {
@@ -688,7 +689,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         Map<Long, List<RPanUserFile>> folderRecordMap = folderRecords.stream().collect(Collectors.groupingBy(RPanUserFile::getParentId));
         List<RPanUserFile> unavailableRecords = Collections.emptyList();
         unavailableRecords.addAll(prepareRecords);
-        prepareRecords.stream().forEach(record -> this.findAllChildFolderRecords(unavailableRecords, folderRecordMap, record));
+        prepareRecords.stream().forEach(fileRecord -> this.findAllChildFolderRecords(unavailableRecords, folderRecordMap, fileRecord));
 
         List<Long> unavailableFolderRecordIds = unavailableRecords.stream().map(RPanUserFile::getFileId).collect(Collectors.toList());
 
@@ -700,13 +701,13 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      *
      * @param unavailableFolderRecords
      * @param folderRecordMap
-     * @param record
+     * @param fileRecord
      */
-    private void findAllChildFolderRecords(List<RPanUserFile> unavailableFolderRecords, Map<Long, List<RPanUserFile>> folderRecordMap, RPanUserFile record) {
-        if (Objects.isNull(record)) {
+    private void findAllChildFolderRecords(List<RPanUserFile> unavailableFolderRecords, Map<Long, List<RPanUserFile>> folderRecordMap, RPanUserFile fileRecord) {
+        if (Objects.isNull(fileRecord)) {
             return;
         }
-        List<RPanUserFile> childFolderRecords = folderRecordMap.get(record.getFileId());
+        List<RPanUserFile> childFolderRecords = folderRecordMap.get(fileRecord.getFileId());
         if (CollectionUtils.isEmpty(childFolderRecords)) {
             return;
         }
@@ -762,11 +763,11 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 2. 添加跨域的公共响应头
      * 3. 委托文件存储引擎去读取文件内容到响应的输出流中
      *
-     * @param record
+     * @param fileRecord
      * @param response
      */
-    private void doPreview(RPanUserFile record, HttpServletResponse response) {
-        RPanFile realFileRecord = Optional.ofNullable(this.iFileService.getById(record.getRealFileId()))
+    private void doPreview(RPanUserFile fileRecord, HttpServletResponse response) {
+        RPanFile realFileRecord = Optional.ofNullable(this.iFileService.getById(fileRecord.getRealFileId()))
                 .orElseThrow(() -> new RPanBusinessException("文件不存在"));
         this.addCommonResponseHeader(response, realFileRecord.getFilePreviewContentType());
         this.readFile2OutputStream(realFileRecord.getRealPath(), response);
@@ -779,14 +780,14 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 3. 拼装下载文件的名称, 长度等等响应信息
      * 4. 委托文件存储引擎去读取文件内容到响应的输出流中
      *
-     * @param record
+     * @param fileRecord
      * @param response
      */
-    private void doDownLoad(RPanUserFile record, HttpServletResponse response) {
-        RPanFile realFileRecord = Optional.ofNullable(this.iFileService.getById(record.getRealFileId()))
+    private void doDownLoad(RPanUserFile fileRecord, HttpServletResponse response) {
+        RPanFile realFileRecord = Optional.ofNullable(this.iFileService.getById(fileRecord.getRealFileId()))
                 .orElseThrow(() -> new RPanBusinessException("文件不存在"));
         this.addCommonResponseHeader(response, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        this.addDownloadAttribute(response, record, realFileRecord);
+        this.addDownloadAttribute(response, fileRecord, realFileRecord);
         this.readFile2OutputStream(realFileRecord.getRealPath(), response);
     }
 
@@ -812,14 +813,14 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 添加文件下载的属性信息
      *
      * @param response
-     * @param record
+     * @param fileRecord
      * @param realFileRecord
      */
-    private void addDownloadAttribute(HttpServletResponse response, RPanUserFile record, RPanFile realFileRecord) {
+    private void addDownloadAttribute(HttpServletResponse response, RPanUserFile fileRecord, RPanFile realFileRecord) {
         try {
             response.addHeader(FileConsts.CONTENT_DISPOSITION_STR,
                     FileConsts.CONTENT_DISPOSITION_VALUE_PREFIX_STR +
-                            new String(record.getFilename().getBytes(FileConsts.GB2312_STR), FileConsts.ISO_8859_1_STR));
+                            new String(fileRecord.getFilename().getBytes(FileConsts.GB2312_STR), FileConsts.ISO_8859_1_STR));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             throw new RPanBusinessException("文件下载失败");
@@ -843,14 +844,14 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     /**
      * 检查当前文件记录是否为文件夹
      *
-     * @param record
+     * @param fileRecord
      * @return
      */
-    private boolean checkIsFolder(RPanUserFile record) {
-        if (record == null) {
+    private boolean checkIsFolder(RPanUserFile fileRecord) {
+        if (fileRecord == null) {
             throw new RPanBusinessException("文件不存在");
         }
-        return FolderFlagEnum.YES.getCode().equals(record.getFolderFlag());
+        return FolderFlagEnum.YES.getCode().equals(fileRecord.getFolderFlag());
     }
 
     /**
@@ -858,14 +859,14 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 1. 文件记录必须存在
      * 2. 文件记录的创建者
      *
-     * @param record
+     * @param fileRecord
      * @param userId
      */
-    private void checkOperatePermission(RPanUserFile record, Long userId) {
-        if (record == null) {
+    private void checkOperatePermission(RPanUserFile fileRecord, Long userId) {
+        if (fileRecord == null) {
             throw new RPanBusinessException("文件不存在");
         }
-        if (!Objects.equals(userId, record.getCreateUser())) {
+        if (!Objects.equals(userId, fileRecord.getCreateUser())) {
             throw new RPanBusinessException("无权操作该文件");
         }
     }
@@ -879,7 +880,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         FileChunkMergeAndSaveContext anotherContext =
                 this.fileConverter.fileChunkMergeContext2FileChunkMergeAndSaveContext(context);
         this.iFileService.mergeFileChunkAndSaveFile(anotherContext);
-        context.setRecord(anotherContext.getRecord());
+        context.setEntity(anotherContext.getEntity());
     }
 
     /**
@@ -891,7 +892,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     private void saveFile(FileUploadContext context) {
         FileSaveContext fileSaveContext = this.fileConverter.fileUploadContext2FileSaveContext(context);
         this.iFileService.saveFile(fileSaveContext);
-        context.setRecord(fileSaveContext.getRecord());
+        context.setEntity(fileSaveContext.getEntity());
     }
 
     /**
@@ -905,13 +906,13 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         LambdaQueryWrapper<RPanFile> wrapper = Wrappers.<RPanFile>lambdaQuery()
                 .eq(RPanFile::getCreateUser, context.getUserId())
                 .eq(RPanFile::getIdentifier, context.getIdentifier());
-        List<RPanFile> records = this.iFileService.list(wrapper);
+        List<RPanFile> fileRecords = this.iFileService.list(wrapper);
 
-        if (CollectionUtils.isEmpty(records)) {
+        if (CollectionUtils.isEmpty(fileRecords)) {
             return null;
         }
 
-        return records.get(0);
+        return fileRecords.get(0);
     }
 
     /**

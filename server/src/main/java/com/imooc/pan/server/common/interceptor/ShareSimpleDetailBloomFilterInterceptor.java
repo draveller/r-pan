@@ -5,14 +5,13 @@ import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.IdUtil;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 查询简单分享详情布隆过滤器拦截器
@@ -21,7 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class ShareSimpleDetailBloomFilterInterceptor implements BloomFilterInterceptor {
 
-    @Autowired
+    @Resource
     private BloomFilterManager manager;
 
     private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";

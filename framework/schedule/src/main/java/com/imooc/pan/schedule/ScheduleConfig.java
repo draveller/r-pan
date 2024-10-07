@@ -13,8 +13,7 @@ public class ScheduleConfig {
 
     @Bean
     public ThreadPoolTaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-        return taskScheduler;
+        return new ThreadPoolTaskScheduler();
     }
 
 

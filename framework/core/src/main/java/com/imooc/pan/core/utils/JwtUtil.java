@@ -13,17 +13,20 @@ import java.util.Date;
  */
 public class JwtUtil {
 
+    private JwtUtil() {
+    }
+
     public static final Long TWO_LONG = 2L;
 
     /**
      * 秘钥
      */
-    private final static String JWT_PRIVATE_KEY = "0CB16040A41140E48F2F93A7BE222C46";
+    private static final String JWT_PRIVATE_KEY = "0CB16040A41140E48F2F93A7BE222C46";
 
     /**
      * 刷新时间
      */
-    private final static String RENEWAL_TIME = "RENEWAL_TIME";
+    private static final String RENEWAL_TIME = "RENEWAL_TIME";
 
     /**
      * 生成token
@@ -35,14 +38,13 @@ public class JwtUtil {
      * @return
      */
     public static String generateToken(String subject, String claimKey, Object claimValue, Long expire) {
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(subject)
                 .claim(claimKey, claimValue)
                 .claim(RENEWAL_TIME, new Date(System.currentTimeMillis() + expire / TWO_LONG))
                 .setExpiration(new Date(System.currentTimeMillis() + expire))
                 .signWith(SignatureAlgorithm.HS256, JWT_PRIVATE_KEY)
                 .compact();
-        return token;
     }
 
     /**

@@ -6,6 +6,9 @@ package com.imooc.pan.core.utils;
  */
 public class PasswordUtil {
 
+    private PasswordUtil() {
+    }
+
     /**
      * 随机生成盐值
      *

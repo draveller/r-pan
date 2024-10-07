@@ -3,6 +3,7 @@ package com.imooc.pan.server.modules.share.context;
 import com.imooc.pan.server.modules.share.entity.RPanShare;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -11,7 +12,8 @@ import java.io.Serializable;
 @Data
 public class CheckShareCodeContext implements Serializable {
 
-    private static final long serialVersionUID = -5492075515460473471L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 分享ID
@@ -26,6 +28,6 @@ public class CheckShareCodeContext implements Serializable {
     /**
      * 对应的分享实体
      */
-    private RPanShare record;
+    private RPanShare entity;
 
 }

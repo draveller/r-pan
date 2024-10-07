@@ -4,16 +4,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-import lombok.Data;
 
 /**
  * 文件分片信息表
+ *
  * @TableName r_pan_file_chunk
  */
-@TableName(value ="r_pan_file_chunk")
+@TableName(value = "r_pan_file_chunk")
 @Data
 public class RPanFileChunk implements Serializable {
     /**
@@ -58,6 +60,7 @@ public class RPanFileChunk implements Serializable {
     @TableField(value = "create_time")
     private LocalDateTime createTime;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

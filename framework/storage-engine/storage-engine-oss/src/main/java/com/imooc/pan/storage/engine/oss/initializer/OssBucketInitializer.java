@@ -3,8 +3,8 @@ package com.imooc.pan.storage.engine.oss.initializer;
 import com.aliyun.oss.OSSClient;
 import com.imooc.pan.core.exception.RPanFrameworkException;
 import com.imooc.pan.storage.engine.oss.config.OssStorageEngineConfig;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class OssBucketInitializer implements CommandLineRunner {
 
-    @Autowired
+    @Resource
     private OssStorageEngineConfig config;
 
-    @Autowired
+    @Resource
     private OSSClient client;
 
     @Override

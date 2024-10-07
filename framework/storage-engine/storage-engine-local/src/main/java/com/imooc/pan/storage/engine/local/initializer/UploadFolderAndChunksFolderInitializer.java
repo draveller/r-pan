@@ -1,9 +1,9 @@
 package com.imooc.pan.storage.engine.local.initializer;
 
 import com.imooc.pan.storage.engine.local.config.LocalStorageEngineConfig;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import java.io.File;
 @Slf4j
 public class UploadFolderAndChunksFolderInitializer implements CommandLineRunner {
 
-    @Autowired
+    @Resource
     private LocalStorageEngineConfig config;
 
     @Override

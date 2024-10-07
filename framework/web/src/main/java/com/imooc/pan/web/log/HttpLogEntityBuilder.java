@@ -2,14 +2,14 @@ package com.imooc.pan.web.log;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Objects;
@@ -18,6 +18,9 @@ import java.util.Objects;
  * HttpLogEntity构造器
  */
 public class HttpLogEntityBuilder {
+
+    private HttpLogEntityBuilder() {
+    }
 
     /**
      * 构建HTTP日志对象
@@ -92,13 +95,13 @@ public class HttpLogEntityBuilder {
         Map<String, String> result = Maps.newHashMap();
         if (Objects.nonNull(request)) {
             Enumeration<String> headerNames = request.getHeaderNames();
-            if (Objects.nonNull(request)) {
-                while (headerNames.hasMoreElements()) {
-                    String headerName = headerNames.nextElement();
-                    String headerValue = request.getHeader(headerName);
-                    result.put(headerName, headerValue);
-                }
+
+            while (headerNames.hasMoreElements()) {
+                String headerName = headerNames.nextElement();
+                String headerValue = request.getHeader(headerName);
+                result.put(headerName, headerValue);
             }
+
         }
         return result;
     }

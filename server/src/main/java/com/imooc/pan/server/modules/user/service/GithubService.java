@@ -1,14 +1,11 @@
 package com.imooc.pan.server.modules.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,7 +22,7 @@ public class GithubService {
     @Value("${com.imooc.pan.auth.github.client-secret}")
     private String clientSecret;
 
-    @Autowired
+    @Resource
     private RestTemplate restTemplate;
 
     public String getAccessToken(String code) {

@@ -22,6 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SpElUtil {
 
+    private SpElUtil() {
+    }
+
     private static final RPanExpressionEvaluator expressionEvaluator = new RPanExpressionEvaluator();
 
     /**
@@ -244,9 +247,6 @@ public class SpElUtil {
             Method targetMethod = this.targetMethodCache.get(methodKey);
             if (targetMethod == null) {
                 targetMethod = AopUtils.getMostSpecificMethod(method, targetClass);
-                if (targetMethod == null) {
-                    targetMethod = method;
-                }
                 this.targetMethodCache.put(methodKey, targetMethod);
             }
             return targetMethod;

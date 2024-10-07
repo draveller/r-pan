@@ -5,6 +5,7 @@ import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.server.common.utils.ShareIdUtil;
 import com.imooc.pan.server.modules.share.constants.ShareConstants;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**
@@ -39,7 +39,7 @@ public class ShareCodeAspect {
     /**
      * 切点表达式
      */
-    private final static String POINT_CUT = "@annotation(com.imooc.pan.server.common.annotation.NeedShareCode)";
+    private static final String POINT_CUT = "@annotation(com.imooc.pan.server.common.annotation.NeedShareCode)";
 
     /**
      * 切点模版方法

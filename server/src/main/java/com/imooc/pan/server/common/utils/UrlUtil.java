@@ -9,6 +9,9 @@ import java.net.URLDecoder;
  */
 public class UrlUtil {
 
+    private UrlUtil() {
+    }
+
     public static boolean needsUrlDecode(String input) {
         // 检查字符串中是否包含百分号（%）
         if (input.contains("%")) {

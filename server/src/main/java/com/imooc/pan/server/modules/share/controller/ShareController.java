@@ -21,6 +21,7 @@ import com.imooc.pan.server.modules.share.vo.RPanShareUrlVO;
 import com.imooc.pan.server.modules.share.vo.ShareDetailVO;
 import com.imooc.pan.server.modules.share.vo.ShareSimpleDetailVO;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.Tag;
@@ -36,10 +37,10 @@ import java.util.stream.Collectors;
 @Validated
 public class ShareController {
 
-    @Autowired
+    @Resource
     private IShareService iShareService;
 
-    @Autowired
+    @Resource
     private ShareConverter shareConverter;
 
     @Operation(
@@ -52,7 +53,7 @@ public class ShareController {
 
         String shareFileIds = createShareUrlPO.getShareFileIds();
         List<Long> shareFileIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
-                .splitToList(shareFileIds).stream().map(IdUtil::decrypt).collect(Collectors.toList());
+                .splitToList(shareFileIds).stream().map(IdUtil::decrypt).toList();
 
         context.setShareFileIdList(shareFileIdList);
 
@@ -84,7 +85,7 @@ public class ShareController {
 
         String shareIds = cancelSharePO.getShareIds();
         List<Long> shareIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
-                .splitToList(shareIds).stream().map(IdUtil::decrypt).collect(Collectors.toList());
+                .splitToList(shareIds).stream().map(IdUtil::decrypt).toList();
         context.setShareIdList(shareIdList);
 
         iShareService.cancelShare(context);
@@ -162,7 +163,7 @@ public class ShareController {
 
         String fileIds = shareSavePO.getFileIds();
         List<Long> fileIdList = Splitter.on(RPanConstants.COMMON_SEPARATOR)
-                .splitToList(fileIds).stream().map(IdUtil::decrypt).collect(Collectors.toList());
+                .splitToList(fileIds).stream().map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 
         context.setTargetParentId(IdUtil.decrypt(shareSavePO.getTargetParentId()));

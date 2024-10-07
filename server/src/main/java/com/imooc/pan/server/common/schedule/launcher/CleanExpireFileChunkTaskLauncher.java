@@ -2,8 +2,8 @@ package com.imooc.pan.server.common.schedule.launcher;
 
 import com.imooc.pan.schedule.ScheduleManager;
 import com.imooc.pan.server.common.schedule.task.CleanExpireChunkFileTask;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CleanExpireFileChunkTaskLauncher implements CommandLineRunner {
 
-    private final static String CRON = "1 0 0 * * ? ";
-//    private final static String CRON = "0/5 * * * * ? ";
+    private static final String CRON = "1 0 0 * * ? ";
 
-    @Autowired
+    @Resource
     private CleanExpireChunkFileTask task;
 
-    @Autowired
+    @Resource
     private ScheduleManager scheduleManager;
 
     @Override

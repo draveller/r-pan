@@ -4,9 +4,9 @@ import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.schedule.ScheduleTask;
 import com.imooc.pan.server.modules.share.service.IShareService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,10 +21,10 @@ public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
 
     private static final Long BATCH_SIZE = 500L;
 
-    @Autowired
+    @Resource
     private BloomFilterManager manager;
 
-    @Autowired
+    @Resource
     private IShareService iShareService;
 
     private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";

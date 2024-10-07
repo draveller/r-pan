@@ -4,6 +4,7 @@ import com.imooc.pan.server.modules.file.entity.RPanFile;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Data
 public class FileUploadContext implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -47,6 +49,6 @@ public class FileUploadContext implements Serializable {
     /**
      * 实体文件记录
      */
-    private RPanFile record;
+    private RPanFile entity;
 
 }

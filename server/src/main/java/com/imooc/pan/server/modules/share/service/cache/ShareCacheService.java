@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.imooc.pan.server.common.cache.AbstractManualCacheService;
 import com.imooc.pan.server.modules.share.entity.RPanShare;
 import com.imooc.pan.server.modules.share.mapper.RPanShareMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component(value = "shareManualCacheService")
 public class ShareCacheService extends AbstractManualCacheService<RPanShare> {
 
-    @Autowired
+    @Resource
     private RPanShareMapper rPanShareMapper;
 
     @Override

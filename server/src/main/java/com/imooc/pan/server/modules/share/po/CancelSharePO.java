@@ -5,15 +5,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotBlank;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 @Schema(name = "取消分享参数实体对象")
 @Data
 public class CancelSharePO implements Serializable {
 
-    private static final long serialVersionUID = -1536161974548607677L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    @Schema(name = "要取消的分享ID的集合，多个使用公用的分割符拼接", required = true)
+    @Schema(name = "要取消的分享ID的集合，多个使用公用的分割符拼接", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "请选择要取消的分享")
     private String shareIds;
 

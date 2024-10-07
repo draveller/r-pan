@@ -1,12 +1,14 @@
 package com.imooc.pan.server.common.aspect;
 
-import com.imooc.pan.cache.core.constants.CacheConstants;
+import com.imooc.pan.cache.core.constants.CacheConsts;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.server.common.annotation.LoginIgnore;
 import com.imooc.pan.server.common.utils.UserIdUtil;
-import com.imooc.pan.server.modules.user.constants.UserConstants;
+import com.imooc.pan.server.modules.user.constants.UserConsts;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,14 +17,12 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -49,7 +49,7 @@ public class CommonLoginAspect {
      */
     private static final String POINT_CUT = "execution(* com.imooc.pan.server.modules.*.controller..*(..))";
 
-    @Autowired
+    @Resource
     private CacheManager cacheManager;
 
     /**
@@ -108,13 +108,13 @@ public class CommonLoginAspect {
             return false;
         }
 
-        Object userId = JwtUtil.analyzeToken(accessToken, UserConstants.LOGIN_USER_ID);
+        Object userId = JwtUtil.analyzeToken(accessToken, UserConsts.LOGIN_USER_ID);
         if (userId == null) {
             return false;
         }
 
-        Cache cache = cacheManager.getCache(CacheConstants.R_PAN_CACHE_NAME);
-        String redisAccessToken = cache.get(UserConstants.USER_LOGIN_PREFIX + userId, String.class);
+        Cache cache = cacheManager.getCache(CacheConsts.R_PAN_CACHE_NAME);
+        String redisAccessToken = cache.get(UserConsts.USER_LOGIN_PREFIX + userId, String.class);
         if (StringUtils.isBlank(redisAccessToken)) {
             return false;
         }

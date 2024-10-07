@@ -29,16 +29,13 @@ public class BreadcrumbVO implements Serializable {
 
     /**
      * 实体转换
-     *
-     * @param record
-     * @return
      */
-    public static BreadcrumbVO transfer(RPanUserFile record) {
+    public static BreadcrumbVO transfer(RPanUserFile entity) {
         BreadcrumbVO vo = new BreadcrumbVO();
-        if (Objects.nonNull(record)) {
-            vo.setId(record.getFileId());
-            vo.setParentId(record.getParentId());
-            vo.setName(record.getFilename());
+        if (Objects.nonNull(entity)) {
+            vo.setId(entity.getFileId());
+            vo.setParentId(entity.getParentId());
+            vo.setName(entity.getFilename());
         }
         return vo;
     }

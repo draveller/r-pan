@@ -1,7 +1,7 @@
 package com.imooc.pan.core.utils;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.PrimitiveArrayUtil;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.imooc.pan.core.constants.RPanConstants;
@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
  * 雪花算法id生成器
  */
 public class IdUtil {
+
+    private IdUtil() {
+    }
 
     /**
      * 工作id 也就是机器id
@@ -148,7 +151,7 @@ public class IdUtil {
      *
      * @return
      */
-    public synchronized static Long get() {
+    public static synchronized Long get() {
         long timestamp = timeGen();
         // 获取当前时间戳如果小于上次时间戳，则表示时间戳获取出现异常
         if (timestamp < lastTimestamp) {
@@ -210,7 +213,7 @@ public class IdUtil {
         if (StringUtils.isNotBlank(decryptId)) {
             byte[] encrypt = Base64.decode(decryptId);
             byte[] content = AES128Util.aesDecode(encrypt);
-            if (ArrayUtil.isNotEmpty(content)) {
+            if (PrimitiveArrayUtil.isNotEmpty(content)) {
                 ByteBuffer byteBuffer = ByteBuffer.wrap(content);
                 return byteBuffer.getLong();
             }
@@ -221,9 +224,6 @@ public class IdUtil {
 
     /**
      * 解密多个加密ID拼接的字符串
-     *
-     * @param decryptIdStr
-     * @return
      */
     public static List<Long> decryptIdList(String decryptIdStr) {
         if (StringUtils.isBlank(decryptIdStr)) {
@@ -233,8 +233,7 @@ public class IdUtil {
         if (CollectionUtils.isEmpty(decryptIdList)) {
             return Lists.newArrayList();
         }
-        List<Long> result = decryptIdList.stream().map(IdUtil::decrypt).collect(Collectors.toList());
-        return result;
+        return decryptIdList.stream().map(IdUtil::decrypt).collect(Collectors.toList());
     }
 
 }

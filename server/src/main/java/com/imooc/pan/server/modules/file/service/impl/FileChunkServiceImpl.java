@@ -15,6 +15,7 @@ import com.imooc.pan.server.modules.file.mapper.RPanFileChunkMapper;
 import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.StoreFileChunkContext;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +32,13 @@ import java.util.Date;
 public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanFileChunk>
         implements IFileChunkService {
 
-    @Autowired
+    @Resource
     private PanServerConfig panServerConfig;
 
-    @Autowired
+    @Resource
     private FileConverter fileConverter;
 
-    @Autowired
+    @Resource
     private StorageEngine storageEngine;
 
     /**
@@ -89,18 +90,18 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
      * @param context
      */
     private void doSaveRecord(FileChunkSaveContext context) {
-        RPanFileChunk record = new RPanFileChunk();
-        record.setId(IdUtil.get());
-        record.setIdentifier(context.getIdentifier());
-        record.setRealPath(context.getRealPath());
-        record.setChunkNumber(context.getChunkNumber());
+        RPanFileChunk fileChunk = new RPanFileChunk();
+        fileChunk.setId(IdUtil.get());
+        fileChunk.setIdentifier(context.getIdentifier());
+        fileChunk.setRealPath(context.getRealPath());
+        fileChunk.setChunkNumber(context.getChunkNumber());
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expiration = now.plusDays(this.panServerConfig.getChunkFileExpirationDays());
-        record.setExpirationTime(expiration);
-        record.setCreateUser(context.getUserId());
-        record.setCreateTime(now);
-        if (!this.save(record)) {
+        fileChunk.setExpirationTime(expiration);
+        fileChunk.setCreateUser(context.getUserId());
+        fileChunk.setCreateTime(now);
+        if (!this.save(fileChunk)) {
             throw new RPanBusinessException("文件分片上传失败");
         }
     }

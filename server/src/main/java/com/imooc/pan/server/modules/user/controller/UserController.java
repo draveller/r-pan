@@ -10,9 +10,8 @@ import com.imooc.pan.server.modules.user.po.*;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
-import org.apiguardian.api.API;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +23,10 @@ import org.springframework.web.bind.annotation.*;
 @Tag("用户模块")
 public class UserController {
 
-    @Autowired
+    @Resource
     private IUserService iUserService;
 
-    @Autowired
+    @Resource
     private UserConverter userConverter;
 
     @LoginIgnore

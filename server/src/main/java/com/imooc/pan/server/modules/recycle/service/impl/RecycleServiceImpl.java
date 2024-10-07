@@ -1,5 +1,6 @@
 package com.imooc.pan.server.modules.recycle.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.imooc.pan.core.constants.RPanConstants;
@@ -15,14 +16,13 @@ import com.imooc.pan.server.modules.recycle.context.DeleteContext;
 import com.imooc.pan.server.modules.recycle.context.QueryRecycleFileListContext;
 import com.imooc.pan.server.modules.recycle.context.RestoreContext;
 import com.imooc.pan.server.modules.recycle.service.IRecycleService;
+import jakarta.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Service
 public class RecycleServiceImpl implements IRecycleService, ApplicationContextAware {
 
-    @Autowired
+    @Resource
     private IUserFileService iUserFileService;
 
     private ApplicationContext applicationContext;
@@ -137,10 +137,11 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
      * @param context
      */
     private void checkFileDeletePermission(DeleteContext context) {
-        QueryWrapper queryWrapper = Wrappers.query();
-        queryWrapper.eq("user_id", context.getUserId());
-        queryWrapper.in("file_id", context.getFileIdList());
-        List<RPanUserFile> records = iUserFileService.list(queryWrapper);
+        LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(RPanUserFile::getUserId, context.getUserId());
+        wrapper.in(RPanUserFile::getFileId, context.getFileIdList());
+
+        List<RPanUserFile> records = iUserFileService.list(wrapper);
         if (CollectionUtils.isEmpty(records) || records.size() != context.getFileIdList().size()) {
             throw new RPanBusinessException("您无权删除该文件");
         }
@@ -151,8 +152,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
      * 文件还原的后置操作
      * <p>
      * 1、发布文件还原事件
-     *
-     * @param context
      */
     private void afterRestore(RestoreContext context) {
         FileRestoreEvent event = new FileRestoreEvent(this, context.getFileIdList());
@@ -166,10 +165,10 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
      */
     private void doRestore(RestoreContext context) {
         List<RPanUserFile> records = context.getRecords();
-        records.stream().forEach(record -> {
-            record.setDelFlag(DelFlagEnum.NO.getCode());
-            record.setUpdateUser(context.getUserId());
-            record.setUpdateTime(LocalDateTime.now());
+        records.forEach(ele -> {
+            ele.setDelFlag(DelFlagEnum.NO.getCode());
+            ele.setUpdateUser(context.getUserId());
+            ele.setUpdateTime(LocalDateTime.now());
         });
         boolean updateFlag = iUserFileService.updateBatchById(records);
         if (!updateFlag) {
@@ -188,19 +187,23 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
     private void checkRestoreFilename(RestoreContext context) {
         List<RPanUserFile> records = context.getRecords();
 
-        Set<String> filenameSet = records.stream().map(record -> record.getFilename() + RPanConstants.COMMON_SEPARATOR + record.getParentId()).collect(Collectors.toSet());
+        Set<String> filenameSet = records.stream().map(ele ->
+                ele.getFilename() + RPanConstants.COMMON_SEPARATOR + ele.getParentId()).collect(Collectors.toSet());
         if (filenameSet.size() != records.size()) {
             throw new RPanBusinessException("文件还原失败，该还原文件中存在同名文件，请逐个还原并重命名");
         }
 
-        for (RPanUserFile record : records) {
-            QueryWrapper queryWrapper = Wrappers.query();
-            queryWrapper.eq("user_id", context.getUserId());
-            queryWrapper.eq("parent_id", record.getParentId());
-            queryWrapper.eq("filename", record.getFilename());
-            queryWrapper.eq("del_flag", DelFlagEnum.NO.getCode());
-            if (iUserFileService.count(queryWrapper) > 0) {
-                throw new RPanBusinessException("文件: " + record.getFilename() + " 还原失败，该文件夹下面已经存在了相同名称的文件或者文件夹，请重命名之后再执行文件还原操作");
+        for (RPanUserFile entity : records) {
+
+            LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(RPanUserFile::getUserId, context.getUserId());
+            wrapper.eq(RPanUserFile::getParentId, entity.getParentId());
+            wrapper.eq(RPanUserFile::getFilename, entity.getFilename());
+            wrapper.eq(RPanUserFile::getDelFlag, DelFlagEnum.NO.getCode());
+
+            if (iUserFileService.count(wrapper) > 0) {
+                throw new RPanBusinessException("文件: " + entity.getFilename()
+                        + " 还原失败，该文件夹下面已经存在了相同名称的文件或者文件夹，请重命名之后再执行文件还原操作");
             }
         }
     }

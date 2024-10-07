@@ -3,6 +3,7 @@ package com.imooc.pan.bloom.filter.local;
 import com.google.common.collect.Maps;
 import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
+import jakarta.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,7 +20,7 @@ import java.util.Map;
 @Component
 public class LocalBloomFilterManager implements BloomFilterManager, InitializingBean {
 
-    @Autowired
+    @Resource
     private LocalBloomFilterConfig config;
 
     /**

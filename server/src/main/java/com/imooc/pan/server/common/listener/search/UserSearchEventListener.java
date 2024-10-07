@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.imooc.pan.server.common.event.search.UserSearchEvent;
 import com.imooc.pan.server.modules.user.entity.RPanUserSearchHistory;
 import com.imooc.pan.server.modules.user.service.IUserSearchHistoryService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.dao.DuplicateKeyException;
@@ -19,7 +20,7 @@ import java.util.Date;
 @Component
 public class UserSearchEventListener {
 
-    @Autowired
+    @Resource
     private IUserSearchHistoryService iUserSearchHistoryService;
 
     /**
@@ -29,16 +30,16 @@ public class UserSearchEventListener {
      */
     @EventListener(classes = UserSearchEvent.class)
     public void saveSearchHistory(UserSearchEvent event) {
-        RPanUserSearchHistory record = new RPanUserSearchHistory();
-        record.setUserId(event.getUserId());
-        record.setUserId(event.getUserId());
-        record.setSearchContent(event.getKeyword());
+        RPanUserSearchHistory historyRecord = new RPanUserSearchHistory();
+        historyRecord.setUserId(event.getUserId());
+        historyRecord.setUserId(event.getUserId());
+        historyRecord.setSearchContent(event.getKeyword());
         LocalDateTime now = LocalDateTime.now();
-        record.setCreateTime(now);
-        record.setUpdateTime(now);
+        historyRecord.setCreateTime(now);
+        historyRecord.setUpdateTime(now);
 
         try {
-            this.iUserSearchHistoryService.save(record);
+            this.iUserSearchHistoryService.save(historyRecord);
         } catch (DuplicateKeyException e) {
             LambdaUpdateWrapper<RPanUserSearchHistory> wrapper = Wrappers.<RPanUserSearchHistory>lambdaUpdate()
                     .eq(RPanUserSearchHistory::getUserId, event.getUserId())

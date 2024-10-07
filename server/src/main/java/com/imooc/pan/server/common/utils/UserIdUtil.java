@@ -7,7 +7,10 @@ import com.imooc.pan.core.constants.RPanConstants;
  */
 public class UserIdUtil {
 
-    private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+    private UserIdUtil() {
+    }
+
+    private static final ThreadLocal<Long> threadLocal = new ThreadLocal<>();
 
     /**
      * 设置当前线程的用户id

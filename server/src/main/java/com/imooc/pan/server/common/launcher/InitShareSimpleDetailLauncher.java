@@ -3,9 +3,9 @@ package com.imooc.pan.server.common.launcher;
 import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.server.modules.share.service.IShareService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +19,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class InitShareSimpleDetailLauncher implements CommandLineRunner {
 
-    @Autowired
+    @Resource
     private BloomFilterManager manager;
 
-    @Autowired
+    @Resource
     private IShareService iShareService;
 
     private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";

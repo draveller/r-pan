@@ -13,18 +13,17 @@ import com.imooc.pan.server.modules.file.po.*;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 文件模块控制器
@@ -35,10 +34,10 @@ import java.util.stream.Collectors;
 @Tag("文件模块")
 public class FileController {
 
-    @Autowired
+    @Resource
     private IUserFileService iUserFileService;
 
-    @Autowired
+    @Resource
     private FileConverter fileConverter;
 
     @Operation(
@@ -63,7 +62,7 @@ public class FileController {
         List<Integer> fileTypeArray = null;
         if (!Objects.equals(FileConsts.ALL_FILE_TYPE, fileTypes)) {
             fileTypeArray = Arrays.stream(fileTypes.split(RPanConstants.COMMON_SEPARATOR))
-                    .map(Integer::parseInt).collect(Collectors.toList());
+                    .map(Integer::parseInt).toList();
         }
 
         QueryFileListContext context = new QueryFileListContext();
@@ -108,7 +107,7 @@ public class FileController {
 
         String fileIds = deleteFilePO.getFileIds();
         List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR))
-                .map(IdUtil::decrypt).collect(Collectors.toList());
+                .map(IdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 
         this.iUserFileService.deleteFile(context);

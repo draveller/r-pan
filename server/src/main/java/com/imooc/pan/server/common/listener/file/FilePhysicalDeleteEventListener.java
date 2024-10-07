@@ -10,8 +10,8 @@ import com.imooc.pan.server.modules.file.service.IFileService;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
+import jakarta.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.event.EventListener;
@@ -29,13 +29,13 @@ import java.util.stream.Collectors;
 @Component
 public class FilePhysicalDeleteEventListener implements ApplicationContextAware {
 
-    @Autowired
+    @Resource
     private IFileService iFileService;
 
-    @Autowired
+    @Resource
     private IUserFileService iUserFileService;
 
-    @Autowired
+    @Resource
     private StorageEngine storageEngine;
 
     private ApplicationContext applicationContext;
@@ -80,8 +80,6 @@ public class FilePhysicalDeleteEventListener implements ApplicationContextAware 
 
     /**
      * 委托文件存储引擎执行物理文件的删除
-     *
-     * @param realFileRecords
      */
     private void physicalDeleteFileByStorageEngine(List<RPanFile> realFileRecords) {
         List<String> realPathList = realFileRecords.stream().map(RPanFile::getRealPath).collect(Collectors.toList());
@@ -97,9 +95,6 @@ public class FilePhysicalDeleteEventListener implements ApplicationContextAware 
 
     /**
      * 查找所有没有被引用的真实文件记录ID集合
-     *
-     * @param allRecords
-     * @return
      */
     private List<Long> findAllUnusedRealFileIdList(List<RPanUserFile> allRecords) {
         return allRecords.stream()
@@ -111,13 +106,10 @@ public class FilePhysicalDeleteEventListener implements ApplicationContextAware 
 
     /**
      * 校验文件的真实文件ID是不是没有被引用了
-     *
-     * @param record
-     * @return
      */
-    private boolean isUnused(RPanUserFile record) {
+    private boolean isUnused(RPanUserFile userFile) {
         Long count = iUserFileService.lambdaQuery()
-                .eq(RPanUserFile::getRealFileId, record.getRealFileId())
+                .eq(RPanUserFile::getRealFileId, userFile.getRealFileId())
                 .count();
         return count.equals(0L);
     }

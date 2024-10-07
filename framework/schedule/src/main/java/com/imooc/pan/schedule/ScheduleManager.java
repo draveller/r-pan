@@ -2,9 +2,9 @@ package com.imooc.pan.schedule;
 
 import com.imooc.pan.core.exception.RPanFrameworkException;
 import com.imooc.pan.core.utils.UUIDUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import java.util.concurrent.ScheduledFuture;
 @Slf4j
 public class ScheduleManager {
 
-    @Autowired
+    @Resource
     private ThreadPoolTaskScheduler taskScheduler;
 
     /**
@@ -52,7 +52,7 @@ public class ScheduleManager {
     /**
      * 停止一个定时任务
      *
-     * @param key
+     * @param key 任务id
      */
     public void stopTask(String key) {
         if (StringUtils.isBlank(key)) {
@@ -80,7 +80,7 @@ public class ScheduleManager {
      *
      * @param key  唯一标识
      * @param cron 时间表达式
-     * @return
+     * @return 任务id
      */
     public String changeTask(String key, String cron) {
         if (StringUtils.isAnyBlank(key, cron)) {

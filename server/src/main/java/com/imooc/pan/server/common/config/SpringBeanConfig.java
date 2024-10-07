@@ -15,14 +15,12 @@ public class SpringBeanConfig {
         factory.setReadTimeout(5000);
         factory.setConnectTimeout(15000);
         // 设置代理
-        //factory.setProxy(null);
         return factory;
     }
 
     @Bean
     public RestTemplate restTemplate(ClientHttpRequestFactory factory) {
-        RestTemplate restTemplate = new RestTemplate(factory);
-        return restTemplate;
+        return new RestTemplate(factory);
     }
 
 }

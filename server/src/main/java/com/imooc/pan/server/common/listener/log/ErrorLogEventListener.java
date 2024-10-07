@@ -4,12 +4,11 @@ import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.event.log.ErrorLogEvent;
 import com.imooc.pan.server.modules.log.entity.RPanErrorLog;
 import com.imooc.pan.server.modules.log.service.IErrorLogService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 系统错误日志监听器
@@ -17,26 +16,24 @@ import java.util.Date;
 @Component
 public class ErrorLogEventListener {
 
-    @Autowired
+    @Resource
     private IErrorLogService iErrorLogService;
 
     /**
      * 监听系统错误日志事件, 并保存到数据库中
-     *
-     * @param event
      */
     @EventListener(ErrorLogEvent.class)
     public void saveErrorLog(ErrorLogEvent event) {
-        RPanErrorLog record = new RPanErrorLog();
-        record.setId(IdUtil.get());
-        record.setLogContent(event.getErrorMsg());
-        record.setLogStatus(0);
+        RPanErrorLog errorLog = new RPanErrorLog();
+        errorLog.setId(IdUtil.get());
+        errorLog.setLogContent(event.getErrorMsg());
+        errorLog.setLogStatus(0);
         LocalDateTime now = LocalDateTime.now();
-        record.setCreateTime(now);
-        record.setUpdateTime(now);
-        record.setCreateUser(event.getUserId());
-        record.setUpdateUser(event.getUserId());
-        this.iErrorLogService.save(record);
+        errorLog.setCreateTime(now);
+        errorLog.setUpdateTime(now);
+        errorLog.setCreateUser(event.getUserId());
+        errorLog.setUpdateUser(event.getUserId());
+        this.iErrorLogService.save(errorLog);
     }
 
 

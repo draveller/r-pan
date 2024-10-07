@@ -2,7 +2,6 @@ package com.imooc.pan.server.common.schedule.task;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.imooc.pan.core.constants.RPanConstants;
 import com.imooc.pan.schedule.ScheduleTask;
@@ -11,9 +10,9 @@ import com.imooc.pan.server.modules.file.entity.RPanFileChunk;
 import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -33,10 +32,10 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
 
     private static final Long BATCH_SIZE = 500L;
 
-    @Autowired
+    @Resource
     private IFileChunkService iFileChunkService;
 
-    @Autowired
+    @Resource
     private StorageEngine storageEngine;
 
     private ApplicationContext applicationContext;

@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +44,7 @@ public interface FileConverter {
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     FileUploadContext convertPO2Context(FileUploadPO fileUploadPO);
 
-    @Mapping(target = "record", ignore = true)
+    @Mapping(target = "entity", ignore = true)
     FileSaveContext fileUploadContext2FileSaveContext(FileUploadContext context);
 
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
@@ -62,7 +61,7 @@ public interface FileConverter {
     QueryUploadedChunksContext convertPO2Context(QueryUploadedChunksPO queryUploadedChunksPO);
 
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
-    @Mapping(target = "record", ignore = true)
+    @Mapping(target = "entity", ignore = true)
     FileChunkMergeContext convertPO2Context(FileChunkMergePO fileChunkMergePO);
 
     FileChunkMergeAndSaveContext fileChunkMergeContext2FileChunkMergeAndSaveContext(FileChunkMergeContext context);
@@ -76,8 +75,8 @@ public interface FileConverter {
         String fileIds = transferFilePO.getFileIds();
         String targetParentId = transferFilePO.getTargetParentId();
 
-        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR)).map(IdUtil::decrypt)
-                .collect(Collectors.toList());
+        List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR))
+                .map(IdUtil::decrypt).toList();
         Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
 
         TransferFileContext context = new TransferFileContext();
@@ -91,7 +90,7 @@ public interface FileConverter {
         String targetParentId = copyFilePO.getTargetParentId();
 
         List<Long> fileIdList = Arrays.stream(fileIds.split(RPanConstants.COMMON_SEPARATOR)).map(IdUtil::decrypt)
-                .collect(Collectors.toList());
+                .toList();
         Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
 
         CopyFileContext context = new CopyFileContext();
@@ -108,14 +107,13 @@ public interface FileConverter {
         String fileTypes = fileSearchPO.getFileTypes();
         if (StringUtils.isNotBlank(fileTypes) && !Objects.equals(FileConsts.ALL_FILE_TYPE, fileTypes)) {
             context.setFileTypeArray(Arrays.stream(fileTypes.split(RPanConstants.COMMON_SEPARATOR))
-                    .map(Integer::parseInt).collect(Collectors.toList()));
+                    .map(Integer::parseInt).toList());
         }
 
         context.setUserId(UserIdUtil.get());
         return context;
     }
 
-        RPanUserFileVO rPanUserFile2RPanUserFileVO(RPanUserFile record);
-
+    RPanUserFileVO rPanUserFile2RPanUserFileVO(RPanUserFile userFile);
 
 }

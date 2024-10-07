@@ -20,7 +20,7 @@ public class QueryShareDetailContext implements Serializable {
     /**
      * 分享实体
      */
-    private RPanShare record;
+    private RPanShare entity;
 
     /**
      * 分享详情的VO对象

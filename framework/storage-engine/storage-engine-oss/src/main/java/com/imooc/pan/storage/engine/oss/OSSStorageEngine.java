@@ -14,10 +14,10 @@ import com.imooc.pan.core.utils.UUIDUtil;
 import com.imooc.pan.storage.engine.core.AbstractStorageEngine;
 import com.imooc.pan.storage.engine.core.context.*;
 import com.imooc.pan.storage.engine.oss.config.OssStorageEngineConfig;
+import jakarta.annotation.Resource;
 import lombok.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -50,10 +50,10 @@ public class OSSStorageEngine extends AbstractStorageEngine {
 
     private static final String PART_CRC_KEY = "partCRC";
 
-    @Autowired
+    @Resource
     private OssStorageEngineConfig config;
 
-    @Autowired
+    @Resource
     private OSSClient client;
 
     /**
@@ -97,8 +97,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
                     try {
                         AbortMultipartUploadRequest request = new AbortMultipartUploadRequest(config.getBucketName(), getBaseUrl(realPath), uploadId);
                         client.abortMultipartUpload(request);
-                    } catch (Exception e) {
-
+                    } catch (Exception ignored) {
                     }
                 }
             }
@@ -222,7 +221,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
                             jsonObject.getString(E_TAG_KEY),
                             jsonObject.getLongValue(PART_SIZE_KEY),
                             jsonObject.getLong(PART_CRC_KEY)
-                    )).collect(Collectors.toList());
+                    )).toList();
         }
 
         CompleteMultipartUploadRequest request = new CompleteMultipartUploadRequest(config.getBucketName(), entity.getObjectKey(), entity.uploadId, partETags);
@@ -284,16 +283,16 @@ public class OSSStorageEngine extends AbstractStorageEngine {
         if (Objects.isNull(params) || params.isEmpty()) {
             return baseUrl;
         }
-        StringBuffer urlStringBuffer = new StringBuffer(baseUrl);
+        StringBuilder urlStringBuffer = new StringBuilder(baseUrl);
         urlStringBuffer.append(RPanConstants.QUESTION_MARK_STR);
         List<String> paramsList = Lists.newArrayList();
-        StringBuffer urlParamsStringBuffer = new StringBuffer();
-        params.entrySet().forEach(entry -> {
-            urlParamsStringBuffer.setLength(RPanConstants.ZERO_INT);
-            urlParamsStringBuffer.append(entry.getKey());
-            urlParamsStringBuffer.append(RPanConstants.EQUALS_MARK_STR);
-            urlParamsStringBuffer.append(entry.getValue());
-            paramsList.add(urlParamsStringBuffer.toString());
+        StringBuilder urlParamsStringBuilder = new StringBuilder();
+        params.forEach((key, value) -> {
+            urlParamsStringBuilder.setLength(RPanConstants.ZERO_INT);
+            urlParamsStringBuilder.append(key);
+            urlParamsStringBuilder.append(RPanConstants.EQUALS_MARK_STR);
+            urlParamsStringBuilder.append(value);
+            paramsList.add(urlParamsStringBuilder.toString());
         });
         return urlStringBuffer.append(Joiner.on(RPanConstants.AND_MARK_STR).join(paramsList)).toString();
     }

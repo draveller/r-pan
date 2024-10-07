@@ -20,9 +20,9 @@ import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
 import com.imooc.pan.storage.engine.core.context.MergeFileContext;
 import com.imooc.pan.storage.engine.core.context.StoreFileContext;
+import jakarta.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
@@ -43,13 +43,13 @@ import java.util.stream.Collectors;
 public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
         implements IFileService, ApplicationContextAware {
 
-    @Autowired
+    @Resource
     private StorageEngine storageEngine;
 
-    @Autowired
+    @Resource
     private ApplicationContext applicationContext;
 
-    @Autowired
+    @Resource
     private IFileChunkService iFileChunkService;
 
     @Override
@@ -66,24 +66,22 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
     @Override
     public void saveFile(FileSaveContext context) {
         this.storeMultipartFile(context);
-        RPanFile record = this.doSaveFile(context.getFilename(), context.getRealPath(), context.getTotalSize(),
+        RPanFile entity = this.doSaveFile(context.getFilename(), context.getRealPath(), context.getTotalSize(),
                 context.getIdentifier(), context.getUserId());
-        context.setRecord(record);
+        context.setEntity(entity);
     }
 
     /**
      * 合并物理文件并保存物理文件记录
      * 1. 委托文件存储引擎合并文件分片
      * 2. 保存物理文件记录
-     *
-     * @param context
      */
     @Override
     public void mergeFileChunkAndSaveFile(FileChunkMergeAndSaveContext context) {
         this.doMergeFileChunk(context);
-        RPanFile record = this.doSaveFile(context.getFilename(), context.getRealPath(), context.getTotalSize(),
+        RPanFile entity = this.doSaveFile(context.getFilename(), context.getRealPath(), context.getTotalSize(),
                 context.getIdentifier(), context.getUserId());
-        context.setRecord(record);
+        context.setEntity(entity);
     }
 
 
@@ -143,8 +141,8 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
      * @param userId
      */
     private RPanFile doSaveFile(String filename, String realPath, Long totalSize, String identifier, Long userId) {
-        RPanFile record = this.assembleRPanFile(filename, realPath, totalSize, identifier, userId);
-        if (!this.save(record)) {
+        RPanFile fileRecord = this.assembleRPanFile(filename, realPath, totalSize, identifier, userId);
+        if (!this.save(fileRecord)) {
             try {
                 DeleteFileContext deleteContext = new DeleteFileContext();
                 deleteContext.setRealFilePathList(Lists.newArrayList(realPath));
@@ -156,7 +154,7 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
                 applicationContext.publishEvent(errorLogEvent);
             }
         }
-        return record;
+        return fileRecord;
     }
 
     /**
@@ -170,24 +168,22 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
      * @return
      */
     private RPanFile assembleRPanFile(String filename, String realPath, Long totalSize, String identifier, Long userId) {
-        RPanFile record = new RPanFile();
-        record.setFileId(IdUtil.get());
-        record.setFilename(filename);
-        record.setRealPath(realPath);
-        record.setFileSize(String.valueOf(totalSize));
-        record.setFileSizeDesc(FileUtils.byteCountToDisplaySize(totalSize));
-        record.setFileSuffix(FileUtil.getFileSuffix(filename));
-        record.setIdentifier(identifier);
-        record.setCreateUser(userId);
-        record.setCreateTime(LocalDateTime.now());
-        return record;
+        RPanFile fileRecord = new RPanFile();
+        fileRecord.setFileId(IdUtil.get());
+        fileRecord.setFilename(filename);
+        fileRecord.setRealPath(realPath);
+        fileRecord.setFileSize(String.valueOf(totalSize));
+        fileRecord.setFileSizeDesc(FileUtils.byteCountToDisplaySize(totalSize));
+        fileRecord.setFileSuffix(FileUtil.getFileSuffix(filename));
+        fileRecord.setIdentifier(identifier);
+        fileRecord.setCreateUser(userId);
+        fileRecord.setCreateTime(LocalDateTime.now());
+        return fileRecord;
     }
 
     /**
      * 上传单文件
      * 该方法委托文件存储引擎实现
-     *
-     * @param context
      */
     private void storeMultipartFile(FileSaveContext context) {
         try {

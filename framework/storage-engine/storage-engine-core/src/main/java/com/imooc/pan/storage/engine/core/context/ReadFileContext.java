@@ -3,6 +3,7 @@ package com.imooc.pan.storage.engine.core.context;
 import lombok.Data;
 
 import java.io.OutputStream;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,6 +11,8 @@ import java.io.Serializable;
  */
 @Data
 public class ReadFileContext implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

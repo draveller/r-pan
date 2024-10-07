@@ -2,6 +2,7 @@ package com.imooc.pan.server.modules.file.context;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  */
 @Data
 public class FileSearchContext implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

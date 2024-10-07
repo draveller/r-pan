@@ -3,6 +3,7 @@ package com.imooc.pan.server.modules.file.context;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,7 +11,8 @@ import java.io.Serializable;
  */
 @Data
 public class FileChunkUploadContext implements Serializable {
-    private static final long serialVersionUID = 1L;
+    @Serial
+private static final long serialVersionUID = 1L;
 
     /**
      * 文件名

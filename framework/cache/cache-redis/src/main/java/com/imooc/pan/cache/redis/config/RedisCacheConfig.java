@@ -32,13 +32,8 @@ public class RedisCacheConfig {
      */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-//        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-//        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
 
         GenericFastJsonRedisSerializer genericFastJsonRedisSerializer = new GenericFastJsonRedisSerializer();
 
@@ -59,11 +54,6 @@ public class RedisCacheConfig {
      */
     @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
-//        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-//        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
-
         GenericFastJsonRedisSerializer genericFastJsonRedisSerializer = new GenericFastJsonRedisSerializer();
 
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
