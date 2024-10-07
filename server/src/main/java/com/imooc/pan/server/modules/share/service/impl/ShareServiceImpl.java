@@ -815,7 +815,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         if (!sharePrefix.endsWith(RPanConstants.SLASH_STR)) {
             sharePrefix += RPanConstants.SLASH_STR;
         }
-        return sharePrefix + "share/" + URLEncoder.encode(IdUtil.encrypt(shareId));
+        return sharePrefix + URLEncoder.encode(IdUtil.encrypt(shareId));
     }
 
 }

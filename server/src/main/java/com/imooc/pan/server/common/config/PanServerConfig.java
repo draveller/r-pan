@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "com.imooc.pan.server")
 public class PanServerConfig {
 
-
     /**
      * 文件分片的过期天数
      */
