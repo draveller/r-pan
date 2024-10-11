@@ -1,11 +1,11 @@
 package com.imooc.pan.core.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MsgConst {
 
-    private MsgConst() {
-    }
-
-    public static final String FILE_ID_CANNOT_BE_EMPTY = "文件ID不能为空";
     public static final String FILE_DOES_NOT_EXISTS = "文件不存在";
     public static final String FILE_UNIFICATION_CANNOT_BE_EMPTY = "文件唯一标识不能为空";
     public static final String FILE_NAME_CANNOT_BE_EMPTY = "文件名称不能为空";

@@ -27,37 +27,31 @@ public class RPanFileChunk implements Serializable {
     /**
      * 文件唯一标识
      */
-    @TableField(value = "identifier")
     private String identifier;
 
     /**
      * 分片真实的存储路径
      */
-    @TableField(value = "real_path")
     private String realPath;
 
     /**
      * 分片编号
      */
-    @TableField(value = "chunk_number")
     private Integer chunkNumber;
 
     /**
      * 过期时间
      */
-    @TableField(value = "expiration_time")
     private LocalDateTime expirationTime;
 
     /**
      * 创建人
      */
-    @TableField(value = "create_user")
     private Long createUser;
 
     /**
      * 创建时间
      */
-    @TableField(value = "create_time")
     private LocalDateTime createTime;
 
     @Serial

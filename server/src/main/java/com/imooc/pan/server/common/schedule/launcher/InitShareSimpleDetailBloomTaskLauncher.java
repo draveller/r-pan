@@ -20,7 +20,7 @@ public class InitShareSimpleDetailBloomTaskLauncher implements CommandLineRunner
     private ScheduleManager scheduleManager;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         scheduleManager.startTask(task, CRON);
     }
 

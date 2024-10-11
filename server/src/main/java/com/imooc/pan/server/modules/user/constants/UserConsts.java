@@ -1,12 +1,14 @@
 package com.imooc.pan.server.modules.user.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * 用户模块的常量类
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserConsts {
 
-    private UserConsts() {
-    }
 
     /**
      * 登录用户的用户id的key值

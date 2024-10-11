@@ -3,6 +3,7 @@ package com.imooc.pan.server.modules.user.context;
 import com.imooc.pan.server.modules.user.entity.RPanUser;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,6 +11,8 @@ import java.io.Serializable;
  */
 @Data
 public class UserLoginContext implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

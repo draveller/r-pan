@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
-import com.imooc.pan.server.common.event.file.FilePhysicalDeleteEvent;
-import com.imooc.pan.server.common.event.file.FileRestoreEvent;
+import com.imooc.pan.server.common.event.file.PhysicalDeleteFileEvent;
+import com.imooc.pan.server.common.event.file.RestoreFileEvent;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.context.QueryFileListContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
@@ -44,9 +44,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
 
     /**
      * 查询用户的回收站文件列表
-     *
-     * @param context
-     * @return
      */
     @Override
     public List<RPanUserFileVO> recycles(QueryRecycleFileListContext context) {
@@ -63,8 +60,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
      * 2、检查是不是可以还原
      * 3、执行文件还原的操作
      * 4、执行文件还原的后置操作
-     *
-     * @param context
      */
     @Override
     public void restore(RestoreContext context) {
@@ -81,8 +76,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
      * 2、递归查找所有子文件
      * 3、执行文件删除的动作
      * 4、删除后的后置动作
-     *
-     * @param context
      */
     @Override
     public void delete(DeleteContext context) {
@@ -92,25 +85,20 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
         afterDelete(context);
     }
 
-
-    /*************************************************private*************************************************/
+    // -------------------------------- private --------------------------------
 
     /**
      * 文件彻底删除之后的后置函数
      * <p>
      * 1、发送一个文件彻底删除的事件
-     *
-     * @param context
      */
     private void afterDelete(DeleteContext context) {
-        FilePhysicalDeleteEvent event = new FilePhysicalDeleteEvent(this, context.getAllRecords());
+        PhysicalDeleteFileEvent event = new PhysicalDeleteFileEvent(this, context.getAllRecords());
         applicationContext.publishEvent(event);
     }
 
     /**
      * 执行文件删除的动作
-     *
-     * @param context
      */
     private void doDelete(DeleteContext context) {
         List<Long> fileIdList = context.getFileIdList();
@@ -121,8 +109,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
 
     /**
      * 递归查询所有的子文件
-     *
-     * @param context
      */
     private void findAllFileRecords(DeleteContext context) {
         List<RPanUserFile> records = context.getRecords();
@@ -132,8 +118,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
 
     /**
      * 校验文件删除的操作权限
-     *
-     * @param context
      */
     private void checkFileDeletePermission(DeleteContext context) {
         LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.lambdaQuery();
@@ -153,14 +137,12 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
      * 1、发布文件还原事件
      */
     private void afterRestore(RestoreContext context) {
-        FileRestoreEvent event = new FileRestoreEvent(this, context.getFileIdList());
+        RestoreFileEvent event = new RestoreFileEvent(this, context.getFileIdList());
         applicationContext.publishEvent(event);
     }
 
     /**
      * 执行文件还原的动作
-     *
-     * @param context
      */
     private void doRestore(RestoreContext context) {
         List<RPanUserFile> records = context.getRecords();
@@ -180,8 +162,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
      * <p>
      * 1、要还原的文件列表中有同一个文件夹下面相同名称的文件 不允许还原
      * 2、要还原的文件当前的父文件夹下面存在同名文件，我们不允许还原
-     *
-     * @param context
      */
     private void checkRestoreFilename(RestoreContext context) {
         List<RPanUserFile> records = context.getRecords();
@@ -209,8 +189,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
 
     /**
      * 检查文件还原的操作权限
-     *
-     * @param context
      */
     private void checkRestorePermission(RestoreContext context) {
         List<Long> fileIdList = context.getFileIdList();

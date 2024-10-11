@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication(scanBasePackages = GlobalConst.BASE_COMPONENT_SCAN_PATH)
-@ServletComponentScan(basePackages = GlobalConst.BASE_COMPONENT_SCAN_PATH)
-@EnableTransactionManagement
 @MapperScan(basePackages = GlobalConst.BASE_COMPONENT_SCAN_PATH + ".server.modules.**.mapper")
+@ServletComponentScan(basePackages = GlobalConst.BASE_COMPONENT_SCAN_PATH)
+@SpringBootApplication(scanBasePackages = GlobalConst.BASE_COMPONENT_SCAN_PATH)
+@EnableTransactionManagement
 public class RPanServerLauncher {
 
     public static void main(String[] args) {

@@ -10,12 +10,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-/**
- * 拦截器配置类
- */
 @Slf4j
 @SpringBootConfiguration
-public class InterceptorConfig implements WebMvcConfigurer {
+public class InterceptorRegistryConfig implements WebMvcConfigurer {
 
     @Resource
     private List<BloomFilterInterceptor> interceptorList;

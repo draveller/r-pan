@@ -13,8 +13,8 @@ import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.core.utils.UUIDUtil;
 import com.imooc.pan.server.common.cache.ManualCacheService;
-import com.imooc.pan.server.common.config.PanServerConfig;
-import com.imooc.pan.server.common.event.log.ErrorLogEvent;
+import com.imooc.pan.server.common.config.PanServerProps;
+import com.imooc.pan.server.common.event.log.PublishErrorLogEvent;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.CopyFileContext;
@@ -23,7 +23,7 @@ import com.imooc.pan.server.modules.file.context.QueryFileListContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
-import com.imooc.pan.server.modules.share.constants.ShareConstants;
+import com.imooc.pan.server.modules.share.constants.ShareConsts;
 import com.imooc.pan.server.modules.share.context.*;
 import com.imooc.pan.server.modules.share.entity.RPanShare;
 import com.imooc.pan.server.modules.share.entity.RPanShareFile;
@@ -36,6 +36,7 @@ import com.imooc.pan.server.modules.share.vo.*;
 import com.imooc.pan.server.modules.user.entity.RPanUser;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import jakarta.annotation.Resource;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -63,7 +64,7 @@ import java.util.stream.Collectors;
 public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> implements IShareService, ApplicationContextAware {
 
     @Resource
-    private PanServerConfig config;
+    private PanServerProps config;
 
     @Resource
     private IShareFileService iShareFileService;
@@ -83,12 +84,8 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
     private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
 
-
+    @Setter
     private ApplicationContext applicationContext;
-
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
 
     /**
      * 创建分享链接
@@ -96,9 +93,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、拼装分享实体，保存到数据库
      * 2、保存分享和对应文件的关联关系
      * 3、拼装返回实体并返回
-     *
-     * @param context
-     * @return
      */
     @Transactional(rollbackFor = RPanBusinessException.class)
     @Override
@@ -113,9 +107,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
     /**
      * 查询用户的分享列表
-     *
-     * @param context
-     * @return
      */
     @Override
     public List<RPanShareUrlListVO> getShares(QueryShareListContext context) {
@@ -128,8 +119,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、校验用户操作权限
      * 2、删除对应的分享记录
      * 3、删除对应的分享文件关联关系记录
-     *
-     * @param context
      */
     @Transactional(rollbackFor = RPanBusinessException.class)
     @Override
@@ -145,9 +134,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、检查分享的状态是不是正常
      * 2、校验分享的分享码是不是正确
      * 3、生成一个短时间的分享token 返回给上游
-     *
-     * @param context
-     * @return
      */
     @Override
     public String checkShareCode(CheckShareCodeContext context) {
@@ -165,9 +151,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 3、查询分享的主体信息
      * 4、查询分享的文件列表
      * 5、查询分享者的信息
-     *
-     * @param context
-     * @return
      */
     @Override
     public ShareDetailVO detail(QueryShareDetailContext context) {
@@ -187,9 +170,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 2、初始化分享实体
      * 3、查询分享的主体信息
      * 4、查询分享者的信息
-     *
-     * @param context
-     * @return
      */
     @Override
     public ShareSimpleDetailVO simpleDetail(QueryShareSimpleDetailContext context) {
@@ -207,9 +187,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、校验分享的状态
      * 2、校验文件的ID实在分享的文件列表中
      * 3、查询对应文件的子文件列表，返回
-     *
-     * @param context
-     * @return
      */
     @Override
     public List<RPanUserFileVO> fileList(QueryChildFileListContext context) {
@@ -230,8 +207,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、校验分享状态
      * 2、校验文件ID是否合法
      * 3、执行保存我的网盘动作
-     *
-     * @param context
      */
     @Override
     public void saveFiles(ShareSaveContext context) {
@@ -246,8 +221,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、校验分享状态
      * 2、校验文件ID的合法性
      * 3、执行文件下载的动作
-     *
-     * @param context
      */
     @Override
     public void download(ShareFileDownloadContext context) {
@@ -262,8 +235,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、查询所有受影响的分享的ID集合
      * 2、去判断每一个分享对应的文件以及所有的父文件信息均为正常，该种情况，把分享的状态变为正常
      * 3、如果有分享的文件或者是父文件信息被删除，变更该分享的状态为有文件被删除
-     *
-     * @param allAvailableFileIdList
      */
     @Override
     public void refreshShareStatus(List<Long> allAvailableFileIdList) {
@@ -285,9 +256,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
     /**
      * 创建分享链接后置处理
-     *
-     * @param context
-     * @param vo
      */
     private void afterCreate(CreateShareUrlContext context) {
         BloomFilter<Long> filter = manager.getFilter(BLOOM_FILTER_NAME);
@@ -303,8 +271,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      * 1、查询对应的分享信息，判断有效
      * 2、 去判断该分享对应的文件以及所有的父文件信息均为正常，该种情况，把分享的状态变为正常
      * 3、如果有分享的文件或者是父文件信息被删除，变更该分享的状态为有文件被删除
-     *
-     * @param shareId
      */
     private void refreshOneShareStatus(Long shareId) {
         RPanShare entity = getById(shareId);
@@ -326,24 +292,18 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
     /**
      * 执行刷新文件分享状态的动作
-     *
-     * @param entity
-     * @param shareStatus
      */
     private void doChangeShareStatus(RPanShare entity, ShareStatusEnum shareStatus) {
         entity.setShareStatus(shareStatus.getCode());
 
         if (!updateById(entity)) {
-            applicationContext.publishEvent(new ErrorLogEvent(this, "更新分享状态失败，请手动更改状态，分享ID为："
+            applicationContext.publishEvent(new PublishErrorLogEvent(this, "更新分享状态失败，请手动更改状态，分享ID为："
                     + entity.getShareId() + ", 分享" + "状态改为：" + shareStatus.getCode(), GlobalConst.ZERO_LONG));
         }
     }
 
     /**
      * 检查该分享所有的文件以及所有的父文件均为正常状态
-     *
-     * @param shareId
-     * @return
      */
     private boolean checkShareFileAvailable(Long shareId) {
         List<Long> shareFileIdList = getShareFileIdList(shareId);
@@ -357,9 +317,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
     /**
      * 检查该文件以及所有的文件夹信息均为正常状态
-     *
-     * @param fileId
-     * @return
      */
     private boolean checkUpFileAvailable(Long fileId) {
         RPanUserFile entity = iUserFileService.getById(fileId);
@@ -377,9 +334,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
     /**
      * 通过文件ID查询对应的分享ID集合
-     *
-     * @param allAvailableFileIdList
-     * @return
      */
     private List<Long> getShareIdListByFileIdList(List<Long> allAvailableFileIdList) {
         LambdaQueryWrapper<RPanShareFile> wrapper = Wrappers.lambdaQuery();
@@ -637,7 +591,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      */
     private String generateShareToken(CheckShareCodeContext context) {
         RPanShare entity = context.getEntity();
-        return JwtUtil.generateToken(UUIDUtil.getUUID(), ShareConstants.SHARE_ID, entity.getShareId(), ShareConstants.ONE_HOUR_LONG);
+        return JwtUtil.generateToken(UUIDUtil.getUUID(), ShareConsts.SHARE_ID, entity.getShareId(), ShareConsts.ONE_HOUR_LONG);
     }
 
     /**

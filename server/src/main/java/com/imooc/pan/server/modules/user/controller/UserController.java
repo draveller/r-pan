@@ -2,7 +2,7 @@ package com.imooc.pan.server.modules.user.controller;
 
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
-import com.imooc.pan.server.common.annotation.LoginIgnore;
+import com.imooc.pan.server.common.annotation.NoCheckLogin;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.user.context.*;
 import com.imooc.pan.server.modules.user.converter.UserConverter;
@@ -31,7 +31,7 @@ public class UserController {
     @Resource
     private UserConverter userConverter;
 
-    @LoginIgnore
+    @NoCheckLogin
     @Operation(
             summary = "用户注册接口",
             description = "该接口提供了用户注册功能, 实现了幂等性注册的逻辑, 可多并发调用"
@@ -45,7 +45,7 @@ public class UserController {
         return R.data(IdUtil.encrypt(userId));
     }
 
-    @LoginIgnore
+    @NoCheckLogin
     @Operation(
             summary = "用户登录接口",
             description = "该接口提供了用户登录功能, 成功登录之后会返回有时效性的accessToken, 供后续服务使用"
@@ -58,7 +58,7 @@ public class UserController {
         return R.data(accessToken);
     }
 
-    @LoginIgnore
+    @NoCheckLogin
     @Operation(
             summary = "用户github登录接口",
             description = "该接口提供了用户登录功能, 成功登录之后会返回有时效性的accessToken, 供后续服务使用"
@@ -80,7 +80,7 @@ public class UserController {
         return R.success();
     }
 
-    @LoginIgnore
+    @NoCheckLogin
     @Operation(
             summary = "用户忘记密码-校验用户名接口",
             description = "该接口提供了用户忘记密码-校验用户名功能, 返回用户设置的密保问题"
@@ -92,7 +92,7 @@ public class UserController {
         return R.data(question);
     }
 
-    @LoginIgnore
+    @NoCheckLogin
     @Operation(
             summary = "用户忘记密码-校验密保答案",
             description = "该接口提供了用户忘记密码-校验密保答案功能, 校验成功后返回token"
@@ -104,7 +104,7 @@ public class UserController {
         return R.data(token);
     }
 
-    @LoginIgnore
+    @NoCheckLogin
     @Operation(
             summary = "用户忘记密码-重置密码",
             description = "该接口提供了用户忘记密码-重置密码功能"

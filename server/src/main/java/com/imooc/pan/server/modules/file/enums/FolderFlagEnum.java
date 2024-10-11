@@ -20,6 +20,6 @@ public enum FolderFlagEnum {
      */
     YES(1);
 
-    private Integer code;
+    private final Integer code;
 
 }

@@ -3,6 +3,8 @@ package com.imooc.pan.server.modules.share.context;
 import lombok.Data;
 
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -11,7 +13,8 @@ import java.io.Serializable;
 @Data
 public class ShareFileDownloadContext implements Serializable {
 
-    private static final long serialVersionUID = 6163063566421910008L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 要下载的文件ID

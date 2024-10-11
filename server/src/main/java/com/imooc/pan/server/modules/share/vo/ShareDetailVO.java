@@ -8,6 +8,7 @@ import com.imooc.pan.web.serializer.LocalDateTime2StringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 public class ShareDetailVO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @JsonSerialize(using = IdEncryptSerializer.class)

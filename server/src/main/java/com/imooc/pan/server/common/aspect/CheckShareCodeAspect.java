@@ -4,7 +4,7 @@ import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.server.common.utils.ShareIdUtil;
-import com.imooc.pan.server.modules.share.constants.ShareConstants;
+import com.imooc.pan.server.modules.share.constants.ShareConsts;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +24,7 @@ import java.util.Objects;
 @Component
 @Aspect
 @Slf4j
-public class ShareCodeAspect {
+public class CheckShareCodeAspect {
 
     /**
      * 登录认证参数名称
@@ -56,10 +56,6 @@ public class ShareCodeAspect {
      * a、获取token 从请求头或者参数
      * b、解析token
      * c、解析的shareId存入线程上下文，供下游使用
-     *
-     * @param proceedingJoinPoint
-     * @return
-     * @throws Throwable
      */
     @Around("shareCodeAuth()")
     public Object shareCodeAuthAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -77,9 +73,6 @@ public class ShareCodeAspect {
 
     /**
      * 校验token并提取shareId
-     *
-     * @param request
-     * @return
      */
     private boolean checkAndSaveShareId(HttpServletRequest request) {
         String shareToken = request.getHeader(SHARE_CODE_AUTH_REQUEST_HEADER_NAME);
@@ -89,7 +82,7 @@ public class ShareCodeAspect {
         if (StringUtils.isBlank(shareToken)) {
             return false;
         }
-        Object shareId = JwtUtil.analyzeToken(shareToken, ShareConstants.SHARE_ID);
+        Object shareId = JwtUtil.analyzeToken(shareToken, ShareConsts.SHARE_ID);
         if (Objects.isNull(shareId)) {
             return false;
         }
@@ -99,8 +92,6 @@ public class ShareCodeAspect {
 
     /**
      * 保存分享ID到线程上下文中
-     *
-     * @param shareId
      */
     private void saveShareId(Object shareId) {
         ShareIdUtil.set(Long.valueOf(String.valueOf(shareId)));

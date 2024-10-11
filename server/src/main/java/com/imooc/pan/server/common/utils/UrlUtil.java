@@ -18,14 +18,9 @@ public class UrlUtil {
         // 检查字符串中是否包含百分号（%）
         if (input.contains("%")) {
             // 尝试解码
-            try {
-                String decoded = URLDecoder.decode(input, "UTF-8");
-                // 比较解码前后的字符串
-                return !input.equals(decoded);
-            } catch (UnsupportedEncodingException e) {
-                // 如果解码失败，说明字符串可能不需要解码
-                return false;
-            }
+            String decoded = URLDecoder.decode(input, StandardCharsets.UTF_8);
+            // 比较解码前后的字符串
+            return !input.equals(decoded);
         }
         // 如果没有百分号，说明不需要解码
         return false;

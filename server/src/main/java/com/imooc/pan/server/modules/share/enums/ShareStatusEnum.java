@@ -6,15 +6,15 @@ import lombok.Getter;
 /**
  * 分享状态枚举类
  */
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public enum ShareStatusEnum {
 
     NORMAL(0, "正常状态"),
     FILE_DELETED(1, "有文件被删除");
 
-    private Integer code;
+    private final Integer code;
 
-    private String desc;
+    private final String desc;
 
 }

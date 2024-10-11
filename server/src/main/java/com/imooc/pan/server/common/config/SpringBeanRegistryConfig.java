@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class SpringBeanConfig {
+public class SpringBeanRegistryConfig {
 
     @Bean
     public ClientHttpRequestFactory simpleClientHttpRequestFactory() {

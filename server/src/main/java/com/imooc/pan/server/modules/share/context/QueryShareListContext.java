@@ -2,6 +2,7 @@ package com.imooc.pan.server.modules.share.context;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,7 +11,8 @@ import java.io.Serializable;
 @Data
 public class QueryShareListContext implements Serializable {
 
-    private static final long serialVersionUID = 4348516200563466548L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 当前登录的用户ID

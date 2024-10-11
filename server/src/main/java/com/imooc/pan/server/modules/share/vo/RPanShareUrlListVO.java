@@ -6,14 +6,16 @@ import com.imooc.pan.web.serializer.LocalDateTime2StringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Schema(name = "分享链接列表结果实体对象")
 @Data
+@Schema(name = "分享链接列表结果实体对象")
 public class RPanShareUrlListVO implements Serializable {
 
-    private static final long serialVersionUID = -5301645564554502650L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Schema(name = "分享的ID")
     @JsonSerialize(using = IdEncryptSerializer.class)

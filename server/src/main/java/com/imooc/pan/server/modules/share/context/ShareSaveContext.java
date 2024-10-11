@@ -2,6 +2,7 @@ package com.imooc.pan.server.modules.share.context;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +12,8 @@ import java.util.List;
 @Data
 public class ShareSaveContext implements Serializable {
 
-    private static final long serialVersionUID = -5381349624053569146L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 要保存的文件ID列表

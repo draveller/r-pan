@@ -5,9 +5,9 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
-public class ErrorLogEvent extends ApplicationEvent {
+@EqualsAndHashCode(callSuper = false)
+public class PublishErrorLogEvent extends ApplicationEvent {
 
     /**
      * 错误日志的内容
@@ -19,7 +19,7 @@ public class ErrorLogEvent extends ApplicationEvent {
      */
     private Long userId;
 
-    public ErrorLogEvent(Object source, String errorMsg, Long userId) {
+    public PublishErrorLogEvent(Object source, String errorMsg, Long userId) {
         super(source);
         this.errorMsg = errorMsg;
         this.userId = userId;

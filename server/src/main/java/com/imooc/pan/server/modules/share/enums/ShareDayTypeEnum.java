@@ -17,17 +17,14 @@ public enum ShareDayTypeEnum {
     SEVEN_DAYS_VALIDITY(1, 7, "七天有效"),
     THIRTY_DAYS_VALIDITY(2, 30, "三十天有效");
 
-    private Integer code;
+    private final Integer code;
 
-    private Integer days;
+    private final Integer days;
 
-    private String desc;
+    private final String desc;
 
     /**
      * 根据穿过来的分享天数的code获取对应的分享天数的数值
-     *
-     * @param code
-     * @return
      */
     public static Integer getShareDayByCode(Integer code) {
         if (Objects.isNull(code)) {

@@ -3,12 +3,14 @@ package com.imooc.pan.server.modules.recycle.context;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 @Data
 public class RestoreContext implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

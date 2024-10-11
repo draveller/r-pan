@@ -13,8 +13,6 @@ public interface IShareFileService extends IService<RPanShareFile> {
 
     /**
      * 保存分享的文件的对应关系
-     *
-     * @param context
      */
     void saveShareFiles(SaveShareFilesContext context);
 

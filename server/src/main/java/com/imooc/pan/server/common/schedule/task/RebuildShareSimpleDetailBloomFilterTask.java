@@ -30,8 +30,6 @@ public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
 
     /**
      * 获取定时任务的名称
-     *
-     * @return
      */
     @Override
     public String getName() {
@@ -40,7 +38,6 @@ public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
 
     /**
      * 执行重建任务
-     * <p>
      */
     @Override
     public void run() {
@@ -70,8 +67,6 @@ public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
 
         log.info("finish rebuild ShareSimpleDetailBloomFilter, total set item count {} ...", addCount.get());
     }
-
-    // -------------------------------- private --------------------------------
 
 
 }

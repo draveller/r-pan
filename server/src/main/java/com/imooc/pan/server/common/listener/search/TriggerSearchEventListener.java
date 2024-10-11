@@ -2,7 +2,7 @@ package com.imooc.pan.server.common.listener.search;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.imooc.pan.server.common.event.search.UserSearchEvent;
+import com.imooc.pan.server.common.event.search.TriggerSearchEvent;
 import com.imooc.pan.server.modules.user.entity.RPanUserSearchHistory;
 import com.imooc.pan.server.modules.user.service.IUserSearchHistoryService;
 import jakarta.annotation.Resource;
@@ -17,7 +17,7 @@ import java.util.Date;
  * 用户搜索事件监听器
  */
 @Component
-public class UserSearchEventListener {
+public class TriggerSearchEventListener {
 
     @Resource
     private IUserSearchHistoryService iUserSearchHistoryService;
@@ -27,8 +27,8 @@ public class UserSearchEventListener {
      *
      * @param event
      */
-    @EventListener(classes = UserSearchEvent.class)
-    public void saveSearchHistory(UserSearchEvent event) {
+    @EventListener(classes = TriggerSearchEvent.class)
+    public void saveSearchHistory(TriggerSearchEvent event) {
         RPanUserSearchHistory historyRecord = new RPanUserSearchHistory();
         historyRecord.setUserId(event.getUserId());
         historyRecord.setUserId(event.getUserId());

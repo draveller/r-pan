@@ -24,8 +24,6 @@ public class ShareFileServiceImpl extends ServiceImpl<RPanShareFileMapper, RPanS
 
     /**
      * 保存分享的文件的对应关系
-     *
-     * @param context
      */
     @Override
     @Transactional(rollbackFor = Exception.class)

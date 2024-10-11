@@ -2,6 +2,7 @@ package com.imooc.pan.server.modules.share.context;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +12,8 @@ import java.util.List;
 @Data
 public class CancelShareContext implements Serializable {
 
-    private static final long serialVersionUID = -7170454089602402200L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 当前登录的用户ID

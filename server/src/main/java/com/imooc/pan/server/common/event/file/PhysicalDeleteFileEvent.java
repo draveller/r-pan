@@ -14,16 +14,16 @@ import java.util.List;
  */
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
-public class FilePhysicalDeleteEvent extends ApplicationEvent {
+@EqualsAndHashCode(callSuper = false)
+public class PhysicalDeleteFileEvent extends ApplicationEvent {
 
     /**
      * 所有被物理删除的文件实体集合
      */
     private List<RPanUserFile> allRecords;
 
-    public FilePhysicalDeleteEvent(Object source, List<RPanUserFile> allRecords) {
+    public PhysicalDeleteFileEvent(Object source, List<RPanUserFile> allRecords) {
         super(source);
         this.allRecords = allRecords;
     }

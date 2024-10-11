@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.IdUtil;
-import com.imooc.pan.server.common.config.PanServerConfig;
+import com.imooc.pan.server.common.config.PanServerProps;
 import com.imooc.pan.server.modules.file.context.FileChunkSaveContext;
 import com.imooc.pan.server.modules.file.converter.FileConverter;
 import com.imooc.pan.server.modules.file.entity.RPanFileChunk;
@@ -31,7 +31,7 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
         implements IFileChunkService {
 
     @Resource
-    private PanServerConfig panServerConfig;
+    private PanServerProps panServerProps;
 
     @Resource
     private FileConverter fileConverter;
@@ -87,7 +87,7 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
         fileChunk.setChunkNumber(context.getChunkNumber());
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expiration = now.plusDays(this.panServerConfig.getChunkFileExpirationDays());
+        LocalDateTime expiration = now.plusDays(this.panServerProps.getChunkFileExpirationDays());
         fileChunk.setExpirationTime(expiration);
         fileChunk.setCreateUser(context.getUserId());
         fileChunk.setCreateTime(now);

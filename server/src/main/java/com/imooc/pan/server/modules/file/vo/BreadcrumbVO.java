@@ -7,6 +7,7 @@ import com.imooc.pan.web.serializer.IdEncryptSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Schema(name = "面包屑列表展示实体")
 public class BreadcrumbVO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(name = "文件id")

@@ -9,17 +9,20 @@ import org.springframework.context.ApplicationEvent;
 import java.util.List;
 
 /**
- * 文件(夹)删除事件
+ * 文件还原事件实体
  */
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
-public class DeleteFileEvent extends ApplicationEvent {
+@EqualsAndHashCode(callSuper = false)
+public class RestoreFileEvent extends ApplicationEvent {
 
+    /**
+     * 被成功还原的文件记录ID集合
+     */
     private List<Long> fileIdList;
 
-    public DeleteFileEvent(Object source, List<Long> fileIdList) {
+    public RestoreFileEvent(Object source, List<Long> fileIdList) {
         super(source);
         this.fileIdList = fileIdList;
     }

@@ -9,19 +9,16 @@ public interface BloomFilterInterceptor extends HandlerInterceptor {
 
     /**
      * 拦截器名称
-     * @return
      */
     String getName();
 
     /**
      * 要拦截的uri的集合
-     * @return
      */
     String[] getPathPatterns();
 
     /**
      * 要排除的uri的集合
-     * @return
      */
     String[] getExcludePatterns();
 

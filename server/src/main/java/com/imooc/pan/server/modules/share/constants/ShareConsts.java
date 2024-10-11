@@ -1,12 +1,13 @@
 package com.imooc.pan.server.modules.share.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * 分享模块常量类
  */
-public final class ShareConstants {
-
-    private ShareConstants() {
-    }
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ShareConsts {
 
     /**
      * 分享ID的key

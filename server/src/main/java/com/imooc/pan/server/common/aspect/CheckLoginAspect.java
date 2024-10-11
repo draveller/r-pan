@@ -5,7 +5,7 @@ import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.response.ResponseCode;
 import com.imooc.pan.core.utils.JwtUtil;
-import com.imooc.pan.server.common.annotation.LoginIgnore;
+import com.imooc.pan.server.common.annotation.NoCheckLogin;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.user.constants.UserConsts;
 import jakarta.annotation.Resource;
@@ -34,7 +34,7 @@ import java.util.Optional;
 @Component
 @Aspect
 @Slf4j
-public class CommonLoginAspect {
+public class CheckLoginAspect {
 
     /**
      * 登录认证参数名称
@@ -65,10 +65,6 @@ public class CommonLoginAspect {
      * 切点的环绕增强逻辑
      * 1. 判断是否需要校验登录信息
      * 2. 校验登录信息: 获取token -> 从缓存中获取token进行比对 -> 解析token -> 将解析的userId存入线程上下文
-     *
-     * @param proceedingJoinPoint
-     * @return
-     * @throws Throwable
      */
     @Around("loginAuth()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -97,9 +93,6 @@ public class CommonLoginAspect {
 
     /**
      * 校验token并提取userId
-     *
-     * @param request
-     * @return
      */
     private boolean checkAndSaveUserId(HttpServletRequest request) {
         String accessToken = request.getHeader(LOGIN_AUTH_REQUEST_HEADER_NAME);
@@ -136,14 +129,13 @@ public class CommonLoginAspect {
     }
 
     /**
-     * @param proceedingJoinPoint
      * @return ture 表示需要校验登录信息, false表示不需要
      */
     private boolean judgeIfNeedCheckLogin(ProceedingJoinPoint proceedingJoinPoint) {
         Signature signature = proceedingJoinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
-        return !method.isAnnotationPresent(LoginIgnore.class);
+        return !method.isAnnotationPresent(NoCheckLogin.class);
     }
 
 }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.schedule.ScheduleTask;
-import com.imooc.pan.server.common.event.log.ErrorLogEvent;
+import com.imooc.pan.server.common.event.log.PublishErrorLogEvent;
 import com.imooc.pan.server.modules.file.entity.RPanFileChunk;
 import com.imooc.pan.server.modules.file.service.IFileChunkService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 过期分片清理任务
@@ -47,8 +46,6 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
 
     /**
      * 获取定时任务的名称
-     *
-     * @return
      */
     @Override
     public String getName() {
@@ -86,9 +83,6 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
 
     /**
      * 滚动查询过期的文件分片记录
-     *
-     * @param scrollPointer
-     * @return
      */
     private List<RPanFileChunk> scrollQueryExpireFileChunkRecords(Long scrollPointer) {
         LambdaQueryWrapper<RPanFileChunk> wrapper = Wrappers.lambdaQuery();
@@ -100,8 +94,6 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
 
     /**
      * 物理删除过期的文件分片文件实体
-     *
-     * @param expireFileChunkRecords
      */
     private void deleteRealChunkFiles(List<RPanFileChunk> expireFileChunkRecords) {
         DeleteFileContext deleteFileContext = new DeleteFileContext();
@@ -118,15 +110,12 @@ public class CleanExpireChunkFileTask implements ScheduleTask, ApplicationContex
      * @param realPaths
      */
     private void saveErrorLog(List<String> realPaths) {
-        ErrorLogEvent event = new ErrorLogEvent(this, "文件物理删除失败，请手动执行文件删除！文件路径为：" + JSON.toJSONString(realPaths), GlobalConst.ZERO_LONG);
+        PublishErrorLogEvent event = new PublishErrorLogEvent(this, "文件物理删除失败，请手动执行文件删除！文件路径为：" + JSON.toJSONString(realPaths), GlobalConst.ZERO_LONG);
         applicationContext.publishEvent(event);
     }
 
     /**
      * 删除过期文件分片记录
-     *
-     * @param expireFileChunkRecords
-     * @return
      */
     private List<Long> deleteChunkFileRecords(List<RPanFileChunk> expireFileChunkRecords) {
         List<Long> idList = expireFileChunkRecords.stream().map(RPanFileChunk::getId).toList();

@@ -16,18 +16,11 @@ public interface RPanShareMapper extends BaseMapper<RPanShare> {
 
     /**
      * 查询用户的分享列表
-     *
-     * @param userId
-     * @return
      */
     List<RPanShareUrlListVO> selectShareVOListByUserId(Long userId);
 
     /**
      * 滚动查询已存在的分享id集合
-     *
-     * @param startId
-     * @param limit
-     * @return
      */
     List<Long> rollingQueryShareId(long startId, long limit);
 

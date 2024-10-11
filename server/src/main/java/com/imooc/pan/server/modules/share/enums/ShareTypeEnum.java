@@ -12,8 +12,8 @@ public enum ShareTypeEnum {
 
     NEED_SHARE_CODE(0, "有提取码");
 
-    private Integer code;
+    private final Integer code;
 
-    private String desc;
+    private final String desc;
 
 }

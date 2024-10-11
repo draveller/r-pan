@@ -4,8 +4,8 @@ import com.google.common.base.Splitter;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.IdUtil;
-import com.imooc.pan.server.common.annotation.LoginIgnore;
-import com.imooc.pan.server.common.annotation.NeedShareCode;
+import com.imooc.pan.server.common.annotation.NoCheckLogin;
+import com.imooc.pan.server.common.annotation.CheckShareCode;
 import com.imooc.pan.server.common.utils.ShareIdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
@@ -94,7 +94,7 @@ public class ShareController {
             summary = "校验分享码",
             description = "该接口提供了校验分享码的功能"
     )
-    @LoginIgnore
+    @NoCheckLogin
     @PostMapping("/share/code/check")
     public R<String> checkShareCode(@Validated @RequestBody CheckShareCodePO checkShareCodePO) {
         CheckShareCodeContext context = new CheckShareCodeContext();
@@ -110,8 +110,8 @@ public class ShareController {
             summary = "查询分享的详情",
             description = "该接口提供了查询分享的详情的功能"
     )
-    @LoginIgnore
-    @NeedShareCode
+    @NoCheckLogin
+    @CheckShareCode
     @GetMapping("/share")
     public R<ShareDetailVO> detail() {
         QueryShareDetailContext context = new QueryShareDetailContext();
@@ -124,7 +124,7 @@ public class ShareController {
             summary = "查询分享的简单详情",
             description = "该接口提供了查询分享的简单详情的功能"
     )
-    @LoginIgnore
+    @NoCheckLogin
     @GetMapping("/share/simple")
     public R<ShareSimpleDetailVO> simpleDetail(@NotBlank(message = "分享的ID不能为空")
                                                @RequestParam(value = "shareId", required = false) String shareId) {
@@ -139,8 +139,8 @@ public class ShareController {
             description = "该接口提供了获取下一级文件列表的功能"
     )
     @GetMapping("/share/file/list")
-    @NeedShareCode
-    @LoginIgnore
+    @CheckShareCode
+    @NoCheckLogin
     public R<List<RPanUserFileVO>> fileList(@NotBlank(message = "文件的父ID不能为空")
                                             @RequestParam(value = "parentId", required = false) String parentId) {
         QueryChildFileListContext context = new QueryChildFileListContext();
@@ -154,7 +154,7 @@ public class ShareController {
             summary = "保存至我的网盘",
             description = "该接口提供了保存至我的网盘的功能"
     )
-    @NeedShareCode
+    @CheckShareCode
     @PostMapping("/share/save")
     public R saveFiles(@Validated @RequestBody ShareSavePO shareSavePO) {
         ShareSaveContext context = new ShareSaveContext();
@@ -177,7 +177,7 @@ public class ShareController {
             description = "该接口提供了分享文件下载的功能"
     )
     @GetMapping("/share/file/download")
-    @NeedShareCode
+    @CheckShareCode
     public void download(@NotBlank(message = "文件ID不能为空")
                          @RequestParam(value = "fileId", required = false) String fileId,
                          HttpServletResponse response) {

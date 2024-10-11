@@ -61,36 +61,33 @@ public enum FileTypeEnum {
         return StringUtils.isNotBlank(fileSuffix) && matchFileSuffixes.contains(fileSuffix);
     }),
     CSV_FILE(12, "CSV_FILE", 12, fileSuffix -> {
-        List<String> matchFileSuffixes = Arrays.asList(".csv");
+        List<String> matchFileSuffixes = List.of(".csv");
         return StringUtils.isNotBlank(fileSuffix) && matchFileSuffixes.contains(fileSuffix);
     });
 
     /**
      * 文件类型的code
      */
-    private Integer code;
+    private final Integer code;
 
     /**
      * 文件类型描述
      */
-    private String desc;
+    private final String desc;
 
     /**
      * 排序字段
      * 按照降序顺序排序
      */
-    private Integer order;
+    private final Integer order;
 
     /**
      * 文件类型匹配器
      */
-    private Predicate<String> tester;
+    private final Predicate<String> tester;
 
     /**
      * 根据文件名称的后缀获取对应的文件类型映射code
-     *
-     * @param fileSuffix
-     * @return
      */
     public static Integer getFileTypeCode(String fileSuffix) {
         Optional<FileTypeEnum> result = Arrays.stream(values())

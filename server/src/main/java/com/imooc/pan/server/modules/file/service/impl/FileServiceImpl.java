@@ -8,7 +8,7 @@ import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.FileUtil;
 import com.imooc.pan.core.utils.FileUtils;
 import com.imooc.pan.core.utils.IdUtil;
-import com.imooc.pan.server.common.event.log.ErrorLogEvent;
+import com.imooc.pan.server.common.event.log.PublishErrorLogEvent;
 import com.imooc.pan.server.modules.file.context.FileChunkMergeAndSaveContext;
 import com.imooc.pan.server.modules.file.context.FileSaveContext;
 import com.imooc.pan.server.modules.file.entity.RPanFile;
@@ -32,7 +32,6 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author 18063
@@ -149,9 +148,9 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
                 this.storageEngine.delete(deleteContext);
             } catch (Exception e) {
                 e.printStackTrace();
-                ErrorLogEvent errorLogEvent = new ErrorLogEvent(
+                PublishErrorLogEvent publishErrorLogEvent = new PublishErrorLogEvent(
                         this, "文件物理删除失败, 请执行手动删除! 文件路径=" + realPath, userId);
-                applicationContext.publishEvent(errorLogEvent);
+                applicationContext.publishEvent(publishErrorLogEvent);
             }
         }
         return fileRecord;

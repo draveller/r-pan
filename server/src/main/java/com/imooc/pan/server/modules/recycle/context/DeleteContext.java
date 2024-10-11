@@ -3,6 +3,7 @@ package com.imooc.pan.server.modules.recycle.context;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 public class DeleteContext implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

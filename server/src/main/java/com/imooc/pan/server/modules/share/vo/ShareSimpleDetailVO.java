@@ -6,13 +6,15 @@ import com.imooc.pan.web.serializer.IdEncryptSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Schema(name = "查询分享简单详情返回实体对象")
 @Data
 public class ShareSimpleDetailVO implements Serializable {
 
-    private static final long serialVersionUID = -244174348108049506L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Schema(name = "分享ID")
     @JsonSerialize(using = IdEncryptSerializer.class)

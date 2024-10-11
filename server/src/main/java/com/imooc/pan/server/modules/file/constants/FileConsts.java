@@ -1,12 +1,13 @@
 package com.imooc.pan.server.modules.file.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * 文件模块常量类
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FileConsts {
-
-    private FileConsts() {
-    }
 
     /**
      * 顶级父文件id
@@ -46,7 +47,5 @@ public final class FileConsts {
     public static final String CONTENT_DISPOSITION_VALUE_PREFIX_STR = "attachment;fileName=";
 
     public static final String GB2312_STR = "GB2312";
-
-    public static final String ISO_8859_1_STR = "ISO-8859-1";
 
 }

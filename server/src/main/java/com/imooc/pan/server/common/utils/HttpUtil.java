@@ -1,20 +1,20 @@
 package com.imooc.pan.server.common.utils;
 
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.NoArgsConstructor;
 
 /**
  * Http工具类
  * Created by RubinChu on 2021/1/19 17:54
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpUtil {
 
     /**
      * 添加跨域的响应头
-     *
-     * @param response
      */
     public static void addCorsResponseHeaders(HttpServletResponse response) {
         for (CorsConfigEnum corsConfigEnum : CorsConfigEnum.values()) {
@@ -49,8 +49,8 @@ public class HttpUtil {
          */
         CORS_HEADERS("Access-Control-Allow-Headers", "*");
 
-        private String key;
-        private String value;
+        private final String key;
+        private final String value;
 
     }
 

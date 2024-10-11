@@ -8,6 +8,4 @@ package com.imooc.pan.server.common.cache;
 public interface AnnotationCacheService<V> extends CacheService<V> {
 
 
-
-
 }

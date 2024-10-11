@@ -20,6 +20,6 @@ public enum DelFlagEnum {
      */
     YES(1);
 
-    private Integer code;
+    private final Integer code;
 
 }

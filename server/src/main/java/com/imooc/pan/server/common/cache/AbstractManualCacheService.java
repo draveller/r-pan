@@ -23,12 +23,11 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
     /**
      * 注入属性时设置 required = false, 防止在某些情况下报错
      */
-//    @Resource(required = false)
     @Resource
     @Nullable
     private CacheManager cacheManager;
 
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
     protected abstract BaseMapper<V> getBaseMapper();
 
@@ -79,9 +78,6 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
      * 1. 查询缓存, 如果命中就直接返回
      * 2. 如果没有命中就查询数据库
      * 3. 如果数据库有对应的记录, 回填缓存
-     *
-     * @param id
-     * @return
      */
     @Override
     public V getById(Serializable id) {
@@ -108,10 +104,6 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
 
     /**
      * 根据id来更新缓存信息
-     *
-     * @param id
-     * @param entity
-     * @return
      */
     @Override
     public boolean updateById(Serializable id, V entity) {
@@ -132,8 +124,6 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
 
     /**
      * 删除缓存信息
-     *
-     * @param id
      */
     private void removeCache(Serializable id) {
         String cacheKey = this.getCacheKey(id);
@@ -146,9 +136,6 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
 
     /**
      * 将实体信息保存到缓存中
-     *
-     * @param id
-     * @param entity
      */
     private void putCache(Serializable id, V entity) {
         String cacheKey = this.getCacheKey(id);
@@ -161,9 +148,6 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
 
     /**
      * 根据主键查询对应的实体信息
-     *
-     * @param id
-     * @return
      */
     private V getByDB(Serializable id) {
         return this.getBaseMapper().selectById(id);
@@ -171,9 +155,6 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
 
     /**
      * 根据id从缓存中查询对应的实体信息
-     *
-     * @param id
-     * @return
      */
     private V getByCache(Serializable id) {
         String cacheKey = this.getCacheKey(id);
@@ -190,9 +171,6 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
 
     /**
      * 生成对应的缓存key
-     *
-     * @param id
-     * @return
      */
     private String getCacheKey(Serializable id) {
         return String.format(this.getKeyFormat(), id);

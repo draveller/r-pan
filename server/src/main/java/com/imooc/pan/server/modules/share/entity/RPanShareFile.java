@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -14,8 +15,8 @@ import java.time.LocalDateTime;
  *
  * @TableName r_pan_share_file
  */
-@TableName(value = "r_pan_share_file")
 @Data
+@TableName(value = "r_pan_share_file")
 public class RPanShareFile implements Serializable {
     /**
      * 主键
@@ -26,27 +27,24 @@ public class RPanShareFile implements Serializable {
     /**
      * 分享id
      */
-    @TableField(value = "share_id")
     private Long shareId;
 
     /**
      * 文件记录ID
      */
-    @TableField(value = "file_id")
     private Long fileId;
 
     /**
      * 分享创建人
      */
-    @TableField(value = "create_user")
     private Long createUser;
 
     /**
      * 创建时间
      */
-    @TableField(value = "create_time")
     private LocalDateTime createTime;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

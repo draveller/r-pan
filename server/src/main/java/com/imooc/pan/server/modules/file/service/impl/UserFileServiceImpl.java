@@ -10,8 +10,8 @@ import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.FileUtil;
 import com.imooc.pan.core.utils.IdUtil;
-import com.imooc.pan.server.common.event.file.DeleteFileEvent;
-import com.imooc.pan.server.common.event.search.UserSearchEvent;
+import com.imooc.pan.server.common.event.file.LogicalDeleteFileEvent;
+import com.imooc.pan.server.common.event.search.TriggerSearchEvent;
 import com.imooc.pan.server.common.utils.HttpUtil;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
@@ -510,7 +510,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * 1. 发布文件搜索的事件
      */
     private void afterSearch(FileSearchContext context) {
-        UserSearchEvent event = new UserSearchEvent(this, context.getKeyword(), context.getUserId());
+        TriggerSearchEvent event = new TriggerSearchEvent(this, context.getKeyword(), context.getUserId());
         this.applicationContext.publishEvent(event);
     }
 
@@ -832,8 +832,6 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     /**
      * 添加公共的文件流响应头
      *
-     * @param response
-     * @param contentType
      */
     private void addCommonResponseHeader(HttpServletResponse response, String contentType) {
         response.reset();
@@ -923,8 +921,8 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param context
      */
     private void afterFileDelete(DeleteFileContext context) {
-        DeleteFileEvent deleteFileEvent = new DeleteFileEvent(this, context.getFileIdList());
-        this.applicationContext.publishEvent(deleteFileEvent);
+        LogicalDeleteFileEvent logicalDeleteFileEvent = new LogicalDeleteFileEvent(this, context.getFileIdList());
+        this.applicationContext.publishEvent(logicalDeleteFileEvent);
     }
 
     /**

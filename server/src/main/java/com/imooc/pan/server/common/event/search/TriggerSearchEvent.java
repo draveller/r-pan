@@ -8,16 +8,15 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
-public class UserSearchEvent extends ApplicationEvent {
-
+@EqualsAndHashCode(callSuper = false)
+public class TriggerSearchEvent extends ApplicationEvent {
 
     private String keyword;
 
     private Long userId;
 
-    public UserSearchEvent(Object source, String keyword, Long userId) {
+    public TriggerSearchEvent(Object source, String keyword, Long userId) {
         super(source);
         this.keyword = keyword;
         this.userId = userId;

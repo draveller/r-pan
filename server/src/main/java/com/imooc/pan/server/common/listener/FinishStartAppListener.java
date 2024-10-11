@@ -13,12 +13,10 @@ import org.springframework.stereotype.Component;
  */
 @Log4j2
 @Component
-public class StartedListener implements ApplicationListener<ApplicationReadyEvent> {
+public class FinishStartAppListener implements ApplicationListener<ApplicationReadyEvent> {
 
     /**
      * 项目启动成功将会在日志中输出对应的启动信息
-     *
-     * @param applicationReadyEvent
      */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {

@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 线程池的配置类
  */
 @SpringBootConfiguration
-public class TreadPoolConfig {
+public class TreadPoolRegistryConfig {
 
     @Bean(name = "eventListenerTaskExecutor")
     public ThreadPoolTaskExecutor eventListenerTaskExecutor() {
@@ -25,6 +25,5 @@ public class TreadPoolConfig {
 
         return taskExecutor;
     }
-
 
 }

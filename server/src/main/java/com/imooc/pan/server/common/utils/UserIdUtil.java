@@ -1,21 +1,19 @@
 package com.imooc.pan.server.common.utils;
 
 import com.imooc.pan.core.constants.GlobalConst;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * 用户id存储工具类
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserIdUtil {
-
-    private UserIdUtil() {
-    }
 
     private static final ThreadLocal<Long> threadLocal = new ThreadLocal<>();
 
     /**
      * 设置当前线程的用户id
-     *
-     * @param userId
      */
     public static void set(Long userId) {
         UserIdUtil.threadLocal.set(userId);
@@ -23,8 +21,6 @@ public class UserIdUtil {
 
     /**
      * 获取当前线程的用户id
-     *
-     * @return
      */
     public static Long get() {
         Long userId = UserIdUtil.threadLocal.get();

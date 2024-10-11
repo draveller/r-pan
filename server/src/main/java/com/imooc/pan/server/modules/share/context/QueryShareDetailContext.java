@@ -4,6 +4,7 @@ import com.imooc.pan.server.modules.share.entity.RPanShare;
 import com.imooc.pan.server.modules.share.vo.ShareDetailVO;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -11,6 +12,9 @@ import java.io.Serializable;
  */
 @Data
 public class QueryShareDetailContext implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 对应的分享ID
