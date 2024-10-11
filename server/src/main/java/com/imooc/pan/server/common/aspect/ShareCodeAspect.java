@@ -46,7 +46,6 @@ public class ShareCodeAspect {
      */
     @Pointcut(value = POINT_CUT)
     public void shareCodeAuth() {
-
     }
 
     /**

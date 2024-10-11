@@ -3,6 +3,8 @@ package com.imooc.pan.core.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -11,10 +13,8 @@ import java.util.Date;
  * Jwt工具类
  * Created by RubinChu on 2021/1/22 下午 4:11
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtUtil {
-
-    private JwtUtil() {
-    }
 
     public static final Long TWO_LONG = 2L;
 

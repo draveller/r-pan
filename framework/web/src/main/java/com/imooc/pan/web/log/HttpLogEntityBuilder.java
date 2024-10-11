@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,12 +19,10 @@ import java.util.Objects;
 /**
  * HttpLogEntity构造器
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpLogEntityBuilder {
 
     private static final String UNKNOWN_STR = "unknown";
-
-    private HttpLogEntityBuilder() {
-    }
 
     /**
      * 构建HTTP日志对象

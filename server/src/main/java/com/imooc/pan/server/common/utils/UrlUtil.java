@@ -1,5 +1,8 @@
 package com.imooc.pan.server.common.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -8,10 +11,8 @@ import java.nio.charset.StandardCharsets;
  * 前端传的参数字符串, 有时候需要解码, 有时候则不需要...
  * 为了适配前端传参, 所以创建此工具类..
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UrlUtil {
-
-    private UrlUtil() {
-    }
 
     public static boolean needsUrlDecode(String input) {
         // 检查字符串中是否包含百分号（%）

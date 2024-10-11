@@ -1,7 +1,9 @@
 package com.imooc.pan.core.utils;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.expression.AnnotatedElementKey;
@@ -20,10 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 解析SpEl表达式解析器工具类
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SpElUtil {
-
-    private SpElUtil() {
-    }
 
     private static final RPanExpressionEvaluator expressionEvaluator = new RPanExpressionEvaluator();
 

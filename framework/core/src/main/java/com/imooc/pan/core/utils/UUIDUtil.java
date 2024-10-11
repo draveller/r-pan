@@ -1,15 +1,16 @@
 package com.imooc.pan.core.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 /**
  * UUID工具类
  * Created by RubinChu on 2021/1/22 下午 4:11
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UUIDUtil {
-
-    private UUIDUtil() {
-    }
 
     public static final String EMPTY_STR = "";
     public static final String HYPHEN_STR = "-";

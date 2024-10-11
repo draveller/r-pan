@@ -1,14 +1,14 @@
 package com.imooc.pan.core.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * RPan公用基础常量类
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GlobalConst {
-
-    private GlobalConst() {
-    }
 
     /**
      * 公用的字符串分隔符

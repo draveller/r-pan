@@ -1,13 +1,14 @@
 package com.imooc.pan.core.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * 密码工具类
  * Created by RubinChu on 2021/1/22 下午 4:11
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PasswordUtil {
-
-    private PasswordUtil() {
-    }
 
     /**
      * 随机生成盐值

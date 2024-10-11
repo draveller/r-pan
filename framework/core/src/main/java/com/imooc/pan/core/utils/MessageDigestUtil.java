@@ -1,6 +1,8 @@
 package com.imooc.pan.core.utils;
 
 import cn.hutool.core.codec.Base64;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,10 +13,8 @@ import java.security.MessageDigest;
  * MessageDigest加密工具类
  * Created by RubinChu on 2021/1/22 下午 4:11
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MessageDigestUtil {
-
-    private MessageDigestUtil() {
-    }
 
     private static final String MD5_STR = "MD5";
     private static final String SHA1_STR = "SHA1";

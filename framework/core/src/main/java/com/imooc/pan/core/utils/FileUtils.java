@@ -2,6 +2,8 @@ package com.imooc.pan.core.utils;
 
 import cn.hutool.core.date.DateUtil;
 import com.imooc.pan.core.constants.GlobalConst;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,10 +21,8 @@ import java.util.Objects;
 /**
  * 公用的文件工具类
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtils {
-
-    private FileUtils() {
-    }
 
     /**
      * 获取文件的后缀

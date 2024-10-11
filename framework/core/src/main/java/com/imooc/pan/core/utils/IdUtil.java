@@ -3,6 +3,8 @@ package com.imooc.pan.core.utils;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.PrimitiveArrayUtil;
 import com.imooc.pan.core.exception.RPanBusinessException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.NetworkInterface;
@@ -14,10 +16,8 @@ import java.util.Objects;
 /**
  * 雪花算法id生成器
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IdUtil {
-
-    private IdUtil() {
-    }
 
     /**
      * 工作id 也就是机器id
