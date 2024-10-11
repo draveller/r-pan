@@ -11,6 +11,7 @@ import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.core.utils.PasswordUtil;
 import com.imooc.pan.server.common.cache.AnnotationCacheService;
+import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.CreateFolderContext;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
@@ -24,11 +25,13 @@ import com.imooc.pan.server.modules.user.enums.ThirdPartyProviderEnum;
 import com.imooc.pan.server.modules.user.mapper.RPanUserMapper;
 import com.imooc.pan.server.modules.user.service.GithubService;
 import com.imooc.pan.server.modules.user.service.IThirdPartyAuthService;
+import com.imooc.pan.server.modules.user.service.IUserSearchHistoryService;
 import com.imooc.pan.server.modules.user.service.IUserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -69,6 +72,8 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     private AnnotationCacheService<RPanUser> cacheService;
     @Resource
     private ThirdPartyAuthServiceImpl thirdPartyAuthServiceImpl;
+    @Resource
+    private IUserSearchHistoryService iUserSearchHistoryService;
 
     /**
      * 用户注册的业务方法实现
@@ -177,7 +182,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     public void exit(Long userId) {
         try {
             Cache cache = Optional.ofNullable(cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME))
-                    .orElseThrow(()-> new RPanBusinessException(MsgConst.CACHE_NOT_FOUND));
+                    .orElseThrow(() -> new RPanBusinessException(MsgConst.CACHE_NOT_FOUND));
             cache.evict(UserConsts.USER_LOGIN_PREFIX + userId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -297,6 +302,11 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         throw new RPanBusinessException("请更换手动缓存");
     }
 
+    @Override
+    public List<String> getSearchHistories() {
+        return this.iUserSearchHistoryService.getUserSearchHistories(UserIdUtil.get());
+    }
+
     // ******************************** private ********************************
 
     /**
@@ -392,7 +402,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
                 entity.getUserId(), UserConsts.ONE_DAY_LONG);
 
         Cache cache = Optional.ofNullable(this.cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME))
-                .orElseThrow(()-> new RPanBusinessException(MsgConst.CACHE_NOT_FOUND));
+                .orElseThrow(() -> new RPanBusinessException(MsgConst.CACHE_NOT_FOUND));
         cache.put(UserConsts.USER_LOGIN_PREFIX + entity.getUserId(), accessToken);
 
         userLoginContext.setAccessToken(accessToken);

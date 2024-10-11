@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 该类是用户模块的控制器类
  */
@@ -127,14 +129,23 @@ public class UserController {
     }
 
     @Operation(
+            summary = "用户查询搜索历史接口",
+            description = "该接口提供了用户查询搜索历史功能"
+    )
+    @GetMapping("/search/histories")
+    public R<List<String>> getSearchHistories() {
+        List<String> histories = this.iUserService.getSearchHistories();
+        return R.data(histories);
+    }
+
+    @Operation(
             summary = "查询登录用户信息",
             description = "该接口提供了查询登录用户信息功能"
     )
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public R<UserInfoVO> info() {
         UserInfoVO userInfoVO = this.iUserService.info(UserIdUtil.get());
         return R.data(userInfoVO);
     }
-
 
 }

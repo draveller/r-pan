@@ -5,6 +5,8 @@ import com.imooc.pan.server.modules.user.context.*;
 import com.imooc.pan.server.modules.user.entity.RPanUser;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 
+import java.util.List;
+
 /**
  * @author 18063
  * @description 针对表【r_pan_user(用户信息表)】的数据库操作Service
@@ -29,5 +31,7 @@ public interface IUserService extends IService<RPanUser> {
     void changePassword(ChangePasswordContext context);
 
     UserInfoVO info(Long userId);
+
+    List<String> getSearchHistories();
 
 }
