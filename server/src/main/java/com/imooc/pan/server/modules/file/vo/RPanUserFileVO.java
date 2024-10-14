@@ -22,7 +22,7 @@ public class RPanUserFileVO implements Serializable {
 
     @JsonSerialize(using = IdEncryptSerializer.class)
     @Schema(name = "文件id")
-    private Long fileId;
+    private Long id;
 
     @JsonSerialize(using = IdEncryptSerializer.class)
     @Schema(name = "父文件夹id")

@@ -1,7 +1,6 @@
 package com.imooc.pan.server.modules.share.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -20,8 +19,7 @@ public class RPanShare implements Serializable {
     /**
      * 分享id
      */
-    @TableId
-    private Long shareId;
+    private Long id;
 
     /**
      * 分享名称
@@ -72,6 +70,11 @@ public class RPanShare implements Serializable {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     @Serial
     @TableField(exist = false)

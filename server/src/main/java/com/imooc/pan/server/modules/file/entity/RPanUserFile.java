@@ -19,7 +19,7 @@ public class RPanUserFile implements Serializable {
     /**
      * 文件记录ID
      */
-    private Long fileId;
+    private Long id;
 
     /**
      * 用户ID
@@ -67,14 +67,14 @@ public class RPanUserFile implements Serializable {
     private Long createUser;
 
     /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
      * 更新人
      */
     private Long updateUser;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
     /**
      * 更新时间

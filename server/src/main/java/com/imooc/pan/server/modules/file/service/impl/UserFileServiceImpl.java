@@ -80,13 +80,13 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     /**
      * 创建文件夹的业务方法实现
      *
-     * @param createFolderContext 上下文字段集合对象
+     * @param context 上下文字段集合对象
      * @return
      */
     @Override
-    public Long createFolder(CreateFolderContext createFolderContext) {
-        return this.saveUserFile(createFolderContext.getParentId(), createFolderContext.getFolderName(),
-                FolderFlagEnum.YES, null, null, createFolderContext.getUserId(), null
+    public Long createFolder(CreateFolderContext context) {
+        return this.saveUserFile(context.getParentId(), context.getFolderName(),
+                FolderFlagEnum.YES, null, null, context.getUserId(), null
         );
     }
 
@@ -162,7 +162,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         }
         this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
                 FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
-                fileRecord.getFileId(), context.getUserId(), fileRecord.getFileSizeDesc());
+                fileRecord.getId(), context.getUserId(), fileRecord.getFileSizeDesc());
         return true;
     }
 
@@ -179,7 +179,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         this.saveFile(context);
         this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
                 FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
-                context.getEntity().getFileId(), context.getUserId(), context.getEntity().getFileSizeDesc());
+                context.getEntity().getId(), context.getUserId(), context.getEntity().getFileSizeDesc());
     }
 
     /**
@@ -235,7 +235,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         this.mergeFileChunkAndSaveFile(context);
         this.saveUserFile(context.getParentId(), context.getFilename(), FolderFlagEnum.NO,
                 FileTypeEnum.getFileTypeCode(FileUtil.getFileSuffix(context.getFilename())),
-                context.getEntity().getFileId(), context.getUserId(), context.getEntity().getFileSizeDesc());
+                context.getEntity().getId(), context.getUserId(), context.getEntity().getFileSizeDesc());
     }
 
     /**
@@ -483,7 +483,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         if (!checkIsFolder(fileRecord)) {
             return;
         }
-        List<RPanUserFile> childRecords = findChildRecordsIgnoreDelFlag(fileRecord.getFileId());
+        List<RPanUserFile> childRecords = findChildRecordsIgnoreDelFlag(fileRecord.getId());
         if (CollectionUtils.isEmpty(childRecords)) {
             return;
         }
@@ -526,7 +526,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         List<Long> parentIdList = result.stream().map(FileSearchResultVO::getParentId).toList();
         List<RPanUserFile> parentRecords = listByIds(parentIdList);
         Map<Long, String> fileId2FilenameMap = parentRecords.stream()
-                .collect(Collectors.toMap(RPanUserFile::getFileId, RPanUserFile::getFilename));
+                .collect(Collectors.toMap(RPanUserFile::getId, RPanUserFile::getFilename));
         result.stream().forEach(vo -> vo.setParentFilename(fileId2FilenameMap.get(vo.getParentId())));
     }
 
@@ -573,10 +573,10 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     private void assembleCopyChildRecord(List<RPanUserFile> allRecords, RPanUserFile fileRecord, Long targetParentId, Long userId) {
         LocalDateTime now = LocalDateTime.now();
         Long newFileId = IdUtil.get();
-        Long oldFileId = fileRecord.getFileId();
+        Long oldFileId = fileRecord.getId();
 
         fileRecord.setParentId(targetParentId);
-        fileRecord.setFileId(newFileId);
+        fileRecord.setId(newFileId);
         fileRecord.setUserId(userId);
         fileRecord.setCreateTime(now);
         fileRecord.setUpdateTime(now);
@@ -693,7 +693,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         unavailableRecords.addAll(prepareRecords);
         prepareRecords.forEach(fileRecord -> this.findAllChildFolderRecords(unavailableRecords, folderRecordMap, fileRecord));
 
-        List<Long> unavailableFolderRecordIds = unavailableRecords.stream().map(RPanUserFile::getFileId).toList();
+        List<Long> unavailableFolderRecordIds = unavailableRecords.stream().map(RPanUserFile::getId).toList();
         return unavailableFolderRecordIds.contains(targetParentId);
     }
 
@@ -708,7 +708,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         if (Objects.isNull(fileRecord)) {
             return;
         }
-        List<RPanUserFile> childFolderRecords = folderRecordMap.get(fileRecord.getFileId());
+        List<RPanUserFile> childFolderRecords = folderRecordMap.get(fileRecord.getId());
         if (CollectionUtils.isEmpty(childFolderRecords)) {
             return;
         }
@@ -934,7 +934,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         List<Long> fileIdList = context.getFileIdList();
 
         LambdaUpdateWrapper<RPanUserFile> wrapper = Wrappers.<RPanUserFile>lambdaUpdate()
-                .in(RPanUserFile::getFileId, fileIdList)
+                .in(RPanUserFile::getId, fileIdList)
                 .set(RPanUserFile::getDelFlag, DelFlagEnum.YES.getCode())
                 .set(RPanUserFile::getUpdateUser, context.getUserId())
                 .set(RPanUserFile::getUpdateTime, new Date());
@@ -958,7 +958,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
             throw new RPanBusinessException("存在不合法的文件(夹)记录");
         }
 
-        Set<Long> fileIdSet = rPanUserFiles.stream().map(RPanUserFile::getFileId).collect(Collectors.toSet());
+        Set<Long> fileIdSet = rPanUserFiles.stream().map(RPanUserFile::getId).collect(Collectors.toSet());
         int oldSize = fileIdSet.size();
         fileIdSet.addAll(fileIdList);
         int newSize = fileIdSet.size();
@@ -1037,11 +1037,10 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
                               Integer fileType, Long realFileId, Long userId, String fileSizeDesc) {
 
         RPanUserFile entity = assembleRPanUserFile(parentId, filename, folderFlagEnum, fileType, realFileId, userId, fileSizeDesc);
-        entity.setFileId(IdUtil.get());
         if (!this.save(entity)) {
             throw new RuntimeException("保存文件信息失败");
         }
-        return entity.getFileId();
+        return entity.getId();
     }
 
     /**

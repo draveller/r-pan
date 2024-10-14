@@ -1,8 +1,6 @@
 package com.imooc.pan.server.modules.log.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -18,10 +16,10 @@ import java.time.LocalDateTime;
 @TableName(value = "r_pan_error_log")
 @Data
 public class RPanErrorLog implements Serializable {
+
     /**
      * 主键
      */
-    @TableId
     private Long id;
 
     /**

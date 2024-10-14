@@ -122,7 +122,7 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
     private void checkFileDeletePermission(DeleteContext context) {
         LambdaQueryWrapper<RPanUserFile> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(RPanUserFile::getUserId, context.getUserId());
-        wrapper.in(RPanUserFile::getFileId, context.getFileIdList());
+        wrapper.in(RPanUserFile::getId, context.getFileIdList());
 
         List<RPanUserFile> records = iUserFileService.list(wrapper);
         if (CollectionUtils.isEmpty(records) || records.size() != context.getFileIdList().size()) {

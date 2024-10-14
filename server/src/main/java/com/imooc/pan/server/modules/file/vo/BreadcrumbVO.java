@@ -35,7 +35,7 @@ public class BreadcrumbVO implements Serializable {
     public static BreadcrumbVO transfer(RPanUserFile entity) {
         BreadcrumbVO vo = new BreadcrumbVO();
         if (Objects.nonNull(entity)) {
-            vo.setId(entity.getFileId());
+            vo.setId(entity.getId());
             vo.setParentId(entity.getParentId());
             vo.setName(entity.getFilename());
         }

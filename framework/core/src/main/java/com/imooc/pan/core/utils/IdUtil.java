@@ -1,23 +1,24 @@
 package com.imooc.pan.core.utils;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.PrimitiveArrayUtil;
+import cn.hutool.core.net.URLDecoder;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 import java.util.Enumeration;
-import java.util.Objects;
 
 /**
  * 雪花算法id生成器
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IdUtil {
+    // 使用AES算法进行加解密
+    private static final SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, "LUqjIh2rAAc/PL4x5H8wZWB6duyyL4NS".getBytes());
 
     /**
      * 工作id 也就是机器id
@@ -97,8 +98,6 @@ public class IdUtil {
 
     /**
      * 获取机器编号
-     *
-     * @return
      */
     private static long getMachineNum() {
         long machinePiece;
@@ -120,9 +119,6 @@ public class IdUtil {
 
     /**
      * 获取时间戳，并与上次时间戳比较
-     *
-     * @param lastTimestamp
-     * @return
      */
     private static long tilNextMillis(long lastTimestamp) {
         long timestamp = timeGen();
@@ -134,8 +130,6 @@ public class IdUtil {
 
     /**
      * 获取系统时间戳
-     *
-     * @return
      */
     private static long timeGen() {
         return System.currentTimeMillis();
@@ -143,8 +137,6 @@ public class IdUtil {
 
     /**
      * 生成ID
-     *
-     * @return
      */
     public static synchronized Long get() {
         long timestamp = timeGen();
@@ -182,40 +174,35 @@ public class IdUtil {
                 sequence;
     }
 
+
     /**
-     * 加密ID
+     * 加密Long类型为字符串
      *
-     * @return
+     * @param value Long类型的值
+     * @return 加密后的字符串
      */
-    public static String encrypt(Long id) {
-        if (Objects.nonNull(id)) {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(8);
-            byteBuffer.putLong(0, id);
-            byte[] content = byteBuffer.array();
-            byte[] encrypt = CryptoUtil.aesEncrypt(content);
-            return Base64.encode(encrypt);
+    public static String encrypt(Long value) {
+        if (value == null) {
+            throw new RPanBusinessException("需要加密的Long类型值为空");
         }
-        return StringUtils.EMPTY;
+        return CryptoUtil.encryptString(String.valueOf(value));
     }
 
     /**
-     * 解密ID
+     * 解密字符串为Long类型
      *
-     * @param decryptId
-     * @return
+     * @param encryptedStr 加密后的字符串
+     * @return 解密后的Long类型值
      */
-    public static Long decrypt(String decryptId) {
-        if (StringUtils.isNotBlank(decryptId)) {
-            byte[] encrypt = Base64.decode(decryptId);
-            byte[] content = CryptoUtil.aesDecode(encrypt);
-            if (PrimitiveArrayUtil.isNotEmpty(content)) {
-                ByteBuffer byteBuffer = ByteBuffer.wrap(content);
-                return byteBuffer.getLong();
-            }
-            throw new RPanBusinessException("AES128Util.aesDecode fail");
+    public static Long decrypt(String encryptedStr) {
+        if (encryptedStr == null) {
+            throw new RPanBusinessException("需要解码的字符串为空");
         }
-        throw new RPanBusinessException("the decryptId can not be empty");
-    }
 
+        if (CryptoUtil.isUrlEncoded(encryptedStr)) {
+            encryptedStr = URLDecoder.decode(encryptedStr, CharsetUtil.CHARSET_UTF_8);
+        }
+        return Long.valueOf(CryptoUtil.decryptString(encryptedStr));
+    }
 
 }

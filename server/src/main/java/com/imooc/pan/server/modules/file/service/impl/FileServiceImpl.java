@@ -168,7 +168,7 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
      */
     private RPanFile assembleRPanFile(String filename, String realPath, Long totalSize, String identifier, Long userId) {
         RPanFile fileRecord = new RPanFile();
-        fileRecord.setFileId(IdUtil.get());
+        fileRecord.setId(IdUtil.get());
         fileRecord.setFilename(filename);
         fileRecord.setRealPath(realPath);
         fileRecord.setFileSize(String.valueOf(totalSize));

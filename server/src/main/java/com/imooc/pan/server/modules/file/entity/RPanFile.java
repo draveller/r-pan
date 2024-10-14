@@ -1,7 +1,6 @@
 package com.imooc.pan.server.modules.file.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -20,7 +19,7 @@ public class RPanFile implements Serializable {
     /**
      * 文件id
      */
-    private Long fileId;
+    private Long id;
 
     /**
      * 文件名称
@@ -66,6 +65,11 @@ public class RPanFile implements Serializable {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     @Serial
     @TableField(exist = false)

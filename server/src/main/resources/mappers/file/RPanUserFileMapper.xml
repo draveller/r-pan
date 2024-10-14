@@ -5,7 +5,7 @@
 <mapper namespace="com.imooc.pan.server.modules.file.mapper.RPanUserFileMapper">
 
     <sql id="Base_Column_List">
-        file_id,user_id,parent_id,
+        id,user_id,parent_id,
         real_file_id,filename,folder_flag,
         file_size_desc,file_type,del_flag,
         create_user,create_time,update_user,
@@ -13,11 +13,11 @@
     </sql>
 
     <select id="selectFileList" resultType="com.imooc.pan.server.modules.file.vo.RPanUserFileVO">
-        SELECT file_id, parent_id, filename, file_size_desc, folder_flag, file_type, update_time
+        SELECT id, parent_id, filename, file_size_desc, folder_flag, file_type, update_time
         FROM r_pan_user_file
         <where>
             <if test="fileIdList != null and !fileIdList.isEmpty()">
-                AND file_id IN
+                AND id IN
                 <foreach collection="fileIdList" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
@@ -39,7 +39,7 @@
     </select>
 
     <select id="searchFile" resultType="com.imooc.pan.server.modules.file.vo.FileSearchResultVO">
-        SELECT file_id, parent_id, filename, file_size_desc, folder_flag, file_type, update_time
+        SELECT id, parent_id, filename, file_size_desc, folder_flag, file_type, update_time
         FROM r_pan_user_file
         <where>
             <if test="userId != null and userId != ''">

@@ -1,8 +1,6 @@
 package com.imooc.pan.server.modules.file.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -15,13 +13,13 @@ import java.time.LocalDateTime;
  *
  * @TableName r_pan_file_chunk
  */
-@TableName(value = "r_pan_file_chunk")
 @Data
+@TableName(value = "r_pan_file_chunk")
 public class RPanFileChunk implements Serializable {
+
     /**
      * 主键
      */
-    @TableId
     private Long id;
 
     /**
@@ -53,6 +51,11 @@ public class RPanFileChunk implements Serializable {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     @Serial
     @TableField(exist = false)

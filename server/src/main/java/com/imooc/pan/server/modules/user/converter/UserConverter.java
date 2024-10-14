@@ -35,10 +35,9 @@ public interface UserConverter {
     /**
      * 拼装用户基本信息返回实体
      */
-    @Mapping(source = "rPanUser.username", target = "username")
-    @Mapping(source = "rPanUserFile.fileId", target = "rootFileId")
-    @Mapping(source = "rPanUserFile.filename", target = "rootFileName")
-    UserInfoVO assembleUserInfoVO(RPanUser rPanUser, RPanUserFile rPanUserFile);
+    @Mapping(source = "entity.id", target = "rootFileId")
+    @Mapping(source = "entity.filename", target = "rootFileName")
+    UserInfoVO assembleUserInfoVO(RPanUser rPanUser, RPanUserFile entity);
 
     UserLoginByGithubContext convertPO2Context(UserLoginByGithubPO po);
 

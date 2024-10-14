@@ -1,5 +1,6 @@
 package com.imooc.pan.server.modules.file.converter;
 
+import com.baomidou.mybatisplus.core.toolkit.EncryptUtils;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
@@ -24,9 +25,9 @@ import java.util.Objects;
 @Mapper(componentModel = "spring")
 public interface FileConverter {
 
-    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(createFolderPO.getParentId()))")
+    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(po.getParentId()))")
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
-    CreateFolderContext convertPO2Context(CreateFolderPO createFolderPO);
+    CreateFolderContext convertPO2Context(CreateFolderPO po);
 
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     @Mapping(target = "fileId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(po.getFileId()))")
@@ -66,7 +67,6 @@ public interface FileConverter {
     FileChunkMergeAndSaveContext fileChunkMergeContext2FileChunkMergeAndSaveContext(FileChunkMergeContext context);
 
     @Mapping(target = "label", source = "rPanUserFile.filename")
-    @Mapping(target = "id", source = "rPanUserFile.fileId")
     @Mapping(target = "children", expression = "java(new java.util.ArrayList())")
     FolderTreeNodeVO rPanUserFile2FolderTreeNodeVO(RPanUserFile rPanUserFile);
 

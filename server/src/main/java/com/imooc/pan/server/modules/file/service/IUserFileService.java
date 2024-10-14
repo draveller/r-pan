@@ -17,10 +17,10 @@ public interface IUserFileService extends IService<RPanUserFile> {
     /**
      * 创建文件夹信息
      *
-     * @param createFolderContext 上下文字段集合对象
+     * @param context 上下文字段集合对象
      * @return 文件夹id
      */
-    Long createFolder(CreateFolderContext createFolderContext);
+    Long createFolder(CreateFolderContext context);
 
     RPanUserFile getUserRootFile(Long userId);
 

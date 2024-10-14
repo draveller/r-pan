@@ -260,8 +260,8 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     private void afterCreate(CreateShareUrlContext context) {
         BloomFilter<Long> filter = manager.getFilter(BLOOM_FILTER_NAME);
         if (filter != null) {
-            filter.put(context.getEntity().getShareId());
-            log.info("create share, add share id to bloom filter, share id is {}", context.getEntity().getShareId());
+            filter.put(context.getEntity().getId());
+            log.info("create share, add share id to bloom filter, share id is {}", context.getEntity().getId());
         }
     }
 
@@ -298,7 +298,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
         if (!updateById(entity)) {
             applicationContext.publishEvent(new PublishErrorLogEvent(this, "更新分享状态失败，请手动更改状态，分享ID为："
-                    + entity.getShareId() + ", 分享" + "状态改为：" + shareStatus.getCode(), GlobalConst.ZERO_LONG));
+                    + entity.getId() + ", 分享" + "状态改为：" + shareStatus.getCode(), GlobalConst.ZERO_LONG));
         }
     }
 
@@ -355,7 +355,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
 
     @Override
     public boolean updateById(RPanShare entity) {
-        return cacheService.updateById(entity.getShareId(), entity);
+        return cacheService.updateById(entity.getId(), entity);
     }
 
     @Override
@@ -364,7 +364,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
             return true;
         }
         Map<Long, RPanShare> entityMap = entityList.stream()
-                .collect(Collectors.toMap(RPanShare::getShareId, entity -> entity));
+                .collect(Collectors.toMap(RPanShare::getId, entity -> entity));
         return cacheService.updateByIds(entityMap);
     }
 
@@ -384,8 +384,6 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     /**
      * 执行分享文件下载的动作
      * 委托文件模块去做
-     *
-     * @param context
      */
     private void doDownload(ShareFileDownloadContext context) {
         FileDownloadContext fileDownloadContext = new FileDownloadContext();
@@ -440,7 +438,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
                 .filter(entity -> Objects.equals(entity.getDelFlag(), DelFlagEnum.NO.getCode()))
                 .toList();
 
-        List<Long> allFileIdList = allFileRecords.stream().map(RPanUserFile::getFileId).toList();
+        List<Long> allFileIdList = allFileRecords.stream().map(RPanUserFile::getId).toList();
 
         if (allFileIdList.containsAll(fileIdList)) {
             return iUserFileService.transferVOList(allFileRecords);
@@ -475,7 +473,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     private void assembleMainShareSimpleInfo(QueryShareSimpleDetailContext context) {
         RPanShare entity = context.getEntity();
         ShareSimpleDetailVO vo = context.getVo();
-        vo.setShareId(entity.getShareId());
+        vo.setShareId(entity.getId());
         vo.setShareName(entity.getShareName());
     }
 
@@ -566,7 +564,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     private void assembleMainShareInfo(QueryShareDetailContext context) {
         RPanShare entity = context.getEntity();
         ShareDetailVO vo = context.getVo();
-        vo.setShareId(entity.getShareId());
+        vo.setShareId(entity.getId());
         vo.setShareName(entity.getShareName());
         vo.setCreateTime(entity.getCreateTime());
         vo.setShareDay(entity.getShareDay());
@@ -591,7 +589,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      */
     private String generateShareToken(CheckShareCodeContext context) {
         RPanShare entity = context.getEntity();
-        return JwtUtil.generateToken(UUIDUtil.getUUID(), ShareConsts.SHARE_ID, entity.getShareId(), ShareConsts.ONE_HOUR_LONG);
+        return JwtUtil.generateToken(UUIDUtil.getUUID(), ShareConsts.SHARE_ID, entity.getId(), ShareConsts.ONE_HOUR_LONG);
     }
 
     /**
@@ -690,7 +688,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     private RPanShareUrlVO assembleShareVO(CreateShareUrlContext context) {
         RPanShare entity = context.getEntity();
         RPanShareUrlVO vo = new RPanShareUrlVO();
-        vo.setShareId(entity.getShareId());
+        vo.setShareId(entity.getId());
         vo.setShareName(entity.getShareName());
         vo.setShareUrl(entity.getShareUrl());
         vo.setShareCode(entity.getShareCode());
@@ -705,7 +703,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
      */
     private void saveShareFiles(CreateShareUrlContext context) {
         SaveShareFilesContext saveShareFilesContext = new SaveShareFilesContext();
-        saveShareFilesContext.setShareId(context.getEntity().getShareId());
+        saveShareFilesContext.setShareId(context.getEntity().getId());
         saveShareFilesContext.setShareFileIdList(context.getShareFileIdList());
         saveShareFilesContext.setUserId(context.getUserId());
         iShareFileService.saveShareFiles(saveShareFilesContext);
@@ -719,7 +717,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
     private void saveShare(CreateShareUrlContext context) {
         RPanShare entity = new RPanShare();
 
-        entity.setShareId(IdUtil.get());
+        entity.setId(IdUtil.get());
         entity.setShareName(context.getShareName());
         entity.setShareType(context.getShareType());
         entity.setShareDayType(context.getShareDayType());
@@ -732,7 +730,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         entity.setShareDay(shareDay);
         LocalDateTime now = LocalDateTime.now();
         entity.setShareEndTime(now.plusDays(shareDay));
-        entity.setShareUrl(createShareUrl(entity.getShareId()));
+        entity.setShareUrl(createShareUrl(entity.getId()));
         entity.setShareCode(createShareCode());
         entity.setShareStatus(ShareStatusEnum.NORMAL.getCode());
         entity.setCreateUser(context.getUserId());

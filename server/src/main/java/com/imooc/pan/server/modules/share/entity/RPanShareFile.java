@@ -18,10 +18,10 @@ import java.time.LocalDateTime;
 @Data
 @TableName(value = "r_pan_share_file")
 public class RPanShareFile implements Serializable {
+
     /**
      * 主键
      */
-    @TableId
     private Long id;
 
     /**
@@ -43,6 +43,11 @@ public class RPanShareFile implements Serializable {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     @Serial
     @TableField(exist = false)

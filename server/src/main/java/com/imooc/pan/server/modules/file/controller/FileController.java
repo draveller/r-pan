@@ -78,8 +78,8 @@ public class FileController {
             description = "该接口提供了创建文件夹的功能"
     )
     @PostMapping("/file/folder")
-    public R<String> createFolder(@Validated @RequestBody CreateFolderPO createFolderPO) {
-        CreateFolderContext context = this.fileConverter.convertPO2Context(createFolderPO);
+    public R<String> createFolder(@Validated @RequestBody CreateFolderPO po) {
+        CreateFolderContext context = this.fileConverter.convertPO2Context(po);
         Long fileId = this.iUserFileService.createFolder(context);
         return R.data(IdUtil.encrypt(fileId));
     }
