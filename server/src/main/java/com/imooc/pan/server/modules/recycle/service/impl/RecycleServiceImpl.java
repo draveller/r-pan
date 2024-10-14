@@ -16,10 +16,10 @@ import com.imooc.pan.server.modules.recycle.context.QueryRecycleFileListContext;
 import com.imooc.pan.server.modules.recycle.context.RestoreContext;
 import com.imooc.pan.server.modules.recycle.service.IRecycleService;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Set;

@@ -1,14 +1,14 @@
 package com.imooc.pan.server.common.cache;
 
+import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.imooc.pan.cache.core.constants.CacheConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -40,7 +40,7 @@ public abstract class AbstractManualCacheService<V> implements ManualCacheServic
 
     @Override
     public boolean updateByIds(Map<? extends Serializable, V> entityMap) {
-        if (MapUtils.isEmpty(entityMap)) {
+        if (MapUtil.isEmpty(entityMap)) {
             return false;
         }
         Set<? extends Map.Entry<? extends Serializable, V>> entries = entityMap.entrySet();

@@ -65,11 +65,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-        <!--commons-collections-->
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-        </dependency>
         <!--commons-io-->
         <dependency>
             <groupId>commons-io</groupId>

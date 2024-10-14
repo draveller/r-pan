@@ -11,12 +11,12 @@ import com.imooc.pan.server.modules.file.service.IUserFileService;
 import com.imooc.pan.storage.engine.core.StorageEngine;
 import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.List;

@@ -16,9 +16,9 @@ import com.imooc.pan.storage.engine.core.context.*;
 import com.imooc.pan.storage.engine.oss.config.OssStorageEngineConfig;
 import jakarta.annotation.Resource;
 import lombok.*;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -210,11 +210,10 @@ public class OSSStorageEngine extends AbstractStorageEngine {
 
         List<String> chunkPaths = context.getRealPathList();
         List<PartETag> partETags = Lists.newArrayList();
-        if (CollectionUtils.isNotEmpty(chunkPaths)) {
+        if (!CollectionUtils.isEmpty(chunkPaths)) {
             partETags = chunkPaths.stream()
                     .filter(StringUtils::isNotBlank)
                     .map(this::analysisUrlParams)
-                    .filter(Objects::nonNull)
                     .filter(jsonObject -> !jsonObject.isEmpty())
                     .map(jsonObject -> new PartETag(jsonObject.getIntValue(PART_NUMBER_KEY),
                             jsonObject.getString(E_TAG_KEY),

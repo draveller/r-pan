@@ -4,9 +4,9 @@ import com.google.common.collect.Maps;
 import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +28,7 @@ public class LocalBloomFilterManager implements BloomFilterManager, Initializing
     @Override
     public void afterPropertiesSet() throws Exception {
         List<LocalBloomFilterConfigItem> items = config.getItems();
-        if (CollectionUtils.isNotEmpty(items)) {
+        if (!CollectionUtils.isEmpty(items)) {
             for (LocalBloomFilterConfigItem item : items) {
                 String funnelTypeName = item.getFunnelTypeName();
                 try {
@@ -37,7 +37,6 @@ public class LocalBloomFilterManager implements BloomFilterManager, Initializing
                             new LocalBloomFilter<>(funnelType.getFunnel(), item.getExpectedInsertions(), item.getFpp()));
                 } catch (Exception ignored) {
                 }
-
             }
         }
     }

@@ -20,11 +20,11 @@ import com.imooc.pan.storage.engine.core.context.DeleteFileContext;
 import com.imooc.pan.storage.engine.core.context.MergeFileContext;
 import com.imooc.pan.storage.engine.core.context.StoreFileContext;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.Comparator;

@@ -1,12 +1,12 @@
 package com.imooc.pan.server.common.schedule.task;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.schedule.ScheduleTask;
 import com.imooc.pan.server.modules.share.service.ShareService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

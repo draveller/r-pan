@@ -6,8 +6,8 @@ import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.nio.channels.Channels;

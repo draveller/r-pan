@@ -37,7 +37,6 @@ import com.imooc.pan.server.modules.user.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.util.Sets;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,6 +44,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.net.URLEncoder;
