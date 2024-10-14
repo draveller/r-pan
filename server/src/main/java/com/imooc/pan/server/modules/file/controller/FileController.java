@@ -156,7 +156,7 @@ public class FileController {
             summary = "查询文件分片",
             description = "该接口提供了查询文件分片的功能"
     )
-    @GetMapping("/file/chunk-upload")
+    @GetMapping("/chunk-upload")
     public R<UploadedChunksVO> getUploadedChunks(@Validated QueryUploadedChunksPO queryUploadedChunksPO) {
         QueryUploadedChunksContext context = this.fileConverter.convertPO2Context(queryUploadedChunksPO);
         UploadedChunksVO vo = this.iUserFileService.getUploadedChunks(context);
@@ -167,7 +167,7 @@ public class FileController {
             summary = "合并文件分片",
             description = "该接口提供了合并文件分片的功能"
     )
-    @PostMapping("/file/merge")
+    @PostMapping("/merge")
     public R<Object> mergeFile(@Validated @RequestBody FileChunkMergePO fileChunkMergePO) {
         FileChunkMergeContext context = this.fileConverter.convertPO2Context(fileChunkMergePO);
         this.iUserFileService.mergeFile(context);
@@ -178,7 +178,7 @@ public class FileController {
             summary = "下载文件",
             description = "该接口提供了下载文件的功能"
     )
-    @GetMapping("/file/download")
+    @GetMapping("/download")
     public void download(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
                          HttpServletResponse response) {
         FileDownloadContext context = new FileDownloadContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
@@ -190,7 +190,7 @@ public class FileController {
             summary = "预览文件",
             description = "该接口提供了预览文件的功能"
     )
-    @GetMapping("/file/preview")
+    @GetMapping("/preview")
     public void preview(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
                         HttpServletResponse response) {
         FilePreviewContext context = new FilePreviewContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
@@ -201,7 +201,7 @@ public class FileController {
             summary = "查询文件夹树",
             description = "该接口提供了查询文件夹树的功能"
     )
-    @GetMapping("/file/folder/tree")
+    @GetMapping("/folder/tree")
     public R<List<FolderTreeNodeVO>> getFolderTree() {
         QueryFolderTreeContext context = new QueryFolderTreeContext();
         context.setUserId(UserIdUtil.get());
@@ -213,7 +213,7 @@ public class FileController {
             summary = "文件转移",
             description = "该接口提供了文件转移的功能"
     )
-    @PostMapping("/file/transfer")
+    @PostMapping("/transfer")
     public R<Object> getFolderTree(@Validated @RequestBody TransferFilePO transferFilePO) {
         TransferFileContext context = this.fileConverter.convertPO2Context(transferFilePO);
         this.iUserFileService.transfer(context);
@@ -224,7 +224,7 @@ public class FileController {
             summary = "文件复制",
             description = "该接口提供了文件复制的功能"
     )
-    @PostMapping("/file/copy")
+    @PostMapping("/copy")
     public R<Object> getFolderTree(@Validated @RequestBody CopyFilePO copyFilePO) {
         CopyFileContext context = this.fileConverter.convertPO2Context(copyFilePO);
         this.iUserFileService.copy(context);
@@ -235,7 +235,7 @@ public class FileController {
             summary = "文件搜索",
             description = "该接口提供了文件搜索的功能"
     )
-    @GetMapping("/file/search")
+    @GetMapping("/search")
     public R<List<FileSearchResultVO>> search(@Validated FileSearchPO fileSearchPO) {
         FileSearchContext context = this.fileConverter.convertPO2Context(fileSearchPO);
         List<FileSearchResultVO> result = this.iUserFileService.search(context);
@@ -246,7 +246,7 @@ public class FileController {
             summary = "查询面包屑列表",
             description = "该接口提供了查询面包屑列表的功能"
     )
-    @GetMapping("/file/breadcrumbs")
+    @GetMapping("/breadcrumbs")
     public R<List<BreadcrumbVO>> getBreadcrumbs(
             @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId) {
         QueryBreadcrumbsContext context = new QueryBreadcrumbsContext();
