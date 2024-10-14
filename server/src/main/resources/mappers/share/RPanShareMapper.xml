@@ -5,14 +5,14 @@
 <mapper namespace="com.imooc.pan.server.modules.share.mapper.RPanShareMapper">
 
     <sql id="Base_Column_List">
-        share_id,share_name,share_type,
+        id,share_name,share_type,
         share_day_type,share_day,share_end_time,
         share_url,share_code,share_status,
         create_user,create_time
     </sql>
 
     <select id="selectShareVOListByUserId" resultType="com.imooc.pan.server.modules.share.vo.RPanShareUrlListVO">
-        SELECT share_id       AS shareId,
+        SELECT id       AS shareId,
                share_name     AS shareName,
                share_type     AS shareType,
                share_day_type AS shareDayType,
@@ -26,10 +26,10 @@
     </select>
 
     <select id="rollingQueryShareId" resultType="java.lang.Long">
-        SELECT share_id
+        SELECT id
         FROM r_pan_share
-        WHERE share_id > #{startId}
-        ORDER BY share_id
+        WHERE id > #{startId}
+        ORDER BY id
         LIMIT #{limit}
     </select>
 

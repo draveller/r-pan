@@ -107,7 +107,7 @@ CREATE TABLE `r_pan_file_chunk`
 DROP TABLE IF EXISTS `r_pan_share`;
 CREATE TABLE `r_pan_share`
 (
-    `share_id`       BIGINT UNSIGNED     NOT NULL COMMENT '分享id',
+    `id`             BIGINT              NOT NULL AUTO_INCREMENT COMMENT '主键',
     `share_name`     VARCHAR(255)        NOT NULL COMMENT '分享名称',
     `share_type`     TINYINT(1)          NOT NULL DEFAULT 0 COMMENT '分享类型（0 有提取码）',
     `share_day_type` TINYINT(1)          NOT NULL DEFAULT 0 COMMENT '分享类型（0 永久有效；1 7天有效；2 30天有效）',
@@ -119,7 +119,7 @@ CREATE TABLE `r_pan_share`
     `create_user`    BIGINT              NOT NULL COMMENT '分享创建人',
     `create_time`    DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`    DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`share_id`),
+    PRIMARY KEY (`id`),
     UNIQUE INDEX `uk_create_user_time` (`create_user`, `create_time`) USING BTREE COMMENT '创建人、创建时间唯一索引'
 ) COMMENT = '用户分享表';
 

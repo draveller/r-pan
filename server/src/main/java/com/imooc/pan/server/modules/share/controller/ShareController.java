@@ -31,8 +31,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag("分享模块")
-@RestController
 @Validated
+@RestController
+@RequestMapping("/share")
 public class ShareController {
 
     @Resource
@@ -45,7 +46,7 @@ public class ShareController {
             summary = "创建分享链接",
             description = "该接口提供了创建分享链接的功能"
     )
-    @PostMapping("/share")
+    @PostMapping
     public R<RPanShareUrlVO> create(@Validated @RequestBody CreateShareUrlPO createShareUrlPO) {
         CreateShareUrlContext context = shareConverter.convertPO2Context(createShareUrlPO);
 
@@ -63,7 +64,7 @@ public class ShareController {
             summary = "查询分享链接列表",
             description = "该接口提供了查询分享链接列表的功能"
     )
-    @GetMapping("/shares")
+    @GetMapping("/list")
     public R<List<RPanShareUrlListVO>> getShares() {
         QueryShareListContext context = new QueryShareListContext();
         context.setUserId(UserIdUtil.get());
@@ -75,7 +76,7 @@ public class ShareController {
             summary = "取消分享",
             description = "该接口提供了取消分享的功能"
     )
-    @DeleteMapping("/share")
+    @DeleteMapping
     public R cancelShare(@Validated @RequestBody CancelSharePO cancelSharePO) {
         CancelShareContext context = new CancelShareContext();
 
@@ -95,7 +96,7 @@ public class ShareController {
             description = "该接口提供了校验分享码的功能"
     )
     @NoCheckLogin
-    @PostMapping("/share/code/check")
+    @PostMapping("/code/check")
     public R<String> checkShareCode(@Validated @RequestBody CheckShareCodePO checkShareCodePO) {
         CheckShareCodeContext context = new CheckShareCodeContext();
 
@@ -112,7 +113,7 @@ public class ShareController {
     )
     @NoCheckLogin
     @CheckShareCode
-    @GetMapping("/share")
+    @GetMapping
     public R<ShareDetailVO> detail() {
         QueryShareDetailContext context = new QueryShareDetailContext();
         context.setShareId(ShareIdUtil.get());
@@ -125,7 +126,7 @@ public class ShareController {
             description = "该接口提供了查询分享的简单详情的功能"
     )
     @NoCheckLogin
-    @GetMapping("/share/simple")
+    @GetMapping("/simple")
     public R<ShareSimpleDetailVO> simpleDetail(@NotBlank(message = "分享的ID不能为空")
                                                @RequestParam(value = "shareId", required = false) String shareId) {
         QueryShareSimpleDetailContext context = new QueryShareSimpleDetailContext();
@@ -138,7 +139,7 @@ public class ShareController {
             summary = "获取下一级文件列表",
             description = "该接口提供了获取下一级文件列表的功能"
     )
-    @GetMapping("/share/file/list")
+    @GetMapping("/file/list")
     @CheckShareCode
     @NoCheckLogin
     public R<List<RPanUserFileVO>> fileList(@NotBlank(message = "文件的父ID不能为空")
@@ -155,7 +156,7 @@ public class ShareController {
             description = "该接口提供了保存至我的网盘的功能"
     )
     @CheckShareCode
-    @PostMapping("/share/save")
+    @PostMapping("/save")
     public R saveFiles(@Validated @RequestBody ShareSavePO shareSavePO) {
         ShareSaveContext context = new ShareSaveContext();
 
@@ -176,7 +177,7 @@ public class ShareController {
             summary = "分享文件下载",
             description = "该接口提供了分享文件下载的功能"
     )
-    @GetMapping("/share/file/download")
+    @GetMapping("/file/download")
     @CheckShareCode
     public void download(@NotBlank(message = "文件ID不能为空")
                          @RequestParam(value = "fileId", required = false) String fileId,

@@ -28,10 +28,11 @@ import java.util.Objects;
 /**
  * 文件模块控制器
  */
-@Slf4j
-@RestController
-@Validated
 @Tag("文件模块")
+@Slf4j
+@Validated
+@RestController
+@RequestMapping("/file")
 public class FileController {
 
     @Resource
@@ -44,7 +45,7 @@ public class FileController {
             summary = "查询文件列表",
             description = "该接口提供了按照父文件夹id和文件类型, 查询文件列表的功能"
     )
-    @GetMapping("/files")
+    @GetMapping("/list")
     public R<List<RPanUserFileVO>> list(
             @NotBlank(message = "父文件夹id不能为空") @RequestParam(required = false) String parentId,
             @RequestParam(required = false, defaultValue = FileConsts.ALL_FILE_TYPE) String fileTypes) {
@@ -77,7 +78,7 @@ public class FileController {
             summary = "创建文件夹",
             description = "该接口提供了创建文件夹的功能"
     )
-    @PostMapping("/file/folder")
+    @PostMapping("/folder")
     public R<String> createFolder(@Validated @RequestBody CreateFolderPO po) {
         CreateFolderContext context = this.fileConverter.convertPO2Context(po);
         Long fileId = this.iUserFileService.createFolder(context);
@@ -88,7 +89,7 @@ public class FileController {
             summary = "文件重命名",
             description = "该接口提供了文件重命名的功能"
     )
-    @PutMapping("/file")
+    @PutMapping
     public R<Object> updateFilename(@Validated @RequestBody UpdateFilenamePO updateFilenamePO) {
         UpdateFilenameContext context = this.fileConverter.convertPO2Context(updateFilenamePO);
         this.iUserFileService.updateFilename(context);
@@ -99,7 +100,7 @@ public class FileController {
             summary = "批量删除文件",
             description = "该接口提供了批量删除文件的功能"
     )
-    @DeleteMapping("/file")
+    @DeleteMapping
     public R<Object> deleteFile(@Validated @RequestBody DeleteFilePO deleteFilePO) {
         DeleteFileContext context = this.fileConverter.convertPO2Context(deleteFilePO);
 
@@ -116,7 +117,7 @@ public class FileController {
             summary = "文件秒传",
             description = "该接口提供了文件秒传的功能"
     )
-    @PostMapping("/file/sec-upload")
+    @PostMapping("/sec-upload")
     public R<Object> secUpload(@Validated @RequestBody SecUploadPO secUploadPO) {
         SecUploadFileContext context = this.fileConverter.convertPO2Context(secUploadPO);
         boolean success = this.iUserFileService.secUpload(context);
@@ -131,7 +132,7 @@ public class FileController {
             summary = "单文件上传",
             description = "该接口提供了单文件上传的功能"
     )
-    @PostMapping("/file/upload")
+    @PostMapping("/upload")
     public R<Object> upload(@Validated FileUploadPO fileUploadPO) {
         FileUploadContext context = this.fileConverter.convertPO2Context(fileUploadPO);
         this.iUserFileService.upload(context);
@@ -143,7 +144,7 @@ public class FileController {
             summary = "文件分片上传",
             description = "该接口提供了文件分片上传的功能"
     )
-    @PostMapping("/file/chunk-upload")
+    @PostMapping("/chunk-upload")
     public R<FileChunkUploadVO> chunkUpload(@Validated FileChunkUploadPO fileChunkUploadPO) {
         FileChunkUploadContext context = this.fileConverter.convertPO2Context(fileChunkUploadPO);
         FileChunkUploadVO fileChunkUploadVO = this.iUserFileService.chunkUpload(context);

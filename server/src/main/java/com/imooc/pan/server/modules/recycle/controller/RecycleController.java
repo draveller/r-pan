@@ -28,6 +28,7 @@ import java.util.List;
 @Tag("回收站模块")
 @Validated
 @RestController
+@RequestMapping("/recycle")
 public class RecycleController {
 
     @Resource
@@ -37,7 +38,7 @@ public class RecycleController {
             summary = "获取回收站文件列表",
             description = "该接口提供了获取回收站文件列表的功能"
     )
-    @GetMapping("/recycles")
+    @GetMapping("/list")
     public R<List<RPanUserFileVO>> recycles() {
         QueryRecycleFileListContext context = new QueryRecycleFileListContext();
         context.setUserId(UserIdUtil.get());
@@ -49,7 +50,7 @@ public class RecycleController {
             summary = "批量还原已删除的文件",
             description = "该接口提供了批量还原已删除的文件的功能"
     )
-    @PutMapping("/recycle/restore")
+    @PutMapping("/restore")
     public R<Object> restore(@Validated @RequestBody RestorePO restorePO) {
         RestoreContext context = new RestoreContext();
         context.setUserId(UserIdUtil.get());
@@ -65,7 +66,7 @@ public class RecycleController {
             summary = "删除的文件批量彻底删除",
             description = "该接口提供了删除的文件批量彻底删除的功能"
     )
-    @DeleteMapping("/recycle")
+    @DeleteMapping
     public R<Object> delete(@Validated @RequestBody DeletePO deletePO) {
         DeleteContext context = new DeleteContext();
         context.setUserId(UserIdUtil.get());
