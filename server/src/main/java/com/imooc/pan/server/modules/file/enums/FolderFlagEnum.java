@@ -22,4 +22,16 @@ public enum FolderFlagEnum {
 
     private final Integer code;
 
+    public static FolderFlagEnum getByCode(Integer code) {
+        if (code == null) {
+            return null;
+        }
+        for (FolderFlagEnum item : values()) {
+            if (item.getCode().equals(code)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.imooc.pan.server.modules.file.service.impl;
 
+import cn.hutool.core.lang.generator.UUIDGenerator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -10,6 +11,7 @@ import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.FileUtil;
 import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.UUIDUtil;
 import com.imooc.pan.server.common.event.file.LogicalDeleteFileEvent;
 import com.imooc.pan.server.common.event.search.TriggerSearchEvent;
 import com.imooc.pan.server.common.utils.HttpUtil;
@@ -33,7 +35,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -1029,7 +1030,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
 
         RPanUserFile entity = assembleRPanUserFile(parentId, filename, folderFlagEnum, fileType, realFileId, userId, fileSizeDesc);
         if (!this.save(entity)) {
-            throw new RuntimeException("保存文件信息失败");
+            throw new RPanBusinessException("保存文件信息失败");
         }
         return entity.getId();
     }
@@ -1055,7 +1056,6 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         entity.setDelFlag(DelFlagEnum.NO.getCode());
         entity.setCreateUser(userId);
         entity.setUpdateUser(userId);
-
         this.handleDuplicateFilename(entity);
 
         return entity;
@@ -1063,33 +1063,45 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
 
     /**
      * 处理重复的文件名
-     * 如果同一文件夹下存在相同的文件名，则自动在文件名后加上数字后缀
+     * 如果同一文件夹下存在相同的文件名，则自动在文件名后加上uuid后缀
      *
      * @param entity 文件(夹)对象
      */
     private void handleDuplicateFilename(RPanUserFile entity) {
         String filename = entity.getFilename();
-        String newFilenameWithoutSuffix;
-        String newFilenameSuffix;
 
-        int newFilenamePointPosition = filename.lastIndexOf(GlobalConst.POINT_STR);
-
-        if (newFilenamePointPosition == GlobalConst.MINUS_ONE_INT) {
-            newFilenameWithoutSuffix = filename;
-            newFilenameSuffix = StringUtils.EMPTY;
-        } else {
-            newFilenameWithoutSuffix = filename.substring(GlobalConst.ZERO_INT, newFilenamePointPosition);
-            newFilenameSuffix = filename.replace(newFilenameWithoutSuffix, StringUtils.EMPTY);
-        }
-
-        long count = getDuplicateFilename(entity, newFilenameWithoutSuffix);
-        if (count == 0L) {
+        boolean exists = this.lambdaQuery()
+                .eq(RPanUserFile::getParentId, entity.getParentId())
+                .eq(RPanUserFile::getFilename, filename)
+                .eq(RPanUserFile::getDelFlag, DelFlagEnum.NO.getCode())
+                .exists();
+        if (!exists) {
             return;
         }
 
-        String newFilename = assembleNewFilename(newFilenameWithoutSuffix, count, newFilenameSuffix);
+        FolderFlagEnum folderFlagEnum = FolderFlagEnum.getByCode(entity.getFolderFlag());
 
-        entity.setFilename(newFilename);
+        if (FolderFlagEnum.YES.equals(folderFlagEnum)) {
+            entity.setFilename(filename + "-" + UUIDUtil.getUUID());
+            return;
+        }
+
+        if (FolderFlagEnum.NO.equals(folderFlagEnum)) {
+            // 1. 寻找最后一个点符号
+            // 2. 如果找到点符号, 就在前面加uuid并拼接后缀
+            // 3. 找不到就直接在最后拼接后缀
+            int lastPointPosition = filename.lastIndexOf(GlobalConst.POINT_STR);
+            if (lastPointPosition != -1) {
+                String suffix = filename.substring(lastPointPosition);
+                String newFilename = filename.substring(0, lastPointPosition) + "-" + UUIDUtil.getUUID() + suffix;
+                entity.setFilename(newFilename);
+            } else {
+                entity.setFilename(filename + "-" + UUIDUtil.getUUID());
+            }
+            return;
+        }
+
+        throw new RPanBusinessException("参数错误");
     }
 
     /**
