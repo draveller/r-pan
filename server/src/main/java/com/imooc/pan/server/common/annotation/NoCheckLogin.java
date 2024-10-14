@@ -3,11 +3,10 @@ package com.imooc.pan.server.common.annotation;
 import java.lang.annotation.*;
 
 /**
- * 注解在不需要登录的接口上
+ * @see com.imooc.pan.server.common.aspect.CheckLoginAspect
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface NoCheckLogin {
-
 }

@@ -37,11 +37,9 @@ public class UserController {
             description = "该接口提供了用户注册功能, 实现了幂等性注册的逻辑, 可多并发调用"
     )
     @PostMapping("/register")
-    public R<Object> register(@Validated @RequestBody UserRegisterPO userRegisterPO) {
-        UserRegisterContext userRegisterContext = this.userConverter.convertPO2Context(userRegisterPO);
-
-        Long userId = this.iUserService.register(userRegisterContext);
-
+    public R<Object> register(@Validated @RequestBody UserRegisterPO po) {
+        UserRegisterContext context = this.userConverter.convertPO2Context(po);
+        Long userId = iUserService.register(context);
         return R.data(IdUtil.encrypt(userId));
     }
 

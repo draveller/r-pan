@@ -31,9 +31,9 @@ import java.util.Optional;
 /**
  * 统一的登录拦截校验切面
  */
-@Component
-@Aspect
 @Slf4j
+@Aspect
+@Component
 public class CheckLoginAspect {
 
     /**
@@ -129,12 +129,13 @@ public class CheckLoginAspect {
     }
 
     /**
-     * @return ture 表示需要校验登录信息, false表示不需要
+     * 通过方法签名判断是否被 {@link NoCheckLogin} 注解
+     *
+     * @return 是否需要校验登录
      */
-    private boolean judgeIfNeedCheckLogin(ProceedingJoinPoint proceedingJoinPoint) {
-        Signature signature = proceedingJoinPoint.getSignature();
-        MethodSignature methodSignature = (MethodSignature) signature;
-        Method method = methodSignature.getMethod();
+    private boolean judgeIfNeedCheckLogin(ProceedingJoinPoint joinPoint) {
+        Signature signature = joinPoint.getSignature();
+        Method method = ((MethodSignature) signature).getMethod();
         return !method.isAnnotationPresent(NoCheckLogin.class);
     }
 
