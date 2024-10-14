@@ -15,7 +15,7 @@ import com.imooc.pan.server.modules.share.po.CancelSharePO;
 import com.imooc.pan.server.modules.share.po.CheckShareCodePO;
 import com.imooc.pan.server.modules.share.po.CreateShareUrlPO;
 import com.imooc.pan.server.modules.share.po.ShareSavePO;
-import com.imooc.pan.server.modules.share.service.IShareService;
+import com.imooc.pan.server.modules.share.service.ShareService;
 import com.imooc.pan.server.modules.share.vo.RPanShareUrlListVO;
 import com.imooc.pan.server.modules.share.vo.RPanShareUrlVO;
 import com.imooc.pan.server.modules.share.vo.ShareDetailVO;
@@ -37,7 +37,7 @@ import java.util.List;
 public class ShareController {
 
     @Resource
-    private IShareService iShareService;
+    private ShareService shareService;
 
     @Resource
     private ShareConverter shareConverter;
@@ -56,7 +56,7 @@ public class ShareController {
 
         context.setShareFileIdList(shareFileIdList);
 
-        RPanShareUrlVO vo = iShareService.create(context);
+        RPanShareUrlVO vo = shareService.create(context);
         return R.data(vo);
     }
 
@@ -68,7 +68,7 @@ public class ShareController {
     public R<List<RPanShareUrlListVO>> getShares() {
         QueryShareListContext context = new QueryShareListContext();
         context.setUserId(UserIdUtil.get());
-        List<RPanShareUrlListVO> result = iShareService.getShares(context);
+        List<RPanShareUrlListVO> result = shareService.getShares(context);
         return R.data(result);
     }
 
@@ -87,7 +87,7 @@ public class ShareController {
                 .splitToList(shareIds).stream().map(IdUtil::decrypt).toList();
         context.setShareIdList(shareIdList);
 
-        iShareService.cancelShare(context);
+        shareService.cancelShare(context);
         return R.success();
     }
 
@@ -103,7 +103,7 @@ public class ShareController {
         context.setShareId(IdUtil.decrypt(checkShareCodePO.getShareId()));
         context.setShareCode(checkShareCodePO.getShareCode().trim());
 
-        String token = iShareService.checkShareCode(context);
+        String token = shareService.checkShareCode(context);
         return R.data(token);
     }
 
@@ -117,7 +117,7 @@ public class ShareController {
     public R<ShareDetailVO> detail() {
         QueryShareDetailContext context = new QueryShareDetailContext();
         context.setShareId(ShareIdUtil.get());
-        ShareDetailVO vo = iShareService.detail(context);
+        ShareDetailVO vo = shareService.detail(context);
         return R.data(vo);
     }
 
@@ -131,7 +131,7 @@ public class ShareController {
                                                @RequestParam(value = "shareId", required = false) String shareId) {
         QueryShareSimpleDetailContext context = new QueryShareSimpleDetailContext();
         context.setShareId(IdUtil.decrypt(shareId));
-        ShareSimpleDetailVO vo = iShareService.simpleDetail(context);
+        ShareSimpleDetailVO vo = shareService.simpleDetail(context);
         return R.data(vo);
     }
 
@@ -147,7 +147,7 @@ public class ShareController {
         QueryChildFileListContext context = new QueryChildFileListContext();
         context.setShareId(ShareIdUtil.get());
         context.setParentId(IdUtil.decrypt(parentId));
-        List<RPanUserFileVO> result = iShareService.fileList(context);
+        List<RPanUserFileVO> result = shareService.fileList(context);
         return R.data(result);
     }
 
@@ -169,7 +169,7 @@ public class ShareController {
         context.setUserId(UserIdUtil.get());
         context.setShareId(ShareIdUtil.get());
 
-        iShareService.saveFiles(context);
+        shareService.saveFiles(context);
         return R.success();
     }
 
@@ -187,7 +187,7 @@ public class ShareController {
         context.setShareId(ShareIdUtil.get());
         context.setUserId(UserIdUtil.get());
         context.setResponse(response);
-        iShareService.download(context);
+        shareService.download(context);
     }
 
 }

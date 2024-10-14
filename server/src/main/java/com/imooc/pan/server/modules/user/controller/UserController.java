@@ -7,7 +7,7 @@ import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.user.context.*;
 import com.imooc.pan.server.modules.user.converter.UserConverter;
 import com.imooc.pan.server.modules.user.po.*;
-import com.imooc.pan.server.modules.user.service.IUserService;
+import com.imooc.pan.server.modules.user.service.UserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
@@ -26,7 +26,7 @@ import java.util.List;
 public class UserController {
 
     @Resource
-    private IUserService iUserService;
+    private UserService userService;
 
     @Resource
     private UserConverter userConverter;
@@ -39,7 +39,7 @@ public class UserController {
     @PostMapping("/register")
     public R<Object> register(@Validated @RequestBody UserRegisterPO po) {
         UserRegisterContext context = this.userConverter.convertPO2Context(po);
-        Long userId = iUserService.register(context);
+        Long userId = userService.register(context);
         return R.data(IdUtil.encrypt(userId));
     }
 
@@ -52,7 +52,7 @@ public class UserController {
     public R<Object> login(@Validated @RequestBody UserLoginPO userLoginPO) {
         UserLoginContext userLoginContext = this.userConverter.convertPO2Context(userLoginPO);
 
-        String accessToken = this.iUserService.login(userLoginContext);
+        String accessToken = this.userService.login(userLoginContext);
         return R.data(accessToken);
     }
 
@@ -64,7 +64,7 @@ public class UserController {
     @PostMapping("/login-by-github")
     public R<Object> loginByGithub(@Validated @RequestBody UserLoginByGithubPO po) {
         UserLoginByGithubContext context = this.userConverter.convertPO2Context(po);
-        String accessToken = this.iUserService.loginByGithub(context);
+        String accessToken = this.userService.loginByGithub(context);
         return R.data(accessToken);
     }
 
@@ -74,7 +74,7 @@ public class UserController {
     )
     @PostMapping("/exit")
     public R<Object> exit() {
-        this.iUserService.exit(UserIdUtil.get());
+        this.userService.exit(UserIdUtil.get());
         return R.success();
     }
 
@@ -86,7 +86,7 @@ public class UserController {
     @PostMapping("/username/check")
     public R<Object> checkUsername(@Validated @RequestBody CheckUsernamePO checkUsernamePO) {
         CheckUsernameContext checkUsernameContext = this.userConverter.convertPO2Context(checkUsernamePO);
-        String question = this.iUserService.checkUsername(checkUsernameContext);
+        String question = this.userService.checkUsername(checkUsernameContext);
         return R.data(question);
     }
 
@@ -98,7 +98,7 @@ public class UserController {
     @PostMapping("/answer/check")
     public R<Object> checkAnswer(@Validated @RequestBody CheckAnswerPO checkAnswerPO) {
         CheckAnswerContext checkAnswerContext = this.userConverter.convertPO2Context(checkAnswerPO);
-        String token = this.iUserService.checkAnswer(checkAnswerContext);
+        String token = this.userService.checkAnswer(checkAnswerContext);
         return R.data(token);
     }
 
@@ -110,7 +110,7 @@ public class UserController {
     @PostMapping("/password/reset")
     public R<Object> resetPassword(@Validated @RequestBody ResetPasswordPO resetPasswordPO) {
         ResetPasswordContext resetPasswordContext = this.userConverter.convertPO2Context(resetPasswordPO);
-        this.iUserService.resetPassword(resetPasswordContext);
+        this.userService.resetPassword(resetPasswordContext);
         return R.success();
     }
 
@@ -121,7 +121,7 @@ public class UserController {
     @PostMapping("/password/change")
     public R<Object> changePassword(@Validated @RequestBody ChangePasswordPO changePasswordPO) {
         ChangePasswordContext context = this.userConverter.convertPO2Context(changePasswordPO);
-        this.iUserService.changePassword(context);
+        this.userService.changePassword(context);
         return R.success();
 
     }
@@ -132,7 +132,7 @@ public class UserController {
     )
     @GetMapping("/search/histories")
     public R<List<String>> getSearchHistories() {
-        List<String> histories = this.iUserService.getSearchHistories();
+        List<String> histories = this.userService.getSearchHistories();
         return R.data(histories);
     }
 
@@ -142,7 +142,7 @@ public class UserController {
     )
     @GetMapping({"", "/"})
     public R<UserInfoVO> info() {
-        UserInfoVO userInfoVO = this.iUserService.info(UserIdUtil.get());
+        UserInfoVO userInfoVO = this.userService.info(UserIdUtil.get());
         return R.data(userInfoVO);
     }
 

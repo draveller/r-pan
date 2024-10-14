@@ -149,7 +149,6 @@ public class RecycleServiceImpl implements IRecycleService, ApplicationContextAw
         records.forEach(ele -> {
             ele.setDelFlag(DelFlagEnum.NO.getCode());
             ele.setUpdateUser(context.getUserId());
-            ele.setUpdateTime(LocalDateTime.now());
         });
         boolean updateFlag = iUserFileService.updateBatchById(records);
         if (!updateFlag) {

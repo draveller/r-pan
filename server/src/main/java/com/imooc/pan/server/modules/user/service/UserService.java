@@ -1,7 +1,8 @@
-package com.imooc.pan.server.modules.user.service.impl;
+package com.imooc.pan.server.modules.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.pan.cache.core.constants.CacheConst;
 import com.imooc.pan.core.constants.MsgConst;
@@ -23,10 +24,6 @@ import com.imooc.pan.server.modules.user.entity.RPanThirdPartyAuth;
 import com.imooc.pan.server.modules.user.entity.RPanUser;
 import com.imooc.pan.server.modules.user.enums.ThirdPartyProviderEnum;
 import com.imooc.pan.server.modules.user.mapper.RPanUserMapper;
-import com.imooc.pan.server.modules.user.service.GithubService;
-import com.imooc.pan.server.modules.user.service.IThirdPartyAuthService;
-import com.imooc.pan.server.modules.user.service.IUserSearchHistoryService;
-import com.imooc.pan.server.modules.user.service.IUserService;
 import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +36,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -49,7 +45,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> implements IUserService {
+public class UserService extends ServiceImpl<RPanUserMapper, RPanUser> implements IService<RPanUser> {
 
     @Resource
     private UserConverter userConverter;
@@ -64,15 +60,14 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     private GithubService githubService;
 
     @Resource
-    private IThirdPartyAuthService iThirdPartyAuthService;
+    private ThirdPartyAuthService thirdPartyAuthService;
 
     @Resource
     @Qualifier(value = "userAnnotationCacheService")
     private AnnotationCacheService<RPanUser> cacheService;
+
     @Resource
-    private ThirdPartyAuthServiceImpl thirdPartyAuthServiceImpl;
-    @Resource
-    private IUserSearchHistoryService iUserSearchHistoryService;
+    private UserSearchHistoryService userSearchHistoryService;
 
     /**
      * 用户注册的业务方法实现
@@ -82,7 +77,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      * @param userRegisterContext 用户注册上下文对象, 包含注册所需的字段
      * @return 注册成功的用户ID
      */
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public Long register(UserRegisterContext userRegisterContext) {
         RPanUser entity = this.assembleUserEntity(userRegisterContext);
@@ -100,7 +94,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      * @param userLoginContext 用户登录上下文对象
      * @return 访问令牌
      */
-    @Override
     public String login(UserLoginContext userLoginContext) {
         checkLoginInfo(userLoginContext);
         generateAndSaveAccessToken(userLoginContext);
@@ -117,7 +110,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      * @param context
      * @return
      */
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public String loginByGithub(UserLoginByGithubContext context) {
         String code = context.getCode();
@@ -135,7 +127,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         String githubUid = String.valueOf(githubUserInfo.get("id"));
 
         // -------------------------------- 通过 渠道名+uid 判断用户是否已存在, 否则自动注册 --------------------------------
-        RPanThirdPartyAuth certificationRecord = this.iThirdPartyAuthService.lambdaQuery()
+        RPanThirdPartyAuth certificationRecord = this.thirdPartyAuthService.lambdaQuery()
                 .eq(RPanThirdPartyAuth::getProvider, ThirdPartyProviderEnum.GITHUB.getProvider())
                 .eq(RPanThirdPartyAuth::getProviderUid, githubUid)
                 .one();
@@ -156,7 +148,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
             authRecord.setProvider(ThirdPartyProviderEnum.GITHUB.getProvider());
             authRecord.setProviderUid(githubUid);
             authRecord.setUserId(userId);
-            thirdPartyAuthServiceImpl.save(authRecord);
+            thirdPartyAuthService.save(authRecord);
         } else {
             // 如果有第三方认证记录, 则直接通过此记录找到关联的用户, 并执行登录...
             userId = certificationRecord.getUserId();
@@ -176,7 +168,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      *
      * @param userId 用户id
      */
-    @Override
     public void exit(Long userId) {
         try {
             Cache cache = Optional.ofNullable(cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME))
@@ -191,7 +182,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     /**
      * 校验用户名
      */
-    @Override
     public String checkUsername(CheckUsernameContext checkUsernameContext) {
         LambdaQueryWrapper<RPanUser> wrapper = Wrappers.<RPanUser>lambdaQuery()
                 .eq(RPanUser::getUsername, checkUsernameContext.getUsername());
@@ -205,7 +195,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         return question;
     }
 
-    @Override
     public String checkAnswer(CheckAnswerContext checkAnswerContext) {
 
         LambdaQueryWrapper<RPanUser> wrapper = Wrappers.<RPanUser>lambdaQuery()
@@ -229,7 +218,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      *
      * @param context
      */
-    @Override
     public void resetPassword(ResetPasswordContext context) {
         this.checkForgetPwdToken(context);
         this.checkAndResetPwd(context);
@@ -243,7 +231,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      *
      * @param context
      */
-    @Override
     public void changePassword(ChangePasswordContext context) {
         this.checkOldPassword(context);
         this.doChangePassword(context);
@@ -259,7 +246,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
      * @param userId 用户id
      * @return
      */
-    @Override
     public UserInfoVO info(Long userId) {
         RPanUser entity = Optional.ofNullable(this.getById(userId))
                 .orElseThrow(() -> new RPanBusinessException(MsgConst.USER_DOES_NOT_EXISTS));
@@ -270,39 +256,32 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         return userConverter.assembleUserInfoVO(entity, rootFile);
     }
 
-    @Override
     public boolean removeBatchByIds(Collection<?> list) {
         throw new RPanBusinessException("请更换手动缓存");
     }
 
-    @Override
     public boolean updateById(RPanUser entity) {
         return cacheService.updateById(entity.getId(), entity);
     }
 
-    @Override
     public boolean removeById(Serializable id) {
         return cacheService.removeById(id);
     }
 
-    @Override
     public boolean updateBatchById(Collection<RPanUser> entityList) {
         throw new RPanBusinessException("请更换手动缓存");
     }
 
-    @Override
     public RPanUser getById(Serializable id) {
         return cacheService.getById(id);
     }
 
-    @Override
     public List<RPanUser> listByIds(Collection<? extends Serializable> idList) {
         throw new RPanBusinessException("请更换手动缓存");
     }
 
-    @Override
     public List<String> getSearchHistories() {
-        return this.iUserSearchHistoryService.getUserSearchHistories(UserIdUtil.get());
+        return this.userSearchHistoryService.getUserSearchHistories(UserIdUtil.get());
     }
 
     // ******************************** private ********************************
@@ -357,7 +336,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
 
         String dbPwd = PasswordUtil.encryptPassword(entity.getSalt(), password);
         entity.setPassword(dbPwd);
-        entity.setUpdateTime(LocalDateTime.now());
         if (!this.updateById(entity)) {
             throw new RPanBusinessException("重置密码失败");
         }
@@ -448,9 +426,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         entity.setSalt(salt);
         String dbPassword = PasswordUtil.encryptPassword(salt, context.getPassword());
         entity.setPassword(dbPassword);
-        LocalDateTime now = LocalDateTime.now();
-        entity.setCreateTime(now);
-        entity.setUpdateTime(now);
         context.setEntity(entity);
 
         return entity;

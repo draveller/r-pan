@@ -571,15 +571,12 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param userId
      */
     private void assembleCopyChildRecord(List<RPanUserFile> allRecords, RPanUserFile fileRecord, Long targetParentId, Long userId) {
-        LocalDateTime now = LocalDateTime.now();
         Long newFileId = IdUtil.get();
         Long oldFileId = fileRecord.getId();
 
         fileRecord.setParentId(targetParentId);
         fileRecord.setId(newFileId);
         fileRecord.setUserId(userId);
-        fileRecord.setCreateTime(now);
-        fileRecord.setUpdateTime(now);
         fileRecord.setCreateUser(userId);
         fileRecord.setUpdateUser(userId);
         this.handleDuplicateFilename(fileRecord);
@@ -635,9 +632,6 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         for (RPanUserFile fileRecord : prepareRecords) {
             fileRecord.setParentId(context.getTargetParentId());
             fileRecord.setUserId(context.getUserId());
-            LocalDateTime now = LocalDateTime.now();
-            fileRecord.setCreateTime(now);
-            fileRecord.setUpdateTime(now);
             fileRecord.setCreateUser(context.getUserId());
             fileRecord.setUpdateUser(context.getUserId());
             this.handleDuplicateFilename(fileRecord);
@@ -982,7 +976,6 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
     private void doUpdateFilename(UpdateFilenameContext context) {
         RPanUserFile entity = context.getEntity();
         entity.setFilename(context.getNewFilename());
-        entity.setUpdateTime(LocalDateTime.now());
         entity.setUpdateUser(context.getUserId());
 
         if (!this.updateById(entity)) {
@@ -1064,9 +1057,6 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         entity.setDelFlag(DelFlagEnum.NO.getCode());
         entity.setCreateUser(userId);
         entity.setUpdateUser(userId);
-        LocalDateTime now = LocalDateTime.now();
-        entity.setCreateTime(now);
-        entity.setUpdateTime(now);
 
         this.handleDuplicateFilename(entity);
 

@@ -1,9 +1,9 @@
-package com.imooc.pan.server.modules.user.service.impl;
+package com.imooc.pan.server.modules.user.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.pan.server.modules.user.entity.RPanUserSearchHistory;
 import com.imooc.pan.server.modules.user.mapper.RPanUserSearchHistoryMapper;
-import com.imooc.pan.server.modules.user.service.IUserSearchHistoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +14,9 @@ import java.util.List;
  * @createDate 2024-09-28 14:06:46
  */
 @Service
-public class UserSearchHistoryServiceImpl extends ServiceImpl<RPanUserSearchHistoryMapper, RPanUserSearchHistory>
-        implements IUserSearchHistoryService {
+public class UserSearchHistoryService extends ServiceImpl<RPanUserSearchHistoryMapper, RPanUserSearchHistory>
+        implements IService<RPanUserSearchHistory> {
 
-    @Override
     public List<String> getUserSearchHistories(Long userId) {
         return this.lambdaQuery()
                 .eq(RPanUserSearchHistory::getUserId, userId)

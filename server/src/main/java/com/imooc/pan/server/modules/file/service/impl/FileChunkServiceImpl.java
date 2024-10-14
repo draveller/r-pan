@@ -90,7 +90,6 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
         LocalDateTime expiration = now.plusDays(this.panServerProps.getChunkFileExpirationDays());
         fileChunk.setExpirationTime(expiration);
         fileChunk.setCreateUser(context.getUserId());
-        fileChunk.setCreateTime(now);
         if (!this.save(fileChunk)) {
             throw new RPanBusinessException(MsgConst.FILE_CHUNK_UPLOAD_FAILED);
         }

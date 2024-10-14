@@ -1,5 +1,6 @@
-package com.imooc.pan.server.modules.share.service.impl;
+package com.imooc.pan.server.modules.share.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.imooc.pan.core.exception.RPanBusinessException;
@@ -7,11 +8,9 @@ import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.modules.share.context.SaveShareFilesContext;
 import com.imooc.pan.server.modules.share.entity.RPanShareFile;
 import com.imooc.pan.server.modules.share.mapper.RPanShareFileMapper;
-import com.imooc.pan.server.modules.share.service.IShareFileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,12 +19,11 @@ import java.util.List;
  * @createDate 2022-11-09 18:38:38
  */
 @Service
-public class ShareFileServiceImpl extends ServiceImpl<RPanShareFileMapper, RPanShareFile> implements IShareFileService {
+public class ShareFileService extends ServiceImpl<RPanShareFileMapper, RPanShareFile> implements IService<RPanShareFile> {
 
     /**
      * 保存分享的文件的对应关系
      */
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveShareFiles(SaveShareFilesContext context) {
         Long shareId = context.getShareId();
@@ -40,7 +38,6 @@ public class ShareFileServiceImpl extends ServiceImpl<RPanShareFileMapper, RPanS
             fileRecord.setShareId(shareId);
             fileRecord.setFileId(shareFileId);
             fileRecord.setCreateUser(userId);
-            fileRecord.setCreateTime(LocalDateTime.now());
             records.add(fileRecord);
         }
 

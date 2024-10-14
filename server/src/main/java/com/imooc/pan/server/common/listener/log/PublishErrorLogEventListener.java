@@ -28,9 +28,6 @@ public class PublishErrorLogEventListener {
         errorLog.setId(IdUtil.get());
         errorLog.setLogContent(event.getErrorMsg());
         errorLog.setLogStatus(0);
-        LocalDateTime now = LocalDateTime.now();
-        errorLog.setCreateTime(now);
-        errorLog.setUpdateTime(now);
         errorLog.setCreateUser(event.getUserId());
         errorLog.setUpdateUser(event.getUserId());
         this.iErrorLogService.save(errorLog);

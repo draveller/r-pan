@@ -3,7 +3,7 @@ package com.imooc.pan.server.common.schedule.task;
 import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.schedule.ScheduleTask;
-import com.imooc.pan.server.modules.share.service.IShareService;
+import com.imooc.pan.server.modules.share.service.ShareService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -23,7 +23,7 @@ public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
     private BloomFilterManager manager;
 
     @Resource
-    private IShareService iShareService;
+    private ShareService shareService;
 
     private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
 
@@ -55,7 +55,7 @@ public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
         AtomicLong addCount = new AtomicLong(0L);
         List<Long> shareIdList;
         do {
-            shareIdList = this.iShareService.rollingQueryShareId(startId, limit);
+            shareIdList = this.shareService.rollingQueryShareId(startId, limit);
             if (CollectionUtils.isNotEmpty(shareIdList)) {
                 for (Long shareId : shareIdList) {
                     filter.put(shareId);

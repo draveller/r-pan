@@ -176,7 +176,6 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
         fileRecord.setFileSuffix(FileUtil.getFileSuffix(filename));
         fileRecord.setIdentifier(identifier);
         fileRecord.setCreateUser(userId);
-        fileRecord.setCreateTime(LocalDateTime.now());
         return fileRecord;
     }
 
