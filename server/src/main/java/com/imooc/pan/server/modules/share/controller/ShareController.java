@@ -55,7 +55,6 @@ public class ShareController {
                 .splitToList(shareFileIds).stream().map(IdUtil::decrypt).toList();
 
         context.setShareFileIdList(shareFileIdList);
-
         RPanShareUrlVO vo = shareService.create(context);
         return R.data(vo);
     }
@@ -79,9 +78,7 @@ public class ShareController {
     @DeleteMapping
     public R cancelShare(@Validated @RequestBody CancelSharePO cancelSharePO) {
         CancelShareContext context = new CancelShareContext();
-
         context.setUserId(UserIdUtil.get());
-
         String shareIds = cancelSharePO.getShareIds();
         List<Long> shareIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
                 .splitToList(shareIds).stream().map(IdUtil::decrypt).toList();
@@ -114,9 +111,9 @@ public class ShareController {
     @NoCheckLogin
     @CheckShareCode
     @GetMapping
-    public R<ShareDetailVO> detail() {
+    public R<ShareDetailVO> detail(@Validated @NotBlank(message = "分享id不能为空") String shareId) {
         QueryShareDetailContext context = new QueryShareDetailContext();
-        context.setShareId(ShareIdUtil.get());
+        context.setShareId(IdUtil.decrypt(shareId));
         ShareDetailVO vo = shareService.detail(context);
         return R.data(vo);
     }
@@ -142,7 +139,7 @@ public class ShareController {
     @GetMapping("/file/list")
     @CheckShareCode
     @NoCheckLogin
-    public R<List<RPanUserFileVO>> fileList(@NotBlank(message = "文件的父ID不能为空")
+    public R<List<RPanUserFileVO>> fileList(@NotBlank(message = "父文件夹ID不能为空")
                                             @RequestParam(value = "parentId", required = false) String parentId) {
         QueryChildFileListContext context = new QueryChildFileListContext();
         context.setShareId(ShareIdUtil.get());
