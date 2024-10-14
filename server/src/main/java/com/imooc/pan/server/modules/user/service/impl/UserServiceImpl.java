@@ -31,7 +31,6 @@ import com.imooc.pan.server.modules.user.vo.UserInfoVO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -89,7 +88,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         RPanUser entity = this.assembleUserEntity(userRegisterContext);
         this.doRegister(entity);
         this.createUserRootFolder(userRegisterContext);
-        return userRegisterContext.getEntity().getUserId();
+        return userRegisterContext.getEntity().getId();
     }
 
     /**
@@ -157,7 +156,6 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
             authRecord.setProvider(ThirdPartyProviderEnum.GITHUB.getProvider());
             authRecord.setProviderUid(githubUid);
             authRecord.setUserId(userId);
-            authRecord.setCreateTime(LocalDateTime.now());
             thirdPartyAuthServiceImpl.save(authRecord);
         } else {
             // 如果有第三方认证记录, 则直接通过此记录找到关联的用户, 并执行登录...
@@ -279,7 +277,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
 
     @Override
     public boolean updateById(RPanUser entity) {
-        return cacheService.updateById(entity.getUserId(), entity);
+        return cacheService.updateById(entity.getId(), entity);
     }
 
     @Override
@@ -399,11 +397,11 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         RPanUser entity = userLoginContext.getEntity();
 
         String accessToken = JwtUtil.generateToken(entity.getUsername(), UserConsts.LOGIN_USER_ID,
-                entity.getUserId(), UserConsts.ONE_DAY_LONG);
+                entity.getId(), UserConsts.ONE_DAY_LONG);
 
         Cache cache = Optional.ofNullable(this.cacheManager.getCache(CacheConst.R_PAN_CACHE_NAME))
                 .orElseThrow(() -> new RPanBusinessException(MsgConst.CACHE_NOT_FOUND));
-        cache.put(UserConsts.USER_LOGIN_PREFIX + entity.getUserId(), accessToken);
+        cache.put(UserConsts.USER_LOGIN_PREFIX + entity.getId(), accessToken);
 
         userLoginContext.setAccessToken(accessToken);
     }
@@ -446,7 +444,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
         RPanUser entity = userConverter.userRegisterContext2RPanUser(context);
         String salt = PasswordUtil.getSalt();
 
-        entity.setUserId(IdUtil.get());
+        entity.setId(IdUtil.get());
         entity.setSalt(salt);
         String dbPassword = PasswordUtil.encryptPassword(salt, context.getPassword());
         entity.setPassword(dbPassword);
@@ -489,7 +487,7 @@ public class UserServiceImpl extends ServiceImpl<RPanUserMapper, RPanUser> imple
     private void createUserRootFolder(UserRegisterContext userRegisterContext) {
         CreateFolderContext createFolderContext = new CreateFolderContext();
         createFolderContext.setParentId(FileConsts.TOP_PARENT_ID);
-        createFolderContext.setUserId(userRegisterContext.getEntity().getUserId());
+        createFolderContext.setUserId(userRegisterContext.getEntity().getId());
         createFolderContext.setFolderName(FileConsts.ALL_FILE_CN_STR);
 
         iUserFileService.createFolder(createFolderContext);

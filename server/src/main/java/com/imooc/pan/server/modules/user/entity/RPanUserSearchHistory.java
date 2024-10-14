@@ -1,8 +1,6 @@
 package com.imooc.pan.server.modules.user.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -15,13 +13,13 @@ import java.time.LocalDateTime;
  *
  * @TableName r_pan_user_search_history
  */
-@TableName(value = "r_pan_user_search_history")
 @Data
+@TableName(value = "r_pan_user_search_history")
 public class RPanUserSearchHistory implements Serializable {
+
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -47,4 +45,5 @@ public class RPanUserSearchHistory implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
 }

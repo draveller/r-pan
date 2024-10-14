@@ -461,7 +461,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         }
         ShareUserInfoVO shareUserInfoVO = new ShareUserInfoVO();
 
-        shareUserInfoVO.setUserId(entity.getUserId());
+        shareUserInfoVO.setUserId(entity.getId());
         shareUserInfoVO.setUsername(encryptUsername(entity.getUsername()));
 
         context.getVo().setShareUserInfoVO(shareUserInfoVO);
@@ -501,7 +501,7 @@ public class ShareServiceImpl extends ServiceImpl<RPanShareMapper, RPanShare> im
         }
         ShareUserInfoVO shareUserInfoVO = new ShareUserInfoVO();
 
-        shareUserInfoVO.setUserId(entity.getUserId());
+        shareUserInfoVO.setUserId(entity.getId());
         shareUserInfoVO.setUsername(encryptUsername(entity.getUsername()));
 
         context.getVo().setShareUserInfoVO(shareUserInfoVO);

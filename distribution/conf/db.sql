@@ -65,16 +65,16 @@ CREATE TABLE `r_pan_share_file`
 DROP TABLE IF EXISTS `r_pan_user`;
 CREATE TABLE `r_pan_user`
 (
-    `user_id`     BIGINT       NOT NULL COMMENT '用户id',
-    `username`    VARCHAR(255) NOT NULL COMMENT '用户名',
-    `password`    VARCHAR(255) NOT NULL COMMENT '密码',
-    `salt`        VARCHAR(255) NOT NULL COMMENT '随机盐值',
-    `question`    VARCHAR(255) NOT NULL DEFAULT '' COMMENT '密保问题',
-    `answer`      VARCHAR(255) NOT NULL DEFAULT '' COMMENT '密保答案',
-    `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`user_id`),
-    UNIQUE INDEX `uk_username` (`username`) USING BTREE COMMENT '用户名唯一索引'
+    `id`          BIGINT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '主键ID',
+    `username`    VARCHAR(255)                   NOT NULL COMMENT '用户名',
+    `password`    VARCHAR(255)                   NOT NULL COMMENT '密码',
+    `salt`        VARCHAR(255)                   NOT NULL COMMENT '随机盐值',
+    `question`    VARCHAR(255)                   NOT NULL DEFAULT '' COMMENT '密保问题',
+    `answer`      VARCHAR(255)                   NOT NULL DEFAULT '' COMMENT '密保答案',
+    `create_time` DATETIME                       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME                       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_username` (`username`) COMMENT '用户名必须唯一'
 ) COMMENT = '用户信息表';
 
 -- ----------------------------
@@ -83,14 +83,33 @@ CREATE TABLE `r_pan_user`
 DROP TABLE IF EXISTS `r_pan_third_party_auth`;
 CREATE TABLE `r_pan_third_party_auth`
 (
-    `id`           BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `user_id`      BIGINT       NOT NULL COMMENT '关联的用户 ID',
-    `provider`     VARCHAR(100) NOT NULL COMMENT 'OAuth 提供商名称（如 github, google）',
-    `provider_uid` VARCHAR(255) NOT NULL COMMENT '提供商用户唯一标识符',
-    `create_time`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `id`           BIGINT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '主键ID',
+    `user_id`      BIGINT UNSIGNED                NOT NULL COMMENT '关联的用户ID',
+    `provider`     VARCHAR(100)                   NOT NULL COMMENT 'OAuth 提供商名称 (如 github, google)',
+    `provider_uid` VARCHAR(255)                   NOT NULL COMMENT '提供商用户唯一标识符',
+    `create_time`  DATETIME                       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`  DATETIME                       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `uk_provider_uid` (`provider`, `provider_uid`) USING BTREE COMMENT '提供商和其用户 ID 的唯一索引'
+    UNIQUE INDEX `uk_provider_provider_uid` (`provider`, `provider_uid`) COMMENT '提供商和其用户ID的组合必须唯一'
 ) COMMENT = '第三方授权登录表';
+
+
+-- ----------------------------
+-- Table structure for r_pan_user_search_history
+-- ----------------------------
+DROP TABLE IF EXISTS `r_pan_user_search_history`;
+CREATE TABLE `r_pan_user_search_history`
+(
+    `id`             BIGINT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '主键ID',
+    `user_id`        BIGINT UNSIGNED                NOT NULL COMMENT '用户ID',
+    `search_content` VARCHAR(255)                   NOT NULL COMMENT '搜索文案',
+    `create_time`    DATETIME                       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`    DATETIME                       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `uk_user_id_search_content` (`user_id`, `search_content`) COMMENT '用户id和搜索内容唯一索引'
+) COMMENT = '用户搜索历史表';
+
+
 
 -- ----------------------------
 -- Table structure for r_pan_user_file
@@ -114,20 +133,6 @@ CREATE TABLE `r_pan_user_file`
     PRIMARY KEY (`file_id`)
 ) COMMENT ='用户文件信息表';
 
--- ----------------------------
--- Table structure for r_pan_user_search_history
--- ----------------------------
-DROP TABLE IF EXISTS `r_pan_user_search_history`;
-CREATE TABLE `r_pan_user_search_history`
-(
-    `id`             BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `user_id`        BIGINT       NOT NULL COMMENT '用户id',
-    `search_content` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '搜索文案',
-    `create_time`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `uk_user_id_search_content` (`user_id`, `search_content`) USING BTREE COMMENT '用户id和搜索内容唯一索引'
-) COMMENT = '用户搜索历史表';
 
 -- ----------------------------
 -- Table structure for r_pan_file_chunk

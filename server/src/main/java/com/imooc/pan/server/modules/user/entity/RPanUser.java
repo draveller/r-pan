@@ -1,7 +1,6 @@
 package com.imooc.pan.server.modules.user.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -14,14 +13,14 @@ import java.time.LocalDateTime;
  *
  * @TableName r_pan_user
  */
-@TableName(value = "r_pan_user")
 @Data
+@TableName(value = "r_pan_user")
 public class RPanUser implements Serializable {
+
     /**
      * 用户id
      */
-    @TableId
-    private Long userId;
+    private Long id;
 
     /**
      * 用户名

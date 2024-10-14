@@ -21,7 +21,7 @@ public class RPanFileChunk implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId
     private Long id;
 
     /**
