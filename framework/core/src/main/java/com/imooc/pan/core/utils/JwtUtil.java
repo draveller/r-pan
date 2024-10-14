@@ -1,11 +1,11 @@
 package com.imooc.pan.core.utils;
 
+import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -54,7 +54,7 @@ public class JwtUtil {
      * @return
      */
     public static Object analyzeToken(String token, String claimKey) {
-        if (StringUtils.isBlank(token)) {
+        if (StrUtil.isBlank(token)) {
             return null;
         }
         try {

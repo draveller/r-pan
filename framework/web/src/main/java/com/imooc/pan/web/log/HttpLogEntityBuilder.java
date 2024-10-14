@@ -1,13 +1,13 @@
 package com.imooc.pan.web.log;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -40,7 +40,7 @@ public class HttpLogEntityBuilder {
             httpLogEntity.setRequestParams(new String(requestWrapper.getContentAsByteArray()));
         }
         String responseContentType = responseWrapper.getContentType();
-        if (StringUtils.equals("application/json;charset=UTF-8", responseContentType)) {
+        if (StrUtil.equals("application/json;charset=UTF-8", responseContentType)) {
             httpLogEntity.setResponseData(new String(responseWrapper.getContentAsByteArray()));
         } else {
             httpLogEntity.setResponseData("Stream Body...");

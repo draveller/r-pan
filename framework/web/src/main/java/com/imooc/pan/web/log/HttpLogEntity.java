@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -75,7 +75,7 @@ public class HttpLogEntity {
      */
     public void print() {
         log.info("====================HTTP CALL START====================");
-        log.info("callTime: {}", DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(new Date()));
+        log.info("callTime: {}", LocalDateTime.now());
         log.info("requestUri: {}", getRequestUri());
         log.info("method: {}", getMethod());
         log.info("remoteAddr: {}", getRemoteAddr());
@@ -94,7 +94,7 @@ public class HttpLogEntity {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("====================HTTP CALL START====================");
         stringBuilder.append("callTime: ");
-        stringBuilder.append(DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.format(new Date()));
+        stringBuilder.append(LocalDateTime.now());
         stringBuilder.append(System.lineSeparator());
 
         stringBuilder.append("requestUri: ");

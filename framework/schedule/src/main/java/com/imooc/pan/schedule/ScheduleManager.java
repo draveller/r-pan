@@ -1,10 +1,10 @@
 package com.imooc.pan.schedule;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.imooc.pan.core.exception.RPanFrameworkException;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
@@ -55,7 +55,7 @@ public class ScheduleManager {
      * @param key 任务id
      */
     public void stopTask(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtil.isBlank(key)) {
             return;
         }
         ScheduleTaskHolder holder = cache.get(key);
@@ -83,7 +83,7 @@ public class ScheduleManager {
      * @return 任务id
      */
     public String changeTask(String key, String cron) {
-        if (StringUtils.isAnyBlank(key, cron)) {
+        if (StrUtil.isBlank(key) || StrUtil.isBlank(cron)) {
             throw new RPanFrameworkException("定时任务参数不正确!");
         }
         ScheduleTaskHolder holder = cache.get(key);

@@ -2,6 +2,7 @@ package com.imooc.pan.storage.engine.oss;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.*;
@@ -16,7 +17,6 @@ import com.imooc.pan.storage.engine.core.context.*;
 import com.imooc.pan.storage.engine.oss.config.OssStorageEngineConfig;
 import jakarta.annotation.Resource;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -212,7 +212,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
         List<PartETag> partETags = Lists.newArrayList();
         if (!CollectionUtils.isEmpty(chunkPaths)) {
             partETags = chunkPaths.stream()
-                    .filter(StringUtils::isNotBlank)
+                    .filter(StrUtil::isNotBlank)
                     .map(this::analysisUrlParams)
                     .filter(jsonObject -> !jsonObject.isEmpty())
                     .map(jsonObject -> new PartETag(jsonObject.getIntValue(PART_NUMBER_KEY),
@@ -302,7 +302,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
      * @return
      */
     private String getBaseUrl(String url) {
-        if (StringUtils.isBlank(url)) {
+        if (StrUtil.isBlank(url)) {
             return GlobalConst.EMPTY_STR;
         }
         if (checkHaveParams(url)) {
@@ -338,7 +338,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
             return result;
         }
         String paramsPart = url.split(getSplitMark(GlobalConst.QUESTION_MARK_STR))[1];
-        if (StringUtils.isNotBlank(paramsPart)) {
+        if (StrUtil.isNotBlank(paramsPart)) {
             List<String> paramPairList = Splitter.on(GlobalConst.AND_MARK_STR).splitToList(paramsPart);
             paramPairList.stream().forEach(paramPair -> {
                 String[] paramArr = paramPair.split(getSplitMark(GlobalConst.EQUALS_MARK_STR));
@@ -357,7 +357,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
      * @return
      */
     private boolean checkHaveParams(String url) {
-        return StringUtils.isNotBlank(url) && url.indexOf(GlobalConst.QUESTION_MARK_STR) != GlobalConst.MINUS_ONE_INT;
+        return StrUtil.isNotBlank(url) && url.indexOf(GlobalConst.QUESTION_MARK_STR) != GlobalConst.MINUS_ONE_INT;
     }
 
     /**

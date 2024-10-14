@@ -1,10 +1,10 @@
 package com.imooc.pan.web.serializer;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.imooc.pan.core.utils.EntityIdUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -26,7 +26,7 @@ public class IdEncryptSerializer extends JsonSerializer<Long> {
     @Override
     public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (Objects.isNull(value)) {
-            gen.writeString(StringUtils.EMPTY);
+            gen.writeString(StrUtil.EMPTY);
         } else {
             gen.writeString(EntityIdUtil.encrypt(value));
         }

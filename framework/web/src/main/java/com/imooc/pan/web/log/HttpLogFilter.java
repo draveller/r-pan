@@ -6,8 +6,8 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.core.annotation.Order;
+import org.springframework.util.StopWatch;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -20,12 +20,13 @@ import java.io.IOException;
  */
 @WebFilter(filterName = "httpLogFilter")
 @Slf4j
-@Order(Integer.MAX_VALUE)
+@Order
 public class HttpLogFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        StopWatch stopWatch = StopWatch.createStarted();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
         ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
         filterChain.doFilter(requestWrapper, responseWrapper);

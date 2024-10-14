@@ -1,8 +1,8 @@
 package com.imooc.pan.core.constants;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * RPan公用基础常量类
@@ -18,7 +18,7 @@ public final class GlobalConst {
     /**
      * 空字符串
      */
-    public static final String EMPTY_STR = StringUtils.EMPTY;
+    public static final String EMPTY_STR = StrUtil.EMPTY;
 
     /**
      * 点 常量

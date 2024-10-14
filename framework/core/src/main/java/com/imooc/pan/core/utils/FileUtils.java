@@ -2,11 +2,11 @@ package com.imooc.pan.core.utils;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.io.*;
@@ -33,7 +33,7 @@ public class FileUtils {
      * @return
      */
     public static String getFileSuffix(String filename) {
-        if (StringUtils.isBlank(filename) || filename.lastIndexOf(GlobalConst.POINT_STR) == GlobalConst.MINUS_ONE_INT) {
+        if (StrUtil.isBlank(filename) || filename.lastIndexOf(GlobalConst.POINT_STR) == GlobalConst.MINUS_ONE_INT) {
             return GlobalConst.EMPTY_STR;
         }
         return filename.substring(filename.lastIndexOf(GlobalConst.POINT_STR)).toLowerCase();

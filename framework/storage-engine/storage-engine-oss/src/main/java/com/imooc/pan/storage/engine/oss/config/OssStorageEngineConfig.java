@@ -1,9 +1,9 @@
 package com.imooc.pan.storage.engine.oss.config;
 
+import cn.hutool.core.util.StrUtil;
 import com.aliyun.oss.OSSClient;
 import com.imooc.pan.core.exception.RPanFrameworkException;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,8 @@ public class OssStorageEngineConfig {
      */
     @Bean(destroyMethod = "shutdown")
     public OSSClient ossClient() {
-        if (StringUtils.isAnyBlank(getEndpoint(), getAccessKeyId(), getAccessKeySecret(), getBucketName())) {
+        if (StrUtil.isBlank(getEndpoint()) || StrUtil.isBlank(getAccessKeyId())
+                || StrUtil.isBlank(getAccessKeySecret()) || StrUtil.isBlank(getBucketName())) {
             throw new RPanFrameworkException("the oss config is missed!");
         }
         return new OSSClient(getEndpoint(), getAccessKeyId(), getAccessKeySecret());
