@@ -4,6 +4,8 @@ import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.exception.RPanFrameworkException;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.response.ResponseCode;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -11,9 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 
 /**
  * 全局异常处理器

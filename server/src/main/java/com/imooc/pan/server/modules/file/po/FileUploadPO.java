@@ -2,11 +2,10 @@ package com.imooc.pan.server.modules.file.po;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serial;
 import java.io.Serializable;

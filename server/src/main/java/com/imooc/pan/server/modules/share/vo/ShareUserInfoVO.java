@@ -2,7 +2,6 @@ package com.imooc.pan.server.modules.share.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.pan.web.serializer.IdEncryptSerializer;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

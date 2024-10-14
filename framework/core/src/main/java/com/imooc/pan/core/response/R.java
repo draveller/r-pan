@@ -46,15 +46,6 @@ public class R<T> implements Serializable {
         this.data = data;
     }
 
-    /**
-     * 注解防止此方法在序列化时生成对应的json属性
-     */
-    @JsonIgnore
-    @JSONField(serialize = false)
-    public boolean isSuccess() {
-        return Objects.equals(ResponseCode.SUCCESS.getCode(), this.code);
-    }
-
     public static <T> R<T> success() {
         return new R<>(ResponseCode.SUCCESS.getCode());
     }
@@ -81,6 +72,15 @@ public class R<T> implements Serializable {
 
     public static <T> R<T> fail(ResponseCode responseCode) {
         return new R<>(responseCode.getCode(), responseCode.getDesc());
+    }
+
+    /**
+     * 注解防止此方法在序列化时生成对应的json属性
+     */
+    @JsonIgnore
+    @JSONField(serialize = false)
+    public boolean isSuccess() {
+        return Objects.equals(ResponseCode.SUCCESS.getCode(), this.code);
     }
 
 }

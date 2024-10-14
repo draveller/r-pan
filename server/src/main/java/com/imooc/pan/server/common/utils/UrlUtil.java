@@ -3,7 +3,6 @@ package com.imooc.pan.server.common.utils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 

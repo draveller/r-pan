@@ -1,13 +1,11 @@
 package com.imooc.pan.server.modules.user.po;
 
 import com.imooc.pan.server.modules.user.constants.UserConsts;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import org.hibernate.validator.constraints.Length;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,7 +14,7 @@ import java.io.Serializable;
  * 重置用户密码PO对象
  */
 @Data
-@Schema(name ="用户忘记密码-重置密码参数")
+@Schema(name = "用户忘记密码-重置密码参数")
 public class ResetPasswordPO implements Serializable {
 
     @Serial

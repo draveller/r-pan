@@ -20,14 +20,13 @@ import java.util.*;
  */
 public abstract class AbstractManualCacheService<V> implements ManualCacheService<V> {
 
+    private final Object lock = new Object();
     /**
      * 注入属性时设置 required = false, 防止在某些情况下报错
      */
     @Resource
     @Nullable
     private CacheManager cacheManager;
-
-    private final Object lock = new Object();
 
     protected abstract BaseMapper<V> getBaseMapper();
 

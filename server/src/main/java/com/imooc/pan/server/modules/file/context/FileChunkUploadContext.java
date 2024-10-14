@@ -1,6 +1,5 @@
 package com.imooc.pan.server.modules.file.context;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -16,62 +16,51 @@ import java.time.LocalDateTime;
 @TableName(value = "r_pan_file")
 @Data
 public class RPanFile implements Serializable {
+    @Serial
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 文件id
      */
     private Long id;
-
     /**
      * 文件名称
      */
     private String filename;
-
     /**
      * 文件物理路径
      */
     private String realPath;
-
     /**
      * 文件实际大小
      */
     private String fileSize;
-
     /**
      * 文件大小展示字符
      */
     private String fileSizeDesc;
-
     /**
      * 文件后缀
      */
     private String fileSuffix;
-
     /**
      * 文件预览的响应头Content-Type的值
      */
     private String filePreviewContentType;
-
     /**
      * 文件唯一标识
      */
     private String identifier;
-
     /**
      * 创建人
      */
     private Long createUser;
-
     /**
      * 创建时间
      */
     private LocalDateTime createTime;
-
     /**
      * 更新时间
      */
     private LocalDateTime updateTime;
-
-    @Serial
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

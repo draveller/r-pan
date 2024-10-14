@@ -1,6 +1,5 @@
 package com.imooc.pan.server.modules.file.converter;
 
-import com.baomidou.mybatisplus.core.toolkit.EncryptUtils;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;

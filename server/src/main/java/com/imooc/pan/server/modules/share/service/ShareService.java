@@ -62,27 +62,20 @@ import java.util.stream.Collectors;
 @Service
 public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implements IService<RPanShare>, ApplicationContextAware {
 
+    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
     @Resource
     private PanServerProps config;
-
     @Resource
     private ShareFileService shareFileService;
-
     @Resource
     private IUserFileService iUserFileService;
-
     @Resource
     private UserService userService;
-
     @Resource
     @Qualifier(value = "shareManualCacheService")
     private ManualCacheService<RPanShare> cacheService;
-
     @Resource
     private BloomFilterManager manager;
-
-    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
-
     @Setter
     private ApplicationContext applicationContext;
 

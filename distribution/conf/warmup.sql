@@ -1,5 +1,5 @@
 SELECT CONCAT('SELECT ', ndxcollist, ' FROM ', db, '.', tb, ' ORDER BY ', ndxcollist,
-                       ';') SelectQueryToLoadCache
+              ';') SelectQueryToLoadCache
 FROM (SELECT ENGINE,
              table_schema                                    db,
              table_name                                      tb,

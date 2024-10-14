@@ -12,7 +12,7 @@
     </sql>
 
     <select id="selectShareVOListByUserId" resultType="com.imooc.pan.server.modules.share.vo.RPanShareUrlListVO">
-        SELECT id       AS shareId,
+        SELECT id             AS shareId,
                share_name     AS shareName,
                share_type     AS shareType,
                share_day_type AS shareDayType,

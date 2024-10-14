@@ -20,10 +20,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShareSimpleDetailBloomFilterInterceptor implements BloomFilterInterceptor {
 
+    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
     @Resource
     private BloomFilterManager manager;
-
-    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
 
     @Override
     public String getName() {

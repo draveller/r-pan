@@ -19,14 +19,11 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 public class RebuildShareSimpleDetailBloomFilterTask implements ScheduleTask {
 
+    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
     @Resource
     private BloomFilterManager manager;
-
     @Resource
     private ShareService shareService;
-
-    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
-
 
     /**
      * 获取定时任务的名称

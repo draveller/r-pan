@@ -2,14 +2,13 @@ package com.imooc.pan.server.modules.file.po;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-@Schema(name ="创建文件夹参数实体")
+@Schema(name = "创建文件夹参数实体")
 @Data
 public class CreateFolderPO implements Serializable {
 

@@ -1,6 +1,9 @@
 package com.imooc.pan.server.common.event.log;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.context.ApplicationEvent;
 
 @Getter

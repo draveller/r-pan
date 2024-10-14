@@ -3,7 +3,6 @@ package com.imooc.pan.server.modules.file.vo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.pan.server.modules.file.entity.RPanUserFile;
 import com.imooc.pan.web.serializer.IdEncryptSerializer;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

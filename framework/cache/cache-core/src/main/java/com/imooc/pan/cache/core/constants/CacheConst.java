@@ -5,11 +5,11 @@ package com.imooc.pan.cache.core.constants;
  */
 public final class CacheConst {
 
-    private CacheConst() {
-    }
-
     /**
      * 缓存名称
      */
     public static final String R_PAN_CACHE_NAME = "R_PAN_CACHE";
+
+    private CacheConst() {
+    }
 }

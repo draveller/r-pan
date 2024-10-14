@@ -16,10 +16,10 @@ import java.security.MessageDigest;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MessageDigestUtil {
 
+    public static final String ZERO_STR = "0";
     private static final String MD5_STR = "MD5";
     private static final String SHA1_STR = "SHA1";
     private static final String SHA256_STR = "SHA-256";
-    public static final String ZERO_STR = "0";
 
     /**
      * 采用指定的单向散列模式加密

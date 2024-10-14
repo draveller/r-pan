@@ -44,7 +44,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -825,7 +824,6 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
 
     /**
      * 添加公共的文件流响应头
-     *
      */
     private void addCommonResponseHeader(HttpServletResponse response, String contentType) {
         response.reset();

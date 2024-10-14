@@ -18,13 +18,12 @@ import java.util.Map;
 @Component
 public class LocalBloomFilterManager implements BloomFilterManager, InitializingBean {
 
-    @Resource
-    private LocalBloomFilterConfig config;
-
     /**
      * 容器
      */
     private final Map<String, BloomFilter> bloomFilterContainer = Maps.newConcurrentMap();
+    @Resource
+    private LocalBloomFilterConfig config;
 
     @Override
     public void afterPropertiesSet() throws Exception {

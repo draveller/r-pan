@@ -20,6 +20,7 @@ public interface CacheService<V> {
     boolean updateById(Serializable id, V entity);
 
     /**
+     *
      */
     boolean removeById(Serializable id);
 

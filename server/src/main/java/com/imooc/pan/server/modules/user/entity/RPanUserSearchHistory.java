@@ -17,33 +17,28 @@ import java.time.LocalDateTime;
 @TableName(value = "r_pan_user_search_history")
 public class RPanUserSearchHistory implements Serializable {
 
+    @Serial
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 主键
      */
     private Long id;
-
     /**
      * 用户id
      */
     private Long userId;
-
     /**
      * 搜索文案
      */
     private String searchContent;
-
     /**
      * 创建时间
      */
     private LocalDateTime createTime;
-
     /**
      * 更新时间
      */
     private LocalDateTime updateTime;
-
-    @Serial
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
 }

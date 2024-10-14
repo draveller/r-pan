@@ -8,7 +8,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Schema(name ="创建分享链接的返回实体对象")
+@Schema(name = "创建分享链接的返回实体对象")
 @Data
 public class RPanShareUrlVO implements Serializable {
 

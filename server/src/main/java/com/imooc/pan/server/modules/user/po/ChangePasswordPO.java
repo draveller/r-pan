@@ -2,10 +2,9 @@ package com.imooc.pan.server.modules.user.po;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-
-import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,7 +13,7 @@ import java.io.Serializable;
  * 重置用户密码PO对象
  */
 @Data
-@Schema(name ="用户在线修改密码参数")
+@Schema(name = "用户在线修改密码参数")
 public class ChangePasswordPO implements Serializable {
 
     @Serial

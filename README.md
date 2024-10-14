@@ -28,8 +28,6 @@
 
 3. **server**: 后端服务模块. 包含主要的业务代码
 
-
-
 <img src="assets/project-tree.svg" alt="project-tree.svg" style="zoom:80%;" /> 
 
 
@@ -112,8 +110,6 @@ class "server" {
 
 
 通过这些层次分明的模块化设计, 可以确保系统具有良好的扩展性和可维护性
-
-
 
 ## 引用关系
 

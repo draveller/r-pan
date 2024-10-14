@@ -19,13 +19,11 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class RebuildShareSimpleDetailBloomTaskLauncher implements CommandLineRunner {
 
+    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
     @Resource
     private BloomFilterManager manager;
-
     @Resource
     private ShareService shareService;
-
-    private static final String BLOOM_FILTER_NAME = "SHARE_SIMPLE_DETAIL";
 
     @Override
     public void run(String... args) throws Exception {

@@ -391,6 +391,17 @@ public class OSSStorageEngine extends AbstractStorageEngine {
     }
 
     /**
+     * 获取分片上传的缓存Key
+     *
+     * @param identifier
+     * @param userId
+     * @return
+     */
+    private String getCacheKey(String identifier, Long userId) {
+        return String.format(CACHE_KEY_TEMPLATE, identifier, userId);
+    }
+
+    /**
      * 该实体为文件分片上传树池化之后的全局信息载体
      */
     @AllArgsConstructor
@@ -413,17 +424,6 @@ public class OSSStorageEngine extends AbstractStorageEngine {
          */
         private String objectKey;
 
-    }
-
-    /**
-     * 获取分片上传的缓存Key
-     *
-     * @param identifier
-     * @param userId
-     * @return
-     */
-    private String getCacheKey(String identifier, Long userId) {
-        return String.format(CACHE_KEY_TEMPLATE, identifier, userId);
     }
 
 }

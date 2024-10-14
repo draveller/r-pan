@@ -17,47 +17,39 @@ import java.time.LocalDateTime;
 @TableName(value = "r_pan_user")
 public class RPanUser implements Serializable {
 
+    @Serial
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      * 用户id
      */
     private Long id;
-
     /**
      * 用户名
      */
     private String username;
-
     /**
      * 密码
      */
     private String password;
-
     /**
      * 随机盐值
      */
     private String salt;
-
     /**
      * 密保问题
      */
     private String question;
-
     /**
      * 密保答案
      */
     private String answer;
-
     /**
      * 创建时间
      */
     private LocalDateTime createTime;
-
     /**
      * 更新时间
      */
     private LocalDateTime updateTime;
-
-    @Serial
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }
