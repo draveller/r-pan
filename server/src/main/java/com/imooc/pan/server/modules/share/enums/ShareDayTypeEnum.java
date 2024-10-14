@@ -13,7 +13,7 @@ import java.util.Objects;
 @Getter
 public enum ShareDayTypeEnum {
 
-    PERMANENT_VALIDITY(0, 0, "永久有效"),
+    PERMANENT_VALIDITY(0, 365, "永久有效"),
     SEVEN_DAYS_VALIDITY(1, 7, "七天有效"),
     THIRTY_DAYS_VALIDITY(2, 30, "三十天有效");
 

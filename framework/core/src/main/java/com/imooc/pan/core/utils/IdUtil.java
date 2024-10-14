@@ -7,6 +7,7 @@ import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -15,6 +16,7 @@ import java.util.Enumeration;
 /**
  * 雪花算法id生成器
  */
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IdUtil {
     // 使用AES算法进行加解密

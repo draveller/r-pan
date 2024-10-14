@@ -28,8 +28,8 @@ public class CreateShareUrlPO implements Serializable {
     @NotNull(message = "分享的日期类型不能为空")
     private Integer shareDayType;
 
-    @Schema(name = "分享的文件ID集合，多个使用公用的分割符去拼接", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "分享的文件ID不能为空")
+    @Schema(name = "分享的文件(夹)ID集合，多个使用公用的分割符去拼接", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "分享的文件(夹)ID不能为空")
     private String shareFileIds;
 
 }

@@ -39,7 +39,7 @@ public class CheckShareCodeAspect {
     /**
      * 切点表达式
      */
-    private static final String POINT_CUT = "@annotation(com.imooc.pan.server.common.annotation.NeedShareCode)";
+    private static final String POINT_CUT = "@annotation(com.imooc.pan.server.common.annotation.CheckShareCode)";
 
     /**
      * 切点模版方法

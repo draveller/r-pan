@@ -16,18 +16,12 @@ public class CreateShareUrlContext implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 分享的名称
-     */
     private String shareName;
 
-    /**
-     * 分享的类型
-     */
     private Integer shareType;
 
     /**
-     * 分享的日期类型
+     * 分享类型（0 永久有效；1 7天有效；2 30天有效）
      */
     private Integer shareDayType;
 

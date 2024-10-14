@@ -111,7 +111,7 @@ CREATE TABLE `r_pan_share`
     `share_name`     VARCHAR(255)        NOT NULL COMMENT '分享名称',
     `share_type`     TINYINT(1)          NOT NULL DEFAULT 0 COMMENT '分享类型（0 有提取码）',
     `share_day_type` TINYINT(1)          NOT NULL DEFAULT 0 COMMENT '分享类型（0 永久有效；1 7天有效；2 30天有效）',
-    `share_day`      TINYINT(1)          NOT NULL DEFAULT 0 COMMENT '分享有效天数（永久有效为0）',
+    `share_day`      INT                 NOT NULL DEFAULT 0 COMMENT '分享有效天数',
     `share_end_time` DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '分享结束时间',
     `share_url`      VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '分享链接地址',
     `share_code`     VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '分享提取码',

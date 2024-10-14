@@ -88,10 +88,10 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
      */
     @Transactional(rollbackFor = RPanBusinessException.class)
     public RPanShareUrlVO create(CreateShareUrlContext context) {
-        saveShare(context);
-        saveShareFiles(context);
+        this.saveShare(context);
+        this.saveShareFiles(context);
         RPanShareUrlVO vo = assembleShareVO(context);
-        afterCreate(context);
+        this.afterCreate(context);
         return vo;
     }
 
@@ -242,7 +242,7 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
         BloomFilter<Long> filter = manager.getFilter(BLOOM_FILTER_NAME);
         if (filter != null) {
             filter.put(context.getEntity().getId());
-            log.info("create share, add share id to bloom filter, share id is {}", context.getEntity().getId());
+            log.info("已创建分享链接并存入布隆过滤器, 分享ID = {}", context.getEntity().getId());
         }
     }
 
@@ -429,7 +429,7 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
      */
     private void assembleShareSimpleUserInfo(QueryShareSimpleDetailContext context) {
         RPanUser entity = userService.getById(context.getEntity().getCreateUser());
-        if (Objects.isNull(entity)) {
+        if (entity == null) {
             throw new RPanBusinessException("用户信息查询失败");
         }
         ShareUserInfoVO shareUserInfoVO = new ShareUserInfoVO();
@@ -674,11 +674,11 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
      * 保存分享和分享文件的关联关系
      */
     private void saveShareFiles(CreateShareUrlContext context) {
-        SaveShareFilesContext saveShareFilesContext = new SaveShareFilesContext();
-        saveShareFilesContext.setShareId(context.getEntity().getId());
-        saveShareFilesContext.setShareFileIdList(context.getShareFileIdList());
-        saveShareFilesContext.setUserId(context.getUserId());
-        shareFileService.saveShareFiles(saveShareFilesContext);
+        SaveShareFilesContext saveContext = new SaveShareFilesContext();
+        saveContext.setShareId(context.getEntity().getId());
+        saveContext.setShareFileIdList(context.getShareFileIdList());
+        saveContext.setUserId(context.getUserId());
+        shareFileService.saveShareFiles(saveContext);
     }
 
     /**
@@ -689,7 +689,6 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
     private void saveShare(CreateShareUrlContext context) {
         RPanShare entity = new RPanShare();
 
-        entity.setId(IdUtil.get());
         entity.setShareName(context.getShareName());
         entity.setShareType(context.getShareType());
         entity.setShareDayType(context.getShareDayType());
@@ -702,7 +701,6 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
         entity.setShareDay(shareDay);
         LocalDateTime now = LocalDateTime.now();
         entity.setShareEndTime(now.plusDays(shareDay));
-        entity.setShareUrl(createShareUrl(entity.getId()));
         entity.setShareCode(createShareCode());
         entity.setShareStatus(ShareStatusEnum.NORMAL.getCode());
         entity.setCreateUser(context.getUserId());
@@ -710,6 +708,10 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
         if (!save(entity)) {
             throw new RPanBusinessException("保存分享信息失败");
         }
+
+        String shareUrl = this.createShareUrl(entity.getId());
+        entity.setShareUrl(shareUrl);
+        updateById(entity);
 
         context.setEntity(entity);
     }
@@ -725,8 +727,8 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
      * 创建分享的URL
      */
     private String createShareUrl(Long shareId) {
-        if (Objects.isNull(shareId)) {
-            throw new RPanBusinessException("分享的ID不能为空");
+        if (shareId == null) {
+            throw new RPanBusinessException("分享的ID为空");
         }
         String sharePrefix = config.getSharePrefix();
         if (!sharePrefix.endsWith(GlobalConst.SLASH_STR)) {

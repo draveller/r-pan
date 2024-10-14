@@ -47,14 +47,8 @@ public class ShareController {
             description = "该接口提供了创建分享链接的功能"
     )
     @PostMapping
-    public R<RPanShareUrlVO> create(@Validated @RequestBody CreateShareUrlPO createShareUrlPO) {
-        CreateShareUrlContext context = shareConverter.convertPO2Context(createShareUrlPO);
-
-        String shareFileIds = createShareUrlPO.getShareFileIds();
-        List<Long> shareFileIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
-                .splitToList(shareFileIds).stream().map(IdUtil::decrypt).toList();
-
-        context.setShareFileIdList(shareFileIdList);
+    public R<RPanShareUrlVO> create(@Validated @RequestBody CreateShareUrlPO po) {
+        CreateShareUrlContext context = shareConverter.convertPO2Context(po);
         RPanShareUrlVO vo = shareService.create(context);
         return R.data(vo);
     }
@@ -76,10 +70,10 @@ public class ShareController {
             description = "该接口提供了取消分享的功能"
     )
     @DeleteMapping
-    public R cancelShare(@Validated @RequestBody CancelSharePO cancelSharePO) {
+    public R cancelShare(@Validated @RequestBody CancelSharePO po) {
         CancelShareContext context = new CancelShareContext();
         context.setUserId(UserIdUtil.get());
-        String shareIds = cancelSharePO.getShareIds();
+        String shareIds = po.getShareIds();
         List<Long> shareIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
                 .splitToList(shareIds).stream().map(IdUtil::decrypt).toList();
         context.setShareIdList(shareIdList);
@@ -94,11 +88,10 @@ public class ShareController {
     )
     @NoCheckLogin
     @PostMapping("/code/check")
-    public R<String> checkShareCode(@Validated @RequestBody CheckShareCodePO checkShareCodePO) {
+    public R<String> checkShareCode(@Validated @RequestBody CheckShareCodePO po) {
         CheckShareCodeContext context = new CheckShareCodeContext();
-
-        context.setShareId(IdUtil.decrypt(checkShareCodePO.getShareId()));
-        context.setShareCode(checkShareCodePO.getShareCode().trim());
+        context.setShareId(IdUtil.decrypt(po.getShareId()));
+        context.setShareCode(po.getShareCode().trim());
 
         String token = shareService.checkShareCode(context);
         return R.data(token);
@@ -111,9 +104,9 @@ public class ShareController {
     @NoCheckLogin
     @CheckShareCode
     @GetMapping
-    public R<ShareDetailVO> detail(@Validated @NotBlank(message = "分享id不能为空") String shareId) {
+    public R<ShareDetailVO> detail() {
         QueryShareDetailContext context = new QueryShareDetailContext();
-        context.setShareId(IdUtil.decrypt(shareId));
+        context.setShareId(ShareIdUtil.get());
         ShareDetailVO vo = shareService.detail(context);
         return R.data(vo);
     }
