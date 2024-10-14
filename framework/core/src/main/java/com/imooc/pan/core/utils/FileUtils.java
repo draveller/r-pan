@@ -1,7 +1,9 @@
 package com.imooc.pan.core.utils;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import com.imooc.pan.core.constants.GlobalConst;
+import com.imooc.pan.core.exception.RPanBusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
@@ -87,26 +89,21 @@ public class FileUtils {
      * @return
      */
     public static String generateStoreFileRealPath(String basePath, String filename) {
-        return new StringBuffer(basePath)
-                .append(File.separator)
-                .append(DateUtil.thisYear())
-                .append(File.separator)
-                .append(DateUtil.thisMonth() + 1)
-                .append(File.separator)
-                .append(DateUtil.thisDayOfMonth())
-                .append(File.separator)
-                .append(UUIDUtil.getUUID())
-                .append(getFileSuffix(filename))
-                .toString();
+        return basePath +
+                File.separator +
+                DateUtil.thisYear() +
+                File.separator +
+                (DateUtil.thisMonth() + 1) +
+                File.separator +
+                DateUtil.thisDayOfMonth() +
+                File.separator +
+                IdUtil.fastSimpleUUID() +
+                getFileSuffix(filename);
     }
 
     /**
      * 将文件的输入流写入到文件中
      * 使用底层的sendfile零拷贝来提高传输效率
-     *
-     * @param inputStream
-     * @param targetFile
-     * @param totalSize
      */
     public static void writeStream2File(InputStream inputStream, File targetFile, Long totalSize) throws IOException {
         createFile(targetFile);
@@ -130,7 +127,7 @@ public class FileUtils {
             targetFile.getParentFile().mkdirs();
         }
         if (!Boolean.TRUE.equals(targetFile.createNewFile())) {
-            throw new RuntimeException("文件创建失败");
+            throw new RPanBusinessException("文件创建失败");
         }
     }
 
@@ -172,7 +169,7 @@ public class FileUtils {
                 File.separator + (DateUtil.thisMonth() + 1) +
                 File.separator + DateUtil.thisDayOfMonth() +
                 File.separator + identifier +
-                File.separator + UUIDUtil.getUUID() +
+                File.separator + IdUtil.fastSimpleUUID() +
                 GlobalConst.COMMON_SEPARATOR + chunkNumber;
     }
 

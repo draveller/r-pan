@@ -1,7 +1,7 @@
 package com.imooc.pan.server.modules.user.controller;
 
 import com.imooc.pan.core.response.R;
-import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.EntityIdUtil;
 import com.imooc.pan.server.common.annotation.NoCheckLogin;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.user.context.*;
@@ -40,7 +40,7 @@ public class UserController {
     public R<Object> register(@Validated @RequestBody UserRegisterPO po) {
         UserRegisterContext context = this.userConverter.convertPO2Context(po);
         Long userId = userService.register(context);
-        return R.data(IdUtil.encrypt(userId));
+        return R.data(EntityIdUtil.encrypt(userId));
     }
 
     @NoCheckLogin

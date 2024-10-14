@@ -1,6 +1,5 @@
 package com.imooc.pan.server.common.listener.log;
 
-import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.event.log.PublishErrorLogEvent;
 import com.imooc.pan.server.modules.log.entity.RPanErrorLog;
 import com.imooc.pan.server.modules.log.service.IErrorLogService;
@@ -23,7 +22,6 @@ public class PublishErrorLogEventListener {
     @EventListener(PublishErrorLogEvent.class)
     public void saveErrorLog(PublishErrorLogEvent event) {
         RPanErrorLog errorLog = new RPanErrorLog();
-        errorLog.setId(IdUtil.get());
         errorLog.setLogContent(event.getErrorMsg());
         errorLog.setLogStatus(0);
         errorLog.setCreateUser(event.getUserId());

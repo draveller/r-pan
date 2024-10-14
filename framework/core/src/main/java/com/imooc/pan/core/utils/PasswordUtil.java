@@ -1,5 +1,7 @@
 package com.imooc.pan.core.utils;
 
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.SecureUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -12,22 +14,16 @@ public class PasswordUtil {
 
     /**
      * 随机生成盐值
-     *
-     * @return
      */
     public static String getSalt() {
-        return MessageDigestUtil.md5(UUIDUtil.getUUID());
+        return RandomUtil.randomString(16);
     }
 
     /**
      * 密码加密
-     *
-     * @param salt
-     * @param inputPassword
-     * @return
      */
-    public static String encryptPassword(String salt, String inputPassword) {
-        return MessageDigestUtil.sha256(MessageDigestUtil.sha1(inputPassword) + salt);
+    public static String encryptPassword(String salt, String inputPwd) {
+        return SecureUtil.sha256(SecureUtil.sha1(inputPwd) + salt);
     }
 
 }

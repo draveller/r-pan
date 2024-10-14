@@ -18,7 +18,6 @@ public class FileUtil {
         if (StringUtils.isBlank(filename) || !filename.contains(GlobalConst.POINT_STR)) {
             return StringUtils.EMPTY;
         }
-
         return filename.substring(filename.lastIndexOf(GlobalConst.POINT_STR));
     }
 

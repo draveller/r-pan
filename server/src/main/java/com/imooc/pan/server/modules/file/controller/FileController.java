@@ -2,7 +2,7 @@ package com.imooc.pan.server.modules.file.controller;
 
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
-import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.EntityIdUtil;
 import com.imooc.pan.server.common.utils.UrlUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
@@ -55,7 +55,7 @@ public class FileController {
         if ("-1".equals(parentId) || "0".equals(parentId)) {
             realParentId = 0L;
         } else {
-            realParentId = IdUtil.decrypt(UrlUtil.decodeIfNeeds(parentId));
+            realParentId = EntityIdUtil.decrypt(UrlUtil.decodeIfNeeds(parentId));
         }
 
         List<Integer> fileTypeArray = null;
@@ -82,7 +82,7 @@ public class FileController {
     public R<String> createFolder(@Validated @RequestBody CreateFolderPO po) {
         CreateFolderContext context = this.fileConverter.convertPO2Context(po);
         Long fileId = this.iUserFileService.createFolder(context);
-        return R.data(IdUtil.encrypt(fileId));
+        return R.data(EntityIdUtil.encrypt(fileId));
     }
 
     @Operation(
@@ -106,7 +106,7 @@ public class FileController {
 
         String fileIds = deleteFilePO.getFileIds();
         List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR))
-                .map(IdUtil::decrypt).toList();
+                .map(EntityIdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 
         this.iUserFileService.deleteFile(context);
@@ -181,7 +181,7 @@ public class FileController {
     @GetMapping("/download")
     public void download(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
                          HttpServletResponse response) {
-        FileDownloadContext context = new FileDownloadContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
+        FileDownloadContext context = new FileDownloadContext(EntityIdUtil.decrypt(fileId), response, UserIdUtil.get());
         this.iUserFileService.download(context);
     }
 
@@ -193,7 +193,7 @@ public class FileController {
     @GetMapping("/preview")
     public void preview(@Validated @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId,
                         HttpServletResponse response) {
-        FilePreviewContext context = new FilePreviewContext(IdUtil.decrypt(fileId), response, UserIdUtil.get());
+        FilePreviewContext context = new FilePreviewContext(EntityIdUtil.decrypt(fileId), response, UserIdUtil.get());
         this.iUserFileService.preview(context);
     }
 
@@ -251,7 +251,7 @@ public class FileController {
             @NotBlank(message = "文件id不能为空") @RequestParam(required = false) String fileId) {
         QueryBreadcrumbsContext context = new QueryBreadcrumbsContext();
         String decoded = UrlUtil.decodeIfNeeds(fileId);
-        context.setFileId(IdUtil.decrypt(decoded));
+        context.setFileId(EntityIdUtil.decrypt(decoded));
         context.setUserId(UserIdUtil.get());
         List<BreadcrumbVO> result = this.iUserFileService.getBreadcrumbs(context);
         return R.data(result);

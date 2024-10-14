@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
-import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.config.PanServerProps;
 import com.imooc.pan.server.modules.file.context.FileChunkSaveContext;
 import com.imooc.pan.server.modules.file.converter.FileConverter;
@@ -81,7 +80,6 @@ public class FileChunkServiceImpl extends ServiceImpl<RPanFileChunkMapper, RPanF
      */
     private void doSaveRecord(FileChunkSaveContext context) {
         RPanFileChunk fileChunk = new RPanFileChunk();
-        fileChunk.setId(IdUtil.get());
         fileChunk.setIdentifier(context.getIdentifier());
         fileChunk.setRealPath(context.getRealPath());
         fileChunk.setChunkNumber(context.getChunkNumber());

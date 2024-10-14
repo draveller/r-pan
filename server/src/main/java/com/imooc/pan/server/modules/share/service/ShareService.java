@@ -1,5 +1,6 @@
 package com.imooc.pan.server.modules.share.service;
 
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -10,9 +11,8 @@ import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
-import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.EntityIdUtil;
 import com.imooc.pan.core.utils.JwtUtil;
-import com.imooc.pan.core.utils.UUIDUtil;
 import com.imooc.pan.server.common.cache.ManualCacheService;
 import com.imooc.pan.server.common.config.PanServerProps;
 import com.imooc.pan.server.common.event.log.PublishErrorLogEvent;
@@ -563,7 +563,7 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
      */
     private String generateShareToken(CheckShareCodeContext context) {
         RPanShare entity = context.getEntity();
-        return JwtUtil.generateToken(UUIDUtil.getUUID(), ShareConsts.SHARE_ID, entity.getId(), ShareConsts.ONE_HOUR_LONG);
+        return JwtUtil.generateToken(IdUtil.fastSimpleUUID(), ShareConsts.SHARE_ID, entity.getId(), ShareConsts.ONE_HOUR_LONG);
     }
 
     /**
@@ -734,7 +734,7 @@ public class ShareService extends ServiceImpl<RPanShareMapper, RPanShare> implem
         if (!sharePrefix.endsWith(GlobalConst.SLASH_STR)) {
             sharePrefix += GlobalConst.SLASH_STR;
         }
-        return sharePrefix + URLEncoder.encode(IdUtil.encrypt(shareId), StandardCharsets.UTF_8);
+        return sharePrefix + URLEncoder.encode(EntityIdUtil.encrypt(shareId), StandardCharsets.UTF_8);
     }
 
 }

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.imooc.pan.core.exception.RPanBusinessException;
-import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.modules.share.context.SaveShareFilesContext;
 import com.imooc.pan.server.modules.share.entity.RPanShareFile;
 import com.imooc.pan.server.modules.share.mapper.RPanShareFileMapper;
@@ -34,7 +33,6 @@ public class ShareFileService extends ServiceImpl<RPanShareFileMapper, RPanShare
 
         for (Long shareFileId : shareFileIdList) {
             RPanShareFile fileRecord = new RPanShareFile();
-            fileRecord.setId(IdUtil.get());
             fileRecord.setShareId(shareId);
             fileRecord.setFileId(shareFileId);
             fileRecord.setCreateUser(userId);

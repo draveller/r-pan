@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class CryptoUtil {
 
     private static final Pattern URL_ENCODED_PATTERN = Pattern.compile("%[0-9A-Fa-f]{2}");
+
     private static final SymmetricCrypto aes = new SymmetricCrypto(
             SymmetricAlgorithm.AES, "LUqjIh2rAAc/PL4x5H8wZWB6duyyL4NS".getBytes());
 

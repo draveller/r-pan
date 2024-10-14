@@ -1,6 +1,7 @@
 package com.imooc.pan.storage.engine.oss;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.*;
@@ -10,7 +11,6 @@ import com.google.common.collect.Lists;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.exception.RPanFrameworkException;
 import com.imooc.pan.core.utils.FileUtils;
-import com.imooc.pan.core.utils.UUIDUtil;
 import com.imooc.pan.storage.engine.core.AbstractStorageEngine;
 import com.imooc.pan.storage.engine.core.context.*;
 import com.imooc.pan.storage.engine.oss.config.OssStorageEngineConfig;
@@ -266,7 +266,7 @@ public class OSSStorageEngine extends AbstractStorageEngine {
                 .append(GlobalConst.SLASH_STR)
                 .append(DateUtil.thisDayOfMonth())
                 .append(GlobalConst.SLASH_STR)
-                .append(UUIDUtil.getUUID())
+                .append(IdUtil.fastSimpleUUID())
                 .append(fileSuffix)
                 .toString();
     }

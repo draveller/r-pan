@@ -8,7 +8,6 @@ import com.imooc.pan.cache.core.constants.CacheConst;
 import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
-import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.core.utils.JwtUtil;
 import com.imooc.pan.core.utils.PasswordUtil;
 import com.imooc.pan.server.common.cache.AnnotationCacheService;
@@ -421,13 +420,10 @@ public class UserService extends ServiceImpl<RPanUserMapper, RPanUser> implement
     private RPanUser assembleUserEntity(UserRegisterContext context) {
         RPanUser entity = userConverter.userRegisterContext2RPanUser(context);
         String salt = PasswordUtil.getSalt();
-
-        entity.setId(IdUtil.get());
         entity.setSalt(salt);
         String dbPassword = PasswordUtil.encryptPassword(salt, context.getPassword());
         entity.setPassword(dbPassword);
         context.setEntity(entity);
-
         return entity;
     }
 

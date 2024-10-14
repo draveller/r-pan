@@ -1,6 +1,6 @@
 package com.imooc.pan.server.modules.file.service.impl;
 
-import cn.hutool.core.lang.generator.UUIDGenerator;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -10,8 +10,6 @@ import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.constants.MsgConst;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.FileUtil;
-import com.imooc.pan.core.utils.IdUtil;
-import com.imooc.pan.core.utils.UUIDUtil;
 import com.imooc.pan.server.common.event.file.LogicalDeleteFileEvent;
 import com.imooc.pan.server.common.event.search.TriggerSearchEvent;
 import com.imooc.pan.server.common.utils.HttpUtil;
@@ -571,7 +569,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
      * @param userId
      */
     private void assembleCopyChildRecord(List<RPanUserFile> allRecords, RPanUserFile fileRecord, Long targetParentId, Long userId) {
-        Long newFileId = IdUtil.get();
+        Long newFileId = IdUtil.getSnowflakeNextId();
         Long oldFileId = fileRecord.getId();
 
         fileRecord.setParentId(targetParentId);
@@ -587,7 +585,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
             if (CollectionUtils.isEmpty(childRecords)) {
                 return;
             }
-            childRecords.stream().forEach(childRecord -> this.assembleCopyChildRecord(allRecords, childRecord, newFileId, userId));
+            childRecords.forEach(childRecord -> this.assembleCopyChildRecord(allRecords, childRecord, newFileId, userId));
         }
 
     }
@@ -1082,7 +1080,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
         FolderFlagEnum folderFlagEnum = FolderFlagEnum.getByCode(entity.getFolderFlag());
 
         if (FolderFlagEnum.YES.equals(folderFlagEnum)) {
-            entity.setFilename(filename + "-" + UUIDUtil.getUUID());
+            entity.setFilename(filename + "-" + IdUtil.fastSimpleUUID());
             return;
         }
 
@@ -1093,10 +1091,10 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
             int lastPointPosition = filename.lastIndexOf(GlobalConst.POINT_STR);
             if (lastPointPosition != -1) {
                 String suffix = filename.substring(lastPointPosition);
-                String newFilename = filename.substring(0, lastPointPosition) + "-" + UUIDUtil.getUUID() + suffix;
+                String newFilename = filename.substring(0, lastPointPosition) + "-" + IdUtil.fastSimpleUUID() + suffix;
                 entity.setFilename(newFilename);
             } else {
-                entity.setFilename(filename + "-" + UUIDUtil.getUUID());
+                entity.setFilename(filename + "-" + IdUtil.fastSimpleUUID());
             }
             return;
         }

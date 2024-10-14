@@ -3,7 +3,7 @@ package com.imooc.pan.server.modules.share.controller;
 import com.google.common.base.Splitter;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
-import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.EntityIdUtil;
 import com.imooc.pan.server.common.annotation.CheckShareCode;
 import com.imooc.pan.server.common.annotation.NoCheckLogin;
 import com.imooc.pan.server.common.utils.ShareIdUtil;
@@ -75,7 +75,7 @@ public class ShareController {
         context.setUserId(UserIdUtil.get());
         String shareIds = po.getShareIds();
         List<Long> shareIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
-                .splitToList(shareIds).stream().map(IdUtil::decrypt).toList();
+                .splitToList(shareIds).stream().map(EntityIdUtil::decrypt).toList();
         context.setShareIdList(shareIdList);
 
         shareService.cancelShare(context);
@@ -90,7 +90,7 @@ public class ShareController {
     @PostMapping("/code/check")
     public R<String> checkShareCode(@Validated @RequestBody CheckShareCodePO po) {
         CheckShareCodeContext context = new CheckShareCodeContext();
-        context.setShareId(IdUtil.decrypt(po.getShareId()));
+        context.setShareId(EntityIdUtil.decrypt(po.getShareId()));
         context.setShareCode(po.getShareCode().trim());
 
         String token = shareService.checkShareCode(context);
@@ -120,7 +120,7 @@ public class ShareController {
     public R<ShareSimpleDetailVO> simpleDetail(@NotBlank(message = "分享的ID不能为空")
                                                @RequestParam(value = "shareId", required = false) String shareId) {
         QueryShareSimpleDetailContext context = new QueryShareSimpleDetailContext();
-        context.setShareId(IdUtil.decrypt(shareId));
+        context.setShareId(EntityIdUtil.decrypt(shareId));
         ShareSimpleDetailVO vo = shareService.simpleDetail(context);
         return R.data(vo);
     }
@@ -136,7 +136,7 @@ public class ShareController {
                                             @RequestParam(value = "parentId", required = false) String parentId) {
         QueryChildFileListContext context = new QueryChildFileListContext();
         context.setShareId(ShareIdUtil.get());
-        context.setParentId(IdUtil.decrypt(parentId));
+        context.setParentId(EntityIdUtil.decrypt(parentId));
         List<RPanUserFileVO> result = shareService.fileList(context);
         return R.data(result);
     }
@@ -152,10 +152,10 @@ public class ShareController {
 
         String fileIds = shareSavePO.getFileIds();
         List<Long> fileIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
-                .splitToList(fileIds).stream().map(IdUtil::decrypt).toList();
+                .splitToList(fileIds).stream().map(EntityIdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 
-        context.setTargetParentId(IdUtil.decrypt(shareSavePO.getTargetParentId()));
+        context.setTargetParentId(EntityIdUtil.decrypt(shareSavePO.getTargetParentId()));
         context.setUserId(UserIdUtil.get());
         context.setShareId(ShareIdUtil.get());
 
@@ -173,7 +173,7 @@ public class ShareController {
                          @RequestParam(value = "fileId", required = false) String fileId,
                          HttpServletResponse response) {
         ShareFileDownloadContext context = new ShareFileDownloadContext();
-        context.setFileId(IdUtil.decrypt(fileId));
+        context.setFileId(EntityIdUtil.decrypt(fileId));
         context.setShareId(ShareIdUtil.get());
         context.setUserId(UserIdUtil.get());
         context.setResponse(response);

@@ -1,7 +1,7 @@
 package com.imooc.pan.server.modules.file.converter;
 
 import com.imooc.pan.core.constants.GlobalConst;
-import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.EntityIdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.constants.FileConsts;
 import com.imooc.pan.server.modules.file.context.*;
@@ -24,22 +24,22 @@ import java.util.Objects;
 @Mapper(componentModel = "spring")
 public interface FileConverter {
 
-    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(po.getParentId()))")
+    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.EntityIdUtil.decrypt(po.getParentId()))")
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     CreateFolderContext convertPO2Context(CreateFolderPO po);
 
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
-    @Mapping(target = "fileId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(po.getFileId()))")
+    @Mapping(target = "fileId", expression = "java(com.imooc.pan.core.utils.EntityIdUtil.decrypt(po.getFileId()))")
     UpdateFilenameContext convertPO2Context(UpdateFilenamePO po);
 
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     DeleteFileContext convertPO2Context(DeleteFilePO deleteFilePO);
 
-    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(secUploadPO.getParentId()))")
+    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.EntityIdUtil.decrypt(secUploadPO.getParentId()))")
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     SecUploadFileContext convertPO2Context(SecUploadPO secUploadPO);
 
-    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.IdUtil.decrypt(fileUploadPO.getParentId()))")
+    @Mapping(target = "parentId", expression = "java(com.imooc.pan.core.utils.EntityIdUtil.decrypt(fileUploadPO.getParentId()))")
     @Mapping(target = "userId", expression = "java(com.imooc.pan.server.common.utils.UserIdUtil.get())")
     FileUploadContext convertPO2Context(FileUploadPO fileUploadPO);
 
@@ -74,8 +74,8 @@ public interface FileConverter {
         String targetParentId = transferFilePO.getTargetParentId();
 
         List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR))
-                .map(IdUtil::decrypt).toList();
-        Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
+                .map(EntityIdUtil::decrypt).toList();
+        Long decryptedTargetParentId = EntityIdUtil.decrypt(targetParentId);
 
         TransferFileContext context = new TransferFileContext();
         context.setFileIdList(fileIdList);
@@ -87,9 +87,9 @@ public interface FileConverter {
         String fileIds = copyFilePO.getFileIds();
         String targetParentId = copyFilePO.getTargetParentId();
 
-        List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR)).map(IdUtil::decrypt)
+        List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR)).map(EntityIdUtil::decrypt)
                 .toList();
-        Long decryptedTargetParentId = IdUtil.decrypt(targetParentId);
+        Long decryptedTargetParentId = EntityIdUtil.decrypt(targetParentId);
 
         CopyFileContext context = new CopyFileContext();
         context.setFileIdList(fileIdList);

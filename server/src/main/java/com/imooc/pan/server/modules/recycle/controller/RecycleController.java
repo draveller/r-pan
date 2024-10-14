@@ -4,7 +4,7 @@ package com.imooc.pan.server.modules.recycle.controller;
 import com.google.common.base.Splitter;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
-import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.EntityIdUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.vo.RPanUserFileVO;
 import com.imooc.pan.server.modules.recycle.context.DeleteContext;
@@ -56,7 +56,7 @@ public class RecycleController {
         context.setUserId(UserIdUtil.get());
         String fileIds = restorePO.getFileIds();
         List<Long> fileIdList = Arrays.stream(fileIds.split(GlobalConst.COMMON_SEPARATOR))
-                .map(IdUtil::decrypt).toList();
+                .map(EntityIdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
         this.iRecycleService.restore(context);
         return R.success();
@@ -73,7 +73,7 @@ public class RecycleController {
 
         String fileIds = deletePO.getFileIds();
         List<Long> fileIdList = Splitter.on(GlobalConst.COMMON_SEPARATOR)
-                .splitToList(fileIds).stream().map(IdUtil::decrypt).toList();
+                .splitToList(fileIds).stream().map(EntityIdUtil::decrypt).toList();
         context.setFileIdList(fileIdList);
 
         iRecycleService.delete(context);

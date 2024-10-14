@@ -1,7 +1,7 @@
 package com.imooc.pan.schedule;
 
+import cn.hutool.core.util.IdUtil;
 import com.imooc.pan.core.exception.RPanFrameworkException;
-import com.imooc.pan.core.utils.UUIDUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +41,7 @@ public class ScheduleManager {
     public String startTask(ScheduleTask scheduleTask, String cron) {
         ScheduledFuture<?> scheduledFuture = taskScheduler.schedule(scheduleTask, new CronTrigger(cron));
 
-        String key = UUIDUtil.getUUID();
+        String key = IdUtil.fastSimpleUUID();
         ScheduleTaskHolder holder = new ScheduleTaskHolder(scheduleTask, scheduledFuture);
         cache.put(key, holder);
 

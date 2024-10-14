@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.utils.FileUtil;
 import com.imooc.pan.core.utils.FileUtils;
-import com.imooc.pan.core.utils.IdUtil;
 import com.imooc.pan.server.common.event.log.PublishErrorLogEvent;
 import com.imooc.pan.server.modules.file.context.FileChunkMergeAndSaveContext;
 import com.imooc.pan.server.modules.file.context.FileSaveContext;
@@ -167,7 +166,6 @@ public class FileServiceImpl extends ServiceImpl<RPanFileMapper, RPanFile>
      */
     private RPanFile assembleRPanFile(String filename, String realPath, Long totalSize, String identifier, Long userId) {
         RPanFile fileRecord = new RPanFile();
-        fileRecord.setId(IdUtil.get());
         fileRecord.setFilename(filename);
         fileRecord.setRealPath(realPath);
         fileRecord.setFileSize(String.valueOf(totalSize));

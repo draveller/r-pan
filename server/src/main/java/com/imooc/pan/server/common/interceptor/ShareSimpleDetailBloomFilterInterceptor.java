@@ -4,7 +4,7 @@ import com.imooc.pan.bloom.filter.core.BloomFilter;
 import com.imooc.pan.bloom.filter.core.BloomFilterManager;
 import com.imooc.pan.core.exception.RPanBusinessException;
 import com.imooc.pan.core.response.ResponseCode;
-import com.imooc.pan.core.utils.IdUtil;
+import com.imooc.pan.core.utils.EntityIdUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,7 +52,7 @@ public class ShareSimpleDetailBloomFilterInterceptor implements BloomFilterInter
             return true;
         }
 
-        Long shareId = IdUtil.decrypt(encShareId);
+        Long shareId = EntityIdUtil.decrypt(encShareId);
         if (bloomFilter.mightContain(shareId)) {
             log.info("the bloomFilter named {} judge shareId {} mightContain pass..", BLOOM_FILTER_NAME, shareId);
             return true;
