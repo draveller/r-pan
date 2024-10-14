@@ -1,6 +1,7 @@
 package com.imooc.pan.server.modules.user.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class RPanUser implements Serializable {
     /**
      * 用户id
      */
+    @TableId
     private Long userId;
 
     /**

@@ -1037,6 +1037,7 @@ public class UserFileServiceImpl extends ServiceImpl<RPanUserFileMapper, RPanUse
                               Integer fileType, Long realFileId, Long userId, String fileSizeDesc) {
 
         RPanUserFile entity = assembleRPanUserFile(parentId, filename, folderFlagEnum, fileType, realFileId, userId, fileSizeDesc);
+        entity.setFileId(IdUtil.get());
         if (!this.save(entity)) {
             throw new RuntimeException("保存文件信息失败");
         }
