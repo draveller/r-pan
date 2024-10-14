@@ -1,4 +1,4 @@
-package com.imooc.pan.server.common.utils;
+package com.imooc.pan.core.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

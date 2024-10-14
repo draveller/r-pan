@@ -40,19 +40,6 @@ public class FileUtils {
     }
 
     /**
-     * 获取文件的类型
-     *
-     * @param filename
-     * @return
-     */
-    public static String getFileExtName(String filename) {
-        if (StringUtils.isBlank(filename) || filename.lastIndexOf(GlobalConst.POINT_STR) == GlobalConst.MINUS_ONE_INT) {
-            return GlobalConst.EMPTY_STR;
-        }
-        return filename.substring(filename.lastIndexOf(GlobalConst.POINT_STR) + GlobalConst.ONE_INT).toLowerCase();
-    }
-
-    /**
      * 通过文件大小转化文件大小的展示名称
      *
      * @param totalSize

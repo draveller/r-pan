@@ -3,7 +3,7 @@ package com.imooc.pan.server.modules.file.controller;
 import com.imooc.pan.core.constants.GlobalConst;
 import com.imooc.pan.core.response.R;
 import com.imooc.pan.core.utils.EntityIdUtil;
-import com.imooc.pan.server.common.utils.UrlUtil;
+import com.imooc.pan.core.utils.UrlUtil;
 import com.imooc.pan.server.common.utils.UserIdUtil;
 import com.imooc.pan.server.modules.file.constants.DelFlagEnum;
 import com.imooc.pan.server.modules.file.constants.FileConsts;

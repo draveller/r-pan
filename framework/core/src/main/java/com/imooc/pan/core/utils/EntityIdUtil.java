@@ -1,7 +1,6 @@
 package com.imooc.pan.core.utils;
 
-import cn.hutool.core.net.URLDecoder;
-import cn.hutool.core.util.CharsetUtil;
+
 import com.imooc.pan.core.exception.RPanBusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -37,10 +36,7 @@ public class EntityIdUtil {
         if (encryptedStr == null) {
             throw new RPanBusinessException("需要解码的字符串为空");
         }
-
-        if (CryptoUtil.isUrlEncoded(encryptedStr)) {
-            encryptedStr = URLDecoder.decode(encryptedStr, CharsetUtil.CHARSET_UTF_8);
-        }
+        encryptedStr = UrlUtil.decodeIfNeeds(encryptedStr);
         return Long.valueOf(CryptoUtil.decryptString(encryptedStr));
     }
 
